@@ -2294,7 +2294,7 @@ $("b-copiar").addEventListener("click", () => {
     .catch(() => { imgTxt.textContent = L("O navegador não permitiu copiar a imagem.", "The browser did not allow copying the image."); });
 });
 
-// ---------- manual: a página abre numa aba nova; o PDF é baixado (na página publicada, com a confirmação do Claude)
+// ---------- manual: a página e o PDF abrem numa aba nova (na página publicada no Claude, o PDF é baixado com confirmação)
 $("b-manual").addEventListener("click", () => {
   const w = window.open("manual/manual.html", "_blank");
   if (!w) location.href = "manual/manual.html";
@@ -2309,9 +2309,9 @@ $("b-manual-pdf").addEventListener("click", async () => {
     } catch (e) { if (e?.code !== "declined") imgTxt.textContent = L("Não foi possível baixar o PDF aqui.", "Could not download the PDF here."); }
     return;
   }
-  const a = document.createElement("a");
-  a.href = "manual/manual.pdf"; a.download = nome;
-  document.body.appendChild(a); a.click(); a.remove();
+  // no servidor e no GitHub Pages: abre o PDF numa aba nova (dali dá para ler, imprimir ou salvar)
+  const w = window.open("manual/manual.pdf", "_blank");
+  if (!w) location.href = "manual/manual.pdf";
 });
 
 // =====================================================================  MENU RETRÁTIL
