@@ -40,12 +40,13 @@ const P = (x, y, z = 0) => new THREE.Vector3(z, y, -(x - 9));
 const reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const grupos = {};
-for (const g of ["pele", "cerebro", "vent", "vasos", "planos", "circ", "liquor", "porta", "simbolo", "fixo", "embriao", "regua"]) {
+for (const g of ["pele", "cerebro", "vent", "vasos", "planos", "circ", "liquor", "porta", "simbolo", "fixo", "embriao", "regua", "cortex", "visao", "limbico", "papez"]) {
   grupos[g] = new THREE.Group(); scene.add(grupos[g]);
 }
 grupos.liquor.visible = false;
 grupos.porta.visible = false;
 grupos.embriao.visible = false;
+for (const g of ["cortex", "visao", "limbico", "papez"]) grupos[g].visible = false; // camadas opcionais, desligadas no início
 
 const pickables = [];
 const clipaveis = [];
@@ -115,7 +116,11 @@ const ID_DO_ROTULO = { "Pineal": "pineal", "Hipófise": "adeno", "Hipotálamo": 
   "Glabela": "glabela", "Raiz do nariz": "nasio", "Quiasma óptico": "quiasma", "Pirâmide nasal": "piramide", "Corpo caloso": "caloso",
   "Cerebelo": "cerebelo", "Tronco encefálico": "tronco", "Gânglio cervical superior": "gcs", "Seio cavernoso": "cavernoso",
   "Ventrículo lateral": "ventlat", "Olho": "olho", "Ajna (simbólico)": "ajna", "Coroa (simbólico)": "coroa", "Sistema porta": "porta",
-  "Topo da cabeça": "vertice", "Parte de trás da cabeça": "occipital" };
+  "Topo da cabeça": "vertice", "Parte de trás da cabeça": "occipital",
+  "Lobo frontal": "lobo_frontal", "Lobo parietal": "lobo_parietal", "Lobo temporal": "lobo_temporal", "Lobo occipital": "lobo_occipital",
+  "Sulco central": "sulco_central", "Fissura lateral": "fissura_lateral", "Corpo geniculado lateral": "cgl", "Radiação óptica": "radiacao",
+  "Córtex visual (V1)": "v1", "Hipocampo": "hipocampo", "Amígdala": "amigdala", "Fórnix": "fornix", "Corpos mamilares": "mamilares",
+  "Giro do cíngulo": "cingulo", "Habênula": "habenula", "Núcleo anterior do tálamo": "tal_anterior" };
 const ROT_EN = { "Pineal": "Pineal", "Hipófise": "Pituitary", "Hipotálamo": "Hypothalamus", "3º ventrículo": "3rd ventricle", "Tálamo": "Thalamus",
   "Glabela": "Glabella", "Raiz do nariz": "Root of the nose", "Topo da cabeça": "Top of the head", "Parte de trás da cabeça": "Back of the head",
   "Quiasma óptico": "Optic chiasm", "Pirâmide nasal": "Nasal pyramid", "Corpo caloso": "Corpus callosum", "Cerebelo": "Cerebellum",
@@ -123,7 +128,12 @@ const ROT_EN = { "Pineal": "Pineal", "Hipófise": "Pituitary", "Hipotálamo": "H
   "Ventrículo lateral": "Lateral ventricle", "Olho": "Eye", "Ajna (simbólico)": "Ajna (symbolic)", "Coroa (simbólico)": "Crown (symbolic)",
   "Sistema porta": "Portal system", "Vesícula do diencéfalo": "Diencephalic vesicle", "Vesícula óptica → retina": "Optic vesicle → retina",
   "Broto da pineal": "Pineal bud", "Infundíbulo → neuro-hipófise": "Infundibulum → posterior pituitary",
-  "Bolsa de Rathke → adeno-hipófise": "Rathke's pouch → anterior pituitary", "Boca primitiva": "Primitive mouth" };
+  "Bolsa de Rathke → adeno-hipófise": "Rathke's pouch → anterior pituitary", "Boca primitiva": "Primitive mouth",
+  "Lobo frontal": "Frontal lobe", "Lobo parietal": "Parietal lobe", "Lobo temporal": "Temporal lobe", "Lobo occipital": "Occipital lobe",
+  "Sulco central": "Central sulcus", "Fissura lateral": "Lateral fissure", "Corpo geniculado lateral": "Lateral geniculate nucleus",
+  "Radiação óptica": "Optic radiation", "Córtex visual (V1)": "Visual cortex (V1)", "Hipocampo": "Hippocampus", "Amígdala": "Amygdala",
+  "Fórnix": "Fornix", "Corpos mamilares": "Mammillary bodies", "Giro do cíngulo": "Cingulate gyrus", "Habênula": "Habenula",
+  "Núcleo anterior do tálamo": "Anterior thalamic nucleus" };
 const rotTexto = (t) => (idioma === "en" && ROT_EN[t]) || t;
 function textoRotulo(r) {
   r.el.innerHTML = `<i style="background:${r.cor}"></i>${rotTexto(r.texto)}`;
@@ -169,6 +179,7 @@ function layoutRotulos() {
     if (estado.embriao) ok = ok && r.grupo === "embriao";
     else ok = ok && r.grupo !== "embriao";
     if (r.grupo !== "regua" && !mostrar) ok = false;
+    if (estado.isolar && !mantidosNoIsolar(estado.isolar).has(r.grupo)) ok = false;
     if (!ok) { esconder(r); continue; }
     if (r.posFn) r.posFn(r.pos);
     tmpV.copy(r.pos).project(camera);
@@ -292,7 +303,7 @@ registrar(tubo([[11.9, -6.4], [12.3, -10], [12.55, -14], [12.6, -18]], 0.5, 0xe2
 const CALOSO = [[5.8, 2.6], [4.5, 3.2], [4.6, 4.5], [6.0, 5.5], [8.5, 5.9], [10.9, 5.4], [12.1, 4.1], [11.9, 3.0],
   [11.1, 3.15], [10.6, 4.3], [8.5, 4.95], [6.3, 4.6], [5.35, 3.9], [5.4, 3.2]];
 registrar(extrudado(CALOSO, 7, 0xf3ead8, { opacity: 0.32 }), "caloso", "cerebro", { clip: true });
-for (const s of [1, -1]) grupos.cerebro.add(tubo([[11.0, 3.15, s * 0.4], [9.6, 3.55, s * 0.4], [8.0, 3.4, s * 0.35], [7.2, 2.6, s * 0.3], [6.95, 1.75, s * 0.2]], 0.12, 0xcdbf9f, { opacity: 0.7 }));
+// o fórnix agora faz parte da camada "Sistema límbico"
 
 // diencéfalo
 for (const s of [1, -1]) {
@@ -427,6 +438,7 @@ function particula(curve, cor, vel, grupo = "circ", tam = 0.14) {
   const b = new THREE.Mesh(geoP, m2); b.scale.setScalar(tam * 2.4);
   g.add(a, b);
   grupos[grupo].add(g);
+  if (estado.isolar && !mantidosNoIsolar(estado.isolar).has(grupo)) { esmaecerMat(m1, true); esmaecerMat(m2, true); }
   particulas.push({ g, curve, t: 0, vel, grupo });
 }
 
@@ -505,6 +517,113 @@ for (const m of emb.opticas) { const r = rotulo("Vesícula óptica → retina", 
 { const r = rotulo("Bolsa de Rathke → adeno-hipófise", new THREE.Vector3(), "#3CC4A2", "embriao", 1); r.posFn = (v) => v.copy(emb.rathke.position); }
 rotulo("Boca primitiva", P(5.6, -6.6), "#F07F5A", "embriao", 3);
 
+// =====================================================================  CÓRTEX, VIA DA VISÃO E SISTEMA LÍMBICO (camadas opcionais)
+// córtex: os quatro lobos como "cascas" sobre o envoltório do cérebro (centro 9,6; 4,4; 0 e semieixos 8,3 × 6,0 × 6,7 cm)
+const ENV_C = [9.6, 4.4], ENV_R = [8.3, 6.0, 6.7];
+const supZ = (x, y) => { const q = 1 - ((x - ENV_C[0]) / ENV_R[0]) ** 2 - ((y - ENV_C[1]) / ENV_R[1]) ** 2; return q > 0 ? ENV_R[2] * Math.sqrt(q) : NaN; };
+const sylvius = (x) => 1.0 + 0.42 * (x - 3.5);   // fissura lateral: sobe de frente para trás
+const centralX = (y) => 7.2 + 0.27 * (y - 2.5);  // sulco central: inclinado para a frente embaixo
+function loboDe(x, y, z) {
+  const az = Math.abs(z);
+  if (y < 0.4 && az < 3.4) return null; // base, escondida pelo diencéfalo e pelo tronco
+  if (x > 14.6 - 0.12 * (y - 4)) return "lobo_occipital";
+  if (az > 2.6 && y < sylvius(x) && x > 3.6 && x < 14.8) return "lobo_temporal";
+  return x < centralX(y) ? "lobo_frontal" : "lobo_parietal";
+}
+const CORES_LOBO = { lobo_frontal: 0x7fa7e8, lobo_parietal: 0xe8c77f, lobo_temporal: 0x8fd19e, lobo_occipital: 0xe89a9a };
+{
+  const base = new THREE.SphereGeometry(1, 120, 80), pos = base.attributes.position, idx = base.index;
+  const cena = [], anat = [];
+  for (let i = 0; i < pos.count; i++) {
+    const vx = pos.getX(i), vy = pos.getY(i), vz = pos.getZ(i);
+    const x = 9.6 - ENV_R[0] * vz, y = ENV_C[1] + ENV_R[1] * vy, z = ENV_R[2] * vx;
+    anat.push([x, y, z]);
+    cena.push(P(x, y, z).sub(P(9.6, 4.4)).multiplyScalar(1.012).add(P(9.6, 4.4)));
+  }
+  const tris = {};
+  for (let t = 0; t < idx.count; t += 3) {
+    const a = idx.getX(t), b = idx.getX(t + 1), c = idx.getX(t + 2);
+    const m = [0, 1, 2].map((k) => (anat[a][k] + anat[b][k] + anat[c][k]) / 3);
+    const l = loboDe(...m);
+    if (l) (tris[l] ||= []).push(a, b, c);
+  }
+  for (const [id, lista] of Object.entries(tris)) {
+    const g = new THREE.BufferGeometry().setFromPoints(cena);
+    g.setIndex(lista); g.computeVertexNormals();
+    const m = new THREE.Mesh(g, mat(CORES_LOBO[id], { opacity: 0.3, side: THREE.DoubleSide }));
+    m.renderOrder = 8;
+    registrar(m, id, "cortex", { clip: true });
+  }
+  // o envoltório é um elipsoide simples e não desce o bastante dos lados: cada lobo temporal ganha um volume próprio
+  // (só a parte que fica fora do envoltório é desenhada; a de dentro já é a casca verde acima)
+  const foraEnv = (x, y, z) => ((x - 9.6) / 8.3) ** 2 + ((y - 4.4) / 6.0) ** 2 + (z / 6.7) ** 2 > 0.985;
+  for (const s of [1, -1]) {
+    const gt = new THREE.SphereGeometry(1, 72, 44), pt = gt.attributes.position, it = gt.index;
+    const an = [], ce = [];
+    for (let i = 0; i < pt.count; i++) {
+      const x = 9.6 - 4.6 * pt.getZ(i), y = -0.3 + 2.3 * pt.getY(i), z = s * 4.3 + 2.2 * pt.getX(i);
+      an.push([x, y, z]); ce.push(P(x, y, z));
+    }
+    const lista = [];
+    for (let t = 0; t < it.count; t += 3) {
+      const a = it.getX(t), b = it.getX(t + 1), c = it.getX(t + 2);
+      const m = [0, 1, 2].map((k) => (an[a][k] + an[b][k] + an[c][k]) / 3);
+      if (foraEnv(...m)) lista.push(a, b, c);
+    }
+    const g = new THREE.BufferGeometry().setFromPoints(ce);
+    g.setIndex(lista); g.computeVertexNormals();
+    const m = new THREE.Mesh(g, mat(CORES_LOBO.lobo_temporal, { opacity: 0.3, side: THREE.DoubleSide }));
+    m.renderOrder = 8; m.userData.centro = P(9.6, -0.3, s * 4.3);
+    registrar(m, "lobo_temporal", "cortex", { clip: true });
+  }
+  // sulco central (cruza o alto da cabeça) e fissura lateral (um de cada lado)
+  const pc = [];
+  for (const s of [1, -1]) {
+    const lado = [];
+    for (let y = 2.9; y <= 10.4; y += 0.25) { const x = centralX(y), z = supZ(x, y); if (z > 0.05) lado.push(P(x, y, s * z * 1.014)); }
+    pc.push(...(s === 1 ? lado : lado.reverse()));
+  }
+  const sulco = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pc), 200, 0.06, 6, false), mat(0xe8edf4, { opacity: 0.75 }));
+  registrar(sulco, "sulco_central", "cortex", { clip: true });
+  for (const s of [1, -1]) {
+    const pf = [];
+    for (let x = 3.8; x <= 12.4; x += 0.3) { const y = sylvius(x), z = supZ(x, y); if (z > 0) pf.push(P(x, y, s * z * 1.014)); }
+    registrar(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pf), 120, 0.06, 6, false), mat(0xe8edf4, { opacity: 0.75 })), "fissura_lateral", "cortex", { clip: true });
+  }
+}
+// via da visão consciente: trato óptico (já desenhado) → corpo geniculado lateral → radiação óptica → córtex visual (V1)
+for (const s of [1, -1]) {
+  registrar(elipsoide([9.75, 1.1, s * 2.42], [0.32, 0.22, 0.22], 0x9fb7ff, { emissive: 0x5e7fe0, ei: 0.25 }), "cgl", "visao");
+  registrar(tubo([[9.85, 1.1, s * 2.5], [11.2, 1.6, s * 3.3], [13.4, 2.5, s * 3.2], [15.6, 3.2, s * 2.0], [16.8, 3.6, s * 0.95]], 0.09, 0x9fb7ff, { opacity: 0.85 }), "radiacao", "visao");
+  registrar(elipsoide([17.1, 3.6, s * 0.75], [0.55, 0.95, 0.35], 0x7fa0ff, { emissive: 0x5e7fe0, ei: 0.3 }), "v1", "visao", { clip: true });
+}
+const CURVAS_VISAO = [];
+for (const s of [1, -1]) for (const cruza of [true, false]) {
+  const t = cruza ? -s : s; // as fibras nasais cruzam no quiasma; as temporais seguem do mesmo lado
+  CURVAS_VISAO.push(curva([[3.1, -0.68, s * 2.85], [4.8, -0.4, s * 1.7], [6.6, 0, s * 0.45], [6.75, 0.03, cruza ? 0 : s * 0.35],
+    [6.85, 0.05, t * 0.45], [8.0, 0.6, t * 1.6], [9.5, 1.2, t * 2.3], [9.85, 1.1, t * 2.5], [11.2, 1.6, t * 3.3], [13.4, 2.5, t * 3.2], [15.6, 3.2, t * 2.0], [16.8, 3.6, t * 0.95]]));
+}
+// sistema límbico
+for (const s of [1, -1]) {
+  registrar(tubo([[9.0, -1.7, s * 3.2], [10.3, -1.3, s * 3.35], [11.5, -0.3, s * 3.1], [12.2, 0.9, s * 2.6]], 0.5, 0xf2a7c8, { opacity: 0.75 }), "hipocampo", "limbico", { clip: true });
+  registrar(elipsoide([8.0, -1.15, s * 3.15], [0.78, 0.62, 0.62], 0xff8a8a, { opacity: 0.85 }), "amigdala", "limbico", { clip: true });
+  registrar(tubo([[11.0, 3.15, s * 0.4], [9.6, 3.55, s * 0.4], [8.0, 3.4, s * 0.35], [7.2, 2.6, s * 0.3], [6.95, 1.75, s * 0.2]], 0.12, 0xe8d3a8, { opacity: 0.85 }), "fornix", "limbico");
+  registrar(tubo([[11.0, 3.15, s * 0.4], [12.0, 2.9, s * 1.3], [12.4, 1.8, s * 2.2], [12.2, 0.9, s * 2.6]], 0.11, 0xe8d3a8, { opacity: 0.85 }), "fornix", "limbico");
+  registrar(tubo([[6.95, 1.75, s * 0.2], [7.2, 0.9, s * 0.28], [7.95, 0.05, s * 0.3]], 0.1, 0xe8d3a8, { opacity: 0.85 }), "fornix", "limbico");
+  registrar(elipsoide([8.05, -0.12, s * 0.32], [0.25, 0.25, 0.25], 0xffb3d1, { emissive: 0xff7ad9, ei: 0.2 }), "mamilares", "limbico");
+  registrar(tubo([[8.05, 0.0, s * 0.33], [7.85, 1.2, s * 0.6], [7.55, 2.45, s * 0.85]], 0.06, 0xffb3d1, { opacity: 0.9 }), "mamilotalamico", "limbico");
+  registrar(elipsoide([7.45, 2.65, s * 0.9], [0.32, 0.28, 0.28], 0xb3adf2, { emissive: 0x8f86ff, ei: 0.25 }), "tal_anterior", "limbico");
+  registrar(tubo([[4.7, 2.9, s * 0.6], [4.4, 4.5, s * 0.6], [5.7, 6.2, s * 0.6], [8.5, 6.75, s * 0.6], [11.1, 6.2, s * 0.6], [12.7, 4.6, s * 0.6], [12.7, 3.0, s * 0.6]], 0.42, 0xd8a6ff, { opacity: 0.55 }), "cingulo", "limbico", { clip: true });
+  registrar(tubo([[7.45, 2.9, s * 0.85], [7.3, 4.3, s * 0.7], [7.6, 5.9, s * 0.62]], 0.05, 0xff7ad9, { opacity: 0.8 }), "papez", "limbico");
+  registrar(tubo([[12.7, 3.0, s * 0.6], [13.1, 1.6, s * 1.6], [12.3, -0.6, s * 2.7], [10.0, -1.7, s * 3.05]], 0.07, 0xff7ad9, { opacity: 0.8 }), "papez", "limbico", { clip: true });
+  registrar(elipsoide([9.55, 1.75, s * 0.33], [0.17, 0.17, 0.17], 0x9ef0d0, { emissive: 0x3cc4a2, ei: 0.4 }), "habenula", "limbico");
+}
+// circuito de Papez: um laço fechado por lado, percorrido pelos pulsos
+const CURVAS_PAPEZ = [1, -1].map((s) => new THREE.CatmullRomCurve3([[12.2, 0.9, 2.6], [12.4, 1.8, 2.2], [12.0, 2.9, 1.3], [11.0, 3.15, 0.4], [9.6, 3.55, 0.4], [8.0, 3.4, 0.35],
+  [7.2, 2.6, 0.3], [6.95, 1.75, 0.2], [7.2, 0.9, 0.28], [7.95, 0.05, 0.3], [7.85, 1.2, 0.6], [7.5, 2.6, 0.88], [7.3, 4.3, 0.7], [7.6, 5.9, 0.62], [8.5, 6.75, 0.6],
+  [11.1, 6.2, 0.6], [12.7, 4.6, 0.6], [12.7, 3.0, 0.6], [13.1, 1.6, 1.6], [12.3, -0.6, 2.7], [10.0, -1.7, 3.05], [9.0, -1.7, 3.2], [10.3, -1.3, 3.35], [11.5, -0.3, 3.1]]
+  .map(([x, y, z]) => P(x, y, s * z)), true));
+
 // =====================================================================  RÓTULOS ANATÔMICOS
 rotulo("Pineal", [10.15, 1.42], "#F2B24A", "fixo", 0);
 rotulo("Hipófise", [6.95, -1.6], "#3CC4A2", "fixo", 1);
@@ -527,6 +646,22 @@ rotulo("Olho", [1.9, -0.7, 3.2], "#E8EDF4", "fixo", 6);
 rotulo("Ajna (simbólico)", [-1.0, 1.3], "#8F86FF", "simbolo", 3, "simb");
 rotulo("Coroa (simbólico)", [9.7, 13.1, 1.2], "#C7A6FF", "simbolo", 3, "simb");
 rotulo("Sistema porta", [7.2, -0.8, 0.3], "#E24B4A", "porta", 2);
+rotulo("Lobo frontal", [4.2, 7.5, supZ(4.2, 7.5)], "#7FA7E8", "cortex", 2);
+rotulo("Lobo parietal", [12.2, 9.0, supZ(12.2, 9.0)], "#E8C77F", "cortex", 2);
+rotulo("Lobo temporal", [9.6, -0.3, 6.5], "#8FD19E", "cortex", 2);
+rotulo("Lobo occipital", [16.8, 4.0, supZ(16.8, 4.0)], "#E89A9A", "cortex", 2);
+rotulo("Sulco central", [centralX(8.5), 8.5, supZ(centralX(8.5), 8.5)], "#E8EDF4", "cortex", 4);
+rotulo("Fissura lateral", [7.5, sylvius(7.5), supZ(7.5, sylvius(7.5))], "#E8EDF4", "cortex", 4);
+rotulo("Corpo geniculado lateral", [9.75, 1.1, 2.42], "#9FB7FF", "visao", 2);
+rotulo("Radiação óptica", [13.4, 2.5, 3.2], "#9FB7FF", "visao", 3);
+rotulo("Córtex visual (V1)", [17.1, 3.6, 0.75], "#7FA0FF", "visao", 1);
+rotulo("Hipocampo", [10.8, -0.9, 3.4], "#F2A7C8", "limbico", 1);
+rotulo("Amígdala", [8.0, -1.15, 3.6], "#FF8A8A", "limbico", 2);
+rotulo("Fórnix", [9.6, 3.6, 0.45], "#E8D3A8", "limbico", 2);
+rotulo("Corpos mamilares", [8.05, -0.15, 0.35], "#FFB3D1", "limbico", 2);
+rotulo("Giro do cíngulo", [8.5, 6.8, 0.6], "#D8A6FF", "limbico", 2);
+rotulo("Habênula", [9.55, 1.75, 0.35], "#9EF0D0", "limbico", 2);
+rotulo("Núcleo anterior do tálamo", [7.45, 2.65, 0.9], "#B3ADF2", "limbico", 5);
 
 // =====================================================================  INFORMAÇÕES
 const INFO = {
@@ -581,6 +716,42 @@ const INFO = {
     ["Fica na glabela, onde sai o plano horizontal da pineal.", "A ligação com a pineal vem da Teosofia; é uma leitura simbólica, sem comprovação fisiológica."]],
   coroa: ["Coroa (simbólico)", "#C7A6FF", "O chakra do topo da cabeça.",
     ["O vértice da cabeça fica quase em cima da pineal: daí o eixo vertical desenhado aqui.", "Leitura simbólica, sem comprovação fisiológica."]],
+  lobo_frontal: ["Lobo frontal", "#7FA7E8", "A parte da frente de cada hemisfério, até o sulco central. É o maior dos lobos.",
+    ["Planejamento, decisão, atenção e controle dos impulsos (córtex pré-frontal).", "Logo à frente do sulco central fica o córtex motor, que comanda os movimentos voluntários.", "No hemisfério esquerdo, a área de Broca ajuda a produzir a fala.", "Substância cinzenta: ≈ 166 cm³ somando os dois lados (adultos, ressonância)."]],
+  lobo_parietal: ["Lobo parietal", "#E8C77F", "Entre o sulco central e o lobo occipital, no alto e atrás.",
+    ["Logo atrás do sulco central fica o córtex somatossensorial: tato, dor, temperatura e posição do corpo.", "Junta visão e tato para saber onde as coisas estão no espaço.", "Substância cinzenta: ≈ 104 cm³ somando os dois lados."]],
+  lobo_temporal: ["Lobo temporal", "#8FD19E", "Abaixo da fissura lateral, dos lados da cabeça, na altura das orelhas.",
+    ["Audição: o córtex auditivo fica na margem de cima, dentro da fissura.", "Compreensão da linguagem (área de Wernicke, em geral à esquerda) e reconhecimento de rostos.", "Por dentro abriga o hipocampo e a amígdala, do sistema límbico.", "Substância cinzenta: ≈ 92 cm³ somando os dois lados."]],
+  lobo_occipital: ["Lobo occipital", "#E89A9A", "A parte de trás do cérebro, na nuca.",
+    ["É o centro da visão: o córtex visual primário (V1) fica na face interna, em volta do sulco calcarino.", "Substância cinzenta: ≈ 43 cm³ somando os dois lados, o menor dos quatro lobos."]],
+  sulco_central: ["Sulco central (de Rolando)", "#E8EDF4", "Separa o lobo frontal do parietal, descendo do alto da cabeça até perto da fissura lateral.",
+    ["À frente dele, o córtex motor (mexer); atrás, o córtex sensitivo (sentir).", "Nos dois giros o corpo está mapeado de cabeça para baixo: é o homúnculo."]],
+  fissura_lateral: ["Fissura lateral (de Sylvius)", "#E8EDF4", "O sulco profundo que separa o lobo temporal dos lobos frontal e parietal.",
+    ["No fundo dela fica escondida a ínsula, um quinto lobo ligado às sensações de dentro do corpo.", "A artéria cerebral média corre por dentro dela."]],
+  cgl: ["Corpo geniculado lateral", "#9FB7FF", "Núcleo do tálamo, um de cada lado, onde terminam os tratos ópticos.",
+    ["É a estação da visão consciente: cerca de 90% das fibras da retina param aqui.", "Tem 6 camadas, que separam o olho direito do esquerdo e o movimento do detalhe e da cor.", "Um ramo pequeno da retina segue outro caminho: vai ao NSQ, o relógio, e não forma imagem."]],
+  radiacao: ["Radiação óptica", "#9FB7FF", "Leque de fibras que leva a imagem do corpo geniculado lateral até o córtex visual.",
+    ["Uma parte faz uma volta para a frente, dentro do lobo temporal (alça de Meyer).", "Uma lesão aqui apaga a mesma metade do campo visual nos dois olhos."]],
+  v1: ["Córtex visual primário (V1)", "#7FA0FF", "Na face interna do lobo occipital, em volta do sulco calcarino.",
+    ["Aqui começam a ser montados bordas, orientação, movimento e cor: a imagem que vemos.", "Cada lado vê a metade oposta do mundo: o V1 esquerdo vê o lado direito.", "O centro da visão (fóvea) ocupa uma área enorme, na ponta de trás."]],
+  hipocampo: ["Hipocampo", "#F2A7C8", "Faixa curva em forma de cavalo-marinho no assoalho do corno temporal do ventrículo lateral, uma de cada lado.",
+    ["Transforma experiências em memórias de longo prazo e ajuda a se orientar no espaço.", "É uma das primeiras regiões afetadas na doença de Alzheimer."]],
+  amigdala: ["Amígdala", "#FF8A8A", "Núcleo em forma de amêndoa logo à frente do hipocampo, perto da ponta do lobo temporal.",
+    ["Detecta ameaças e dá cor emocional às memórias, sobretudo ao medo.", "Conversa com o hipotálamo para disparar a resposta ao estresse."]],
+  fornix: ["Fórnix", "#E8D3A8", "Feixe arqueado de fibras que sai do hipocampo, passa embaixo do corpo caloso e desce até os corpos mamilares.",
+    ["É a principal saída do hipocampo.", "Suas colunas formam a borda da frente do forame de Monro, por onde o líquor passa ao 3º ventrículo."]],
+  mamilares: ["Corpos mamilares", "#FFB3D1", "Duas bolinhas na base do hipotálamo, logo atrás da haste da hipófise.",
+    ["Recebem o fórnix e mandam o sinal ao núcleo anterior do tálamo.", "Encolhem na falta grave de vitamina B1 (tiamina), como na síndrome de Wernicke-Korsakoff."]],
+  mamilotalamico: ["Trato mamilotalâmico", "#FFB3D1", "Feixe curto que sobe dos corpos mamilares até o núcleo anterior do tálamo.",
+    ["Um dos elos do circuito de Papez."]],
+  tal_anterior: ["Núcleo anterior do tálamo", "#B3ADF2", "Núcleo na ponta da frente de cada tálamo.",
+    ["Recebe os corpos mamilares e projeta para o giro do cíngulo.", "Faz parte do sistema límbico, ao contrário da maior parte do tálamo, que é sensitiva."]],
+  cingulo: ["Giro do cíngulo", "#D8A6FF", "Faixa de córtex que abraça o corpo caloso por cima, na face interna de cada hemisfério.",
+    ["Junta emoção, dor e atenção; ajuda a perceber erros e conflitos.", "Por baixo dele corre o cíngulo, um feixe que leva o sinal de volta ao lobo temporal.", "Substância cinzenta: ≈ 19 cm³ somando os dois lados."]],
+  papez: ["Circuito de Papez", "#FF7AD9", "Laço descrito por James Papez em 1937: hipocampo → fórnix → corpos mamilares → trato mamilotalâmico → núcleo anterior do tálamo → giro do cíngulo → cíngulo → córtex entorrinal → hipocampo.",
+    ["Papez achava que era o circuito das emoções; hoje se sabe que é sobretudo um circuito da memória.", "Uma lesão em qualquer elo, como nos corpos mamilares, atrapalha a formação de memórias novas.", "Os pulsos rosa mostram o sentido do sinal."]],
+  habenula: ["Habênula", "#9EF0D0", "Pequeno núcleo par na base da haste da pineal: junto com ela, forma o epitálamo.",
+    ["Funciona como um centro de \"antirrecompensa\": fica ativa quando algo sai pior do que o esperado.", "Vizinha da pineal desde o embrião; às vezes calcifica junto com ela."]],
 };
 // ---------- versão em inglês: dados (o português continua sendo a fonte principal)
 const INFO_EN = {
@@ -635,21 +806,58 @@ const INFO_EN = {
     ["It sits at the glabella, where the pineal's horizontal plane exits.", "The link with the pineal comes from Theosophy; it is a symbolic reading, with no physiological evidence."]],
   coroa: ["Crown (symbolic)", "The chakra at the top of the head.",
     ["The top of the head sits almost directly above the pineal: hence the vertical axis drawn here.", "Symbolic reading, with no physiological evidence."]],
+  lobo_frontal: ["Frontal lobe", "The front part of each hemisphere, up to the central sulcus. It is the largest lobe.",
+    ["Planning, decisions, attention and impulse control (prefrontal cortex).", "Just in front of the central sulcus lies the motor cortex, which drives voluntary movement.", "In the left hemisphere, Broca's area helps produce speech.", "Gray matter: ≈ 166 cm³, both sides together (adults, MRI)."]],
+  lobo_parietal: ["Parietal lobe", "Between the central sulcus and the occipital lobe, at the top and back.",
+    ["Just behind the central sulcus lies the somatosensory cortex: touch, pain, temperature and body position.", "It combines vision and touch to know where things are in space.", "Gray matter: ≈ 104 cm³, both sides together."]],
+  lobo_temporal: ["Temporal lobe", "Below the lateral fissure, on the sides of the head, at ear level.",
+    ["Hearing: the auditory cortex sits on its upper edge, inside the fissure.", "Language comprehension (Wernicke's area, usually on the left) and face recognition.", "Inside it lie the hippocampus and the amygdala, part of the limbic system.", "Gray matter: ≈ 92 cm³, both sides together."]],
+  lobo_occipital: ["Occipital lobe", "The back of the brain.",
+    ["It is the center of vision: the primary visual cortex (V1) lies on its inner face, around the calcarine sulcus.", "Gray matter: ≈ 43 cm³, both sides together, the smallest of the four lobes."]],
+  sulco_central: ["Central sulcus (of Rolando)", "Separates the frontal lobe from the parietal, running down from the top of the head to near the lateral fissure.",
+    ["In front of it, the motor cortex (moving); behind it, the sensory cortex (feeling).", "In both gyri the body is mapped upside down: the homunculus."]],
+  fissura_lateral: ["Lateral fissure (of Sylvius)", "The deep groove that separates the temporal lobe from the frontal and parietal lobes.",
+    ["Hidden at its bottom lies the insula, a fifth lobe tied to sensations from inside the body.", "The middle cerebral artery runs inside it."]],
+  cgl: ["Lateral geniculate nucleus", "A thalamic nucleus, one on each side, where the optic tracts end.",
+    ["It is the relay of conscious vision: about 90% of retinal fibers stop here.", "It has 6 layers, which keep the right and left eyes apart and separate motion from detail and color.", "A small branch from the retina takes another path: it goes to the SCN, the clock, and forms no image."]],
+  radiacao: ["Optic radiation", "A fan of fibers that carries the image from the lateral geniculate nucleus to the visual cortex.",
+    ["Part of it loops forward inside the temporal lobe (Meyer's loop).", "A lesion here blanks the same half of the visual field in both eyes."]],
+  v1: ["Primary visual cortex (V1)", "On the inner face of the occipital lobe, around the calcarine sulcus.",
+    ["Edges, orientation, motion and color start being assembled here: the image we see.", "Each side sees the opposite half of the world: the left V1 sees the right side.", "The center of vision (fovea) takes up a huge area at the very back."]],
+  hipocampo: ["Hippocampus", "A curved, seahorse-shaped band on the floor of the temporal horn of the lateral ventricle, one on each side.",
+    ["It turns experiences into long-term memories and helps with spatial navigation.", "It is one of the first regions affected in Alzheimer's disease."]],
+  amigdala: ["Amygdala", "An almond-shaped nucleus just in front of the hippocampus, near the tip of the temporal lobe.",
+    ["It detects threats and gives memories their emotional color, especially fear.", "It talks to the hypothalamus to trigger the stress response."]],
+  fornix: ["Fornix", "An arched bundle of fibers that leaves the hippocampus, runs under the corpus callosum and descends to the mammillary bodies.",
+    ["It is the main output of the hippocampus.", "Its columns form the front edge of the foramen of Monro, where CSF passes into the 3rd ventricle."]],
+  mamilares: ["Mammillary bodies", "Two small round bumps at the base of the hypothalamus, just behind the pituitary stalk.",
+    ["They receive the fornix and send the signal on to the anterior thalamic nucleus.", "They shrink with severe vitamin B1 (thiamine) deficiency, as in Wernicke-Korsakoff syndrome."]],
+  mamilotalamico: ["Mammillothalamic tract", "A short bundle rising from the mammillary bodies to the anterior thalamic nucleus.",
+    ["One of the links of the Papez circuit."]],
+  tal_anterior: ["Anterior thalamic nucleus", "A nucleus at the front tip of each thalamus.",
+    ["It receives the mammillary bodies and projects to the cingulate gyrus.", "It belongs to the limbic system, unlike most of the thalamus, which is sensory."]],
+  cingulo: ["Cingulate gyrus", "A band of cortex that hugs the corpus callosum from above, on the inner face of each hemisphere.",
+    ["It combines emotion, pain and attention, and helps notice errors and conflicts.", "Beneath it runs the cingulum, a bundle that carries the signal back to the temporal lobe.", "Gray matter: ≈ 19 cm³, both sides together."]],
+  papez: ["Papez circuit", "A loop described by James Papez in 1937: hippocampus → fornix → mammillary bodies → mammillothalamic tract → anterior thalamic nucleus → cingulate gyrus → cingulum → entorhinal cortex → hippocampus.",
+    ["Papez thought it was the circuit of emotion; today it is known to be mainly a memory circuit.", "A lesion in any link, such as the mammillary bodies, impairs forming new memories.", "The pink pulses show the direction of the signal."]],
+  habenula: ["Habenula", "A small paired nucleus at the base of the pineal stalk: together with the pineal it forms the epithalamus.",
+    ["It works as an \"anti-reward\" center: it becomes active when something turns out worse than expected.", "A neighbor of the pineal since the embryo; it sometimes calcifies along with it."]],
 };
 const TOUR_EN = [
   ["The center of the head", "Let's follow the path that takes daylight to nighttime melatonin, through the structures we saw on the posters."],
   ["1. Light enters through the eyes", "By day, bright light reaches the retina. The blue pulses show the signal leaving the eyes along the optic nerves."],
   ["2. Chiasm and master clock", "The optic nerves cross at the chiasm. Just above sits the SCN, the master clock, which gets light directly from the retina."],
-  ["3. Night falls and the brake is released", "Without light, the SCN lets the paraventricular nucleus (PVN) pass the signal on. The red pulses start here."],
-  ["4. The signal goes down the spinal cord", "Instead of going straight to the pineal, the signal travels down the brainstem and the spinal cord to the upper chest (T1–T2)."],
-  ["5. Superior cervical ganglion", "From the chest, the signal climbs the sympathetic chain to this ganglion in the neck."],
-  ["6. The fibers enter the pineal from behind", "Sympathetic fibers travel up along the arteries and reach the pineal from the back, next to the cerebellum."],
-  ["7. The pineal releases melatonin", "Norepinephrine from these fibers activates the pineal. It glows and releases melatonin (orange dots) into the blood and the CSF."],
-  ["8. The third ventricle and the CSF", "CSF flows down from the lateral ventricles, crosses the 3rd ventricle and leaves through the aqueduct, carrying melatonin to the floor, where the hypothalamus and the pituitary stalk are."],
-  ["9. Pituitary and portal system", "The hypothalamus sends releasing hormones through the portal veins (green) to the anterior pituitary, which releases its own hormones into the blood (purple). Oxytocin and vasopressin travel down inside the axons (light green)."],
-  ["10. Glabella, root of the nose and the two planes", "The pineal's horizontal plane exits at the glabella; the pituitary's exits a little below the root of the nose."],
-  ["11. From the root of the nose to the cavernous sinus", "The angular vein, at the corner of the eye, joins the superior ophthalmic vein, which ends in the cavernous sinus, next to the pituitary."],
-  ["12. View from above", "From above, the pineal appears between the two thalami, and the highest point of the head sits almost directly above it. In the symbolic layer, that is where the vertical axis runs."],
+  ["3. Same light, two destinations", "From the chiasm, almost all fibers continue along the optic tracts to the thalamus's lateral geniculate nucleus and, through the optic radiation, to the visual cortex (V1) at the back of the head: this is conscious, image-forming vision. Only a small branch turns off to the SCN, which doesn't want to see anything, only to know whether it is day or night."],
+  ["4. Night falls and the brake is released", "Without light, the SCN lets the paraventricular nucleus (PVN) pass the signal on. The red pulses start here."],
+  ["5. The signal goes down the spinal cord", "Instead of going straight to the pineal, the signal travels down the brainstem and the spinal cord to the upper chest (T1–T2)."],
+  ["6. Superior cervical ganglion", "From the chest, the signal climbs the sympathetic chain to this ganglion in the neck."],
+  ["7. The fibers enter the pineal from behind", "Sympathetic fibers travel up along the arteries and reach the pineal from the back, next to the cerebellum."],
+  ["8. The pineal releases melatonin", "Norepinephrine from these fibers activates the pineal. It glows and releases melatonin (orange dots) into the blood and the CSF."],
+  ["9. The third ventricle and the CSF", "CSF flows down from the lateral ventricles, crosses the 3rd ventricle and leaves through the aqueduct, carrying melatonin to the floor, where the hypothalamus and the pituitary stalk are."],
+  ["10. Pituitary and portal system", "The hypothalamus sends releasing hormones through the portal veins (green) to the anterior pituitary, which releases its own hormones into the blood (purple). Oxytocin and vasopressin travel down inside the axons (light green)."],
+  ["11. Glabella, root of the nose and the two planes", "The pineal's horizontal plane exits at the glabella; the pituitary's exits a little below the root of the nose."],
+  ["12. From the root of the nose to the cavernous sinus", "The angular vein, at the corner of the eye, joins the superior ophthalmic vein, which ends in the cavernous sinus, next to the pituitary."],
+  ["13. View from above", "From above, the pineal appears between the two thalami, and the highest point of the head sits almost directly above it. In the symbolic layer, that is where the vertical axis runs."],
   ["End of the tour", "Try embryo mode to see where the pineal, the eyes and the pituitary come from, or test what you learned in the quiz."],
 ];
 const ETAPAS_EMB_EN = [
@@ -678,8 +886,10 @@ function volumeMalha(m) {
   }
   return Math.abs(v);
 }
-const PARES = new Set(["olho", "talamo", "hipotalamo", "nsq", "npv", "ventlat", "seiofrontal", "cavernoso", "gcs"]);
-const SEM_VOLUME = new Set(["glabela", "nasio", "vertice", "occipital", "ajna", "coroa", "porta", "carotida", "veia"]);
+const PARES = new Set(["olho", "talamo", "hipotalamo", "nsq", "npv", "ventlat", "seiofrontal", "cavernoso", "gcs",
+  "cgl", "v1", "hipocampo", "amigdala", "mamilares", "tal_anterior", "habenula"]);
+const SEM_VOLUME = new Set(["glabela", "nasio", "vertice", "occipital", "ajna", "coroa", "porta", "carotida", "veia",
+  "lobo_frontal", "lobo_parietal", "lobo_temporal", "lobo_occipital", "sulco_central", "fissura_lateral", "radiacao", "papez", "fornix", "mamilotalamico", "cingulo"]);
 const cacheVol = new Map();
 // volume do modelo: total (todas as partes) e de um lado só (para estruturas em par)
 function volumeModelo(id) {
@@ -712,6 +922,10 @@ const VOL_REF = {
   olho: { lo: 6.5, hi: 7.0, cada: true, nota: ["Cada olho é quase uma esfera de 2,4 cm.", "Each eye is almost a sphere 2.4 cm across."] },
   talamo: { lo: 5, hi: 7, cada: true, nota: ["Cada tálamo ≈ uma uva grande.", "Each thalamus ≈ a large grape."] },
   cerebelo: { lo: 105, hi: 150, nota: ["≈ uma laranja pequena; costuma ser maior nos homens.", "≈ a small orange; usually larger in men."] },
+  hipocampo: { lo: 3, hi: 4.5, cada: true, nota: ["Cada hipocampo ≈ 3 a 4,5 cm³, conforme o método de medida; diminui com a idade.", "Each hippocampus ≈ 3 to 4.5 cm³, depending on how it is measured; it shrinks with age."] },
+  amigdala: { lo: 1.1, hi: 1.5, cada: true, nota: ["Cada amígdala ≈ 1,1 a 1,5 cm³: uma amêndoa grande.", "Each amygdala ≈ 1.1 to 1.5 cm³: a large almond."] },
+  mamilares: { lo: 0.045, hi: 0.085, cada: true, nota: ["Cada corpo mamilar ≈ 45 a 85 mm³ (média perto de 60): o tamanho de uma lentilha.", "Each mammillary body ≈ 45 to 85 mm³ (average near 60): the size of a lentil."] },
+  habenula: { lo: 0.015, hi: 0.03, cada: true, nota: ["Cada habênula ≈ 15 a 30 mm³: bem menor que a pineal ao lado.", "Each habenula ≈ 15 to 30 mm³: much smaller than the pineal next to it."] },
   nsq: { lo: 0.00025, hi: 0.00025, cada: true, nota: ["Cada NSQ tem uns 0,25 mm³, menos que um grão de areia grosso: no modelo ele foi ampliado para aparecer.", "Each SCN is about 0.25 mm³, smaller than a coarse grain of sand: the model enlarges it so you can see it."] },
 };
 const refDe = (id) => VOL_REF[id === "adeno" || id === "neuro" ? "hipofise" : id];
@@ -1167,7 +1381,10 @@ function estalo(freq = 1200, vol = 0.1, dur = 0.01, quando = 0, cat = "clique") 
 const FAMILIA = { pineal: "glandula", adeno: "glandula", neuro: "glandula", hipotalamo: "glandula", nsq: "glandula", npv: "glandula",
   vent3: "vent", ventlat: "vent", aqueduto: "vent", quiasma: "nervo", tronco: "nervo", medula: "nervo", gcs: "nervo", caloso: "nervo",
   talamo: "nervo", cerebelo: "nervo", carotida: "vaso", veia: "vaso", cavernoso: "vaso", porta: "vaso", glabela: "face", nasio: "face",
-  piramide: "face", olho: "face", seiofrontal: "face", esfenoidal: "face", vertice: "face", occipital: "face", ajna: "simb", coroa: "simb" };
+  piramide: "face", olho: "face", seiofrontal: "face", esfenoidal: "face", vertice: "face", occipital: "face", ajna: "simb", coroa: "simb",
+  lobo_frontal: "nervo", lobo_parietal: "nervo", lobo_temporal: "nervo", lobo_occipital: "nervo", sulco_central: "nervo", fissura_lateral: "nervo",
+  cgl: "nervo", radiacao: "nervo", v1: "nervo", hipocampo: "nervo", amigdala: "nervo", fornix: "nervo", mamilares: "nervo",
+  mamilotalamico: "nervo", tal_anterior: "nervo", cingulo: "nervo", papez: "nervo", habenula: "glandula" };
 function somEstrutura(id) {
   if (!opc.clique) return;
   switch (FAMILIA[id]) {
@@ -1377,15 +1594,59 @@ document.addEventListener("visibilitychange", () => {
 });
 
 // =====================================================================  CAMADAS
-const mapa = { "c-pele": "pele", "c-cerebro": "cerebro", "c-vent": "vent", "c-vasos": "vasos", "c-planos": "planos", "c-circ": "circ", "c-liquor": "liquor", "c-porta": "porta", "c-simbolo": "simbolo" };
+const mapa = { "c-pele": "pele", "c-cerebro": "cerebro", "c-vent": "vent", "c-vasos": "vasos", "c-planos": "planos", "c-circ": "circ", "c-liquor": "liquor", "c-porta": "porta", "c-simbolo": "simbolo",
+  "c-cortex": "cortex", "c-visao": "visao", "c-limbico": "limbico", "c-papez": "papez" };
+const AO_LIGAR = { porta: "porta", liquor: "liquor", simbolo: "ajna", cortex: "lobo_frontal", visao: "cgl", limbico: "hipocampo", papez: "papez" };
 for (const [id, g] of Object.entries(mapa)) {
   $(id).addEventListener("change", (e) => {
     grupos[g].visible = e.target.checked && !estado.embriao;
     if (g === "liquor" && e.target.checked) liq.horas = 0;
-    if (e.target.checked && (g === "porta" || g === "liquor" || g === "simbolo")) mostrar(g === "simbolo" ? "ajna" : g);
+    if (e.target.checked && AO_LIGAR[g]) mostrar(AO_LIGAR[g]);
+    if (g === "papez" && e.target.checked) setCamada("c-limbico", true); // o circuito corre por dentro do sistema límbico
+    if (g === "limbico" && !e.target.checked) setCamada("c-papez", false);
+    if (!e.target.checked && estado.isolar === g) setIsolar("");
   });
 }
 function setCamada(id, v) { const el = $(id); if (el.checked !== v) { el.checked = v; el.dispatchEvent(new Event("change")); } }
+const CAMADA_DO_GRUPO = Object.fromEntries(Object.entries(mapa).map(([id, g]) => [g, id]));
+function grupoDe(o) { while (o && o.parent && o.parent !== scene) o = o.parent; for (const [n, g] of Object.entries(grupos)) if (g === o) return n; return null; }
+// liga a camada de uma estrutura que está escondida (ex.: ao ir até ela pelo cartão de tamanhos)
+function ligarCamadaDe(id) {
+  const m = (porId.get(id) || [])[0], g = m && grupoDe(m);
+  if (g && CAMADA_DO_GRUPO[g] && !grupos[g].visible) setCamada(CAMADA_DO_GRUPO[g], true);
+}
+
+// ---------- ISOLAR CAMADA: a camada escolhida fica normal e todo o resto fica bem apagado
+const ISOLAVEIS = { cortex: "c-cortex", visao: "c-visao", limbico: "c-limbico", porta: "c-porta", vent: "c-vent", vasos: "c-vasos", circ: "c-circ" };
+estado.isolar = "";
+const mantidosNoIsolar = (g) => new Set([g, "regua", ...(g === "limbico" ? ["papez"] : []), ...(g === "visao" ? ["circ"] : [])]);
+function esmaecerMat(mt, on) {
+  const u = mt.userData;
+  if (on) {
+    if (u.iso || mt === matHalo) return;
+    u.iso = { op: mt.opacity, tr: mt.transparent, dw: mt.depthWrite };
+    mt.opacity = mt.opacity * 0.12; mt.transparent = true; mt.depthWrite = false; mt.needsUpdate = true;
+  } else if (u.iso) {
+    mt.opacity = u.iso.op; mt.transparent = u.iso.tr; mt.depthWrite = u.iso.dw; delete u.iso; mt.needsUpdate = true;
+  }
+}
+function aplicarIsolar() {
+  const g = estado.isolar, manter = mantidosNoIsolar(g);
+  const vistos = new Set();
+  // 1º devolve tudo; depois apaga o que não pertence à camada isolada (materiais compartilhados ficam coerentes)
+  for (const grp of Object.values(grupos)) grp.traverse((o) => { if (o.material) for (const mt of [].concat(o.material)) esmaecerMat(mt, false); });
+  if (!g) return;
+  for (const [n, grp] of Object.entries(grupos)) if (manter.has(n)) grp.traverse((o) => { if (o.material) for (const mt of [].concat(o.material)) vistos.add(mt); });
+  for (const [n, grp] of Object.entries(grupos)) if (!manter.has(n)) grp.traverse((o) => { if (o.material) for (const mt of [].concat(o.material)) if (!vistos.has(mt)) esmaecerMat(mt, true); });
+}
+function setIsolar(g) {
+  estado.isolar = g || "";
+  const sel = $("isolar"); if (sel && sel.value !== estado.isolar) sel.value = estado.isolar;
+  if (g && ISOLAVEIS[g]) setCamada(ISOLAVEIS[g], true);
+  aplicarIsolar();
+}
+$("isolar").addEventListener("change", (e) => setIsolar(e.target.value));
+const noIsolar = (o) => { if (!estado.isolar) return true; const g = grupoDe(o); return mantidosNoIsolar(estado.isolar).has(g); };
 
 // =====================================================================  CÂMERA
 const VISTAS = {
@@ -1513,16 +1774,17 @@ const TOUR = [
   { t: "O centro da cabeça", txt: "Vamos seguir o caminho que leva a luz do dia até a melatonina da noite, passando pelas estruturas que vimos nos pôsteres.", alvo: [9, -1, 0], dir: [1, 0.4, 1], dist: 52, ids: [] },
   { t: "1. A luz entra pelos olhos", txt: "De dia, a luz forte chega à retina. Os pulsos azuis mostram o sinal saindo dos olhos pelos nervos ópticos.", alvo: [3.2, -0.5, 2.2], dir: [0.55, 0.25, 1], dist: 16, ids: ["olho"], hora: 12 },
   { t: "2. Quiasma e relógio central", txt: "Os nervos ópticos se cruzam no quiasma. Logo acima fica o NSQ, o relógio central, que recebe a luz direto da retina.", alvo: [6.8, 0.15, 0], dir: [0.8, 0.35, 1], dist: 8, ids: ["quiasma", "nsq"], hora: 12.5 },
-  { t: "3. Anoitece e o freio se solta", txt: "Sem luz, o NSQ deixa o núcleo paraventricular (NPV) mandar o sinal adiante. Os pulsos vermelhos começam aqui.", alvo: [7.5, 0.7, 0], dir: [1, 0.35, 0.7], dist: 8, ids: ["hipotalamo", "npv"], hora: 22.6 },
-  { t: "4. O sinal desce pela medula", txt: "Em vez de ir direto até a pineal, o sinal desce pelo tronco e pela medula até o alto do tórax (T1–T2).", alvo: [12, -10, 0.5], dir: [1, 0.1, 0.35], dist: 30, ids: ["medula", "tronco"], hora: 23 },
-  { t: "5. Gânglio cervical superior", txt: "Do tórax, o sinal sobe pela cadeia simpática até este gânglio no pescoço.", alvo: [10.3, -9, 2.4], dir: [1, 0.1, 0.7], dist: 12, ids: ["gcs"], hora: 23.4 },
-  { t: "6. As fibras entram na pineal por trás", txt: "Fibras simpáticas sobem acompanhando as artérias e chegam à pineal pela parte de trás, junto ao cerebelo.", alvo: [12.5, -2, 0.8], dir: [0.9, 0.3, 0.5], dist: 20, ids: ["pineal"], hora: 23.8 },
-  { t: "7. A pineal libera melatonina", txt: "A noradrenalina dessas fibras ativa a pineal. Ela brilha e solta melatonina (pontos laranja) no sangue e no líquor.", alvo: [10.1, 1.4, 0], dir: [1, 0.45, 0.55], dist: 12, ids: ["pineal"], hora: 1 },
-  { t: "8. O terceiro ventrículo e o líquor", txt: "O líquor desce dos ventrículos laterais, atravessa o 3º ventrículo e sai pelo aqueduto, levando melatonina até o assoalho, onde estão o hipotálamo e a haste da hipófise.", alvo: [8.6, 1.3, 0], dir: [1, 0.25, 0.25], dist: 10, ids: ["vent3"], hora: 2, camadas: { "c-liquor": true } },
-  { t: "9. Hipófise e sistema porta", txt: "O hipotálamo manda hormônios de liberação pelas veias porta (verde) até a adeno-hipófise, que solta seus hormônios no sangue (roxo). Ocitocina e vasopressina descem por dentro dos axônios (verde-claro).", alvo: [7.2, -0.9, 0], dir: [0.9, -0.05, 1], dist: 9.5, ids: ["adeno", "neuro"], camadas: { "c-porta": true, "c-liquor": false } },
-  { t: "10. Glabela, raiz do nariz e os dois planos", txt: "O plano horizontal da pineal sai na glabela; o da hipófise sai um pouco abaixo da raiz do nariz.", alvo: [4, 0, 0], dir: [1, 0.15, 0.2], dist: 30, ids: ["glabela", "nasio"], camadas: { "c-planos": true, "c-porta": false } },
-  { t: "11. Da raiz do nariz ao seio cavernoso", txt: "A veia angular, no canto do olho, liga-se à veia oftálmica superior, que termina no seio cavernoso, ao lado da hipófise.", alvo: [3.6, -0.8, 1.9], dir: [0.6, 0.45, 0.8], dist: 16, ids: ["veia", "cavernoso"], camadas: { "c-vasos": true } },
-  { t: "12. Vista de cima", txt: "De cima, a pineal aparece entre os dois tálamos, e o ponto mais alto da cabeça fica quase em cima dela. Na camada simbólica, é por aí que passa o eixo vertical.", alvo: [9.5, 2, 0], dir: [0, 1, -0.02], dist: 48, ids: ["pineal", "talamo"], camadas: { "c-simbolo": true } },
+  { t: "3. Mesma luz, dois destinos", txt: "Do quiasma, quase todas as fibras seguem pelos tratos ópticos até o corpo geniculado lateral do tálamo e, pela radiação óptica, até o córtex visual (V1), na nuca: é a visão consciente, a que forma imagem. Só um ramo pequeno desvia para o NSQ, que não quer ver nada, só saber se é dia ou noite.", alvo: [12.6, 1.6, 0.8], dir: [0.8, 1, -0.35], dist: 34, ids: ["cgl", "v1"], hora: 12.6, camadas: { "c-visao": true } },
+  { t: "4. Anoitece e o freio se solta", txt: "Sem luz, o NSQ deixa o núcleo paraventricular (NPV) mandar o sinal adiante. Os pulsos vermelhos começam aqui.", alvo: [7.5, 0.7, 0], dir: [1, 0.35, 0.7], dist: 8, ids: ["hipotalamo", "npv"], hora: 22.6, camadas: { "c-visao": false } },
+  { t: "5. O sinal desce pela medula", txt: "Em vez de ir direto até a pineal, o sinal desce pelo tronco e pela medula até o alto do tórax (T1–T2).", alvo: [12, -10, 0.5], dir: [1, 0.1, 0.35], dist: 30, ids: ["medula", "tronco"], hora: 23 },
+  { t: "6. Gânglio cervical superior", txt: "Do tórax, o sinal sobe pela cadeia simpática até este gânglio no pescoço.", alvo: [10.3, -9, 2.4], dir: [1, 0.1, 0.7], dist: 12, ids: ["gcs"], hora: 23.4 },
+  { t: "7. As fibras entram na pineal por trás", txt: "Fibras simpáticas sobem acompanhando as artérias e chegam à pineal pela parte de trás, junto ao cerebelo.", alvo: [12.5, -2, 0.8], dir: [0.9, 0.3, 0.5], dist: 20, ids: ["pineal"], hora: 23.8 },
+  { t: "8. A pineal libera melatonina", txt: "A noradrenalina dessas fibras ativa a pineal. Ela brilha e solta melatonina (pontos laranja) no sangue e no líquor.", alvo: [10.1, 1.4, 0], dir: [1, 0.45, 0.55], dist: 12, ids: ["pineal"], hora: 1 },
+  { t: "9. O terceiro ventrículo e o líquor", txt: "O líquor desce dos ventrículos laterais, atravessa o 3º ventrículo e sai pelo aqueduto, levando melatonina até o assoalho, onde estão o hipotálamo e a haste da hipófise.", alvo: [8.6, 1.3, 0], dir: [1, 0.25, 0.25], dist: 10, ids: ["vent3"], hora: 2, camadas: { "c-liquor": true } },
+  { t: "10. Hipófise e sistema porta", txt: "O hipotálamo manda hormônios de liberação pelas veias porta (verde) até a adeno-hipófise, que solta seus hormônios no sangue (roxo). Ocitocina e vasopressina descem por dentro dos axônios (verde-claro).", alvo: [7.2, -0.9, 0], dir: [0.9, -0.05, 1], dist: 9.5, ids: ["adeno", "neuro"], camadas: { "c-porta": true, "c-liquor": false } },
+  { t: "11. Glabela, raiz do nariz e os dois planos", txt: "O plano horizontal da pineal sai na glabela; o da hipófise sai um pouco abaixo da raiz do nariz.", alvo: [4, 0, 0], dir: [1, 0.15, 0.2], dist: 30, ids: ["glabela", "nasio"], camadas: { "c-planos": true, "c-porta": false } },
+  { t: "12. Da raiz do nariz ao seio cavernoso", txt: "A veia angular, no canto do olho, liga-se à veia oftálmica superior, que termina no seio cavernoso, ao lado da hipófise.", alvo: [3.6, -0.8, 1.9], dir: [0.6, 0.45, 0.8], dist: 16, ids: ["veia", "cavernoso"], camadas: { "c-vasos": true } },
+  { t: "13. Vista de cima", txt: "De cima, a pineal aparece entre os dois tálamos, e o ponto mais alto da cabeça fica quase em cima dela. Na camada simbólica, é por aí que passa o eixo vertical.", alvo: [9.5, 2, 0], dir: [0, 1, -0.02], dist: 48, ids: ["pineal", "talamo"], camadas: { "c-simbolo": true } },
   { t: "Fim do tour", txt: "Experimente o modo embrião para ver de onde vêm a pineal, os olhos e a hipófise, ou teste o que aprendeu no quiz.", alvo: [9, -1, 0], dir: [1, 0.4, 1], dist: 52, ids: [] },
 ];
 function cardTour(i) {
@@ -1559,7 +1821,9 @@ $("b-tour").addEventListener("click", () => {
 
 // ---------- QUIZ
 const QUIZ_IDS = ["pineal", "adeno", "neuro", "hipotalamo", "nsq", "talamo", "vent3", "ventlat", "aqueduto", "quiasma", "olho", "piramide",
-  "glabela", "nasio", "vertice", "occipital", "caloso", "cerebelo", "tronco", "medula", "gcs", "cavernoso", "carotida", "veia", "esfenoidal", "seiofrontal"];
+  "glabela", "nasio", "vertice", "occipital", "caloso", "cerebelo", "tronco", "medula", "gcs", "cavernoso", "carotida", "veia", "esfenoidal", "seiofrontal",
+  "lobo_frontal", "lobo_parietal", "lobo_temporal", "lobo_occipital", "sulco_central", "fissura_lateral", "cgl", "radiacao", "v1",
+  "hipocampo", "amigdala", "fornix", "mamilares", "cingulo", "habenula", "tal_anterior"];
 const quiz = { alvo: null, acertos: 0, total: 0, respondido: false };
 function visivel(m) { let o = m; while (o) { if (!o.visible) return false; o = o.parent; } return true; }
 const embaralhar = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1624,6 +1888,7 @@ function textoEmbriao() {
   const b = card.querySelector("[data-acao=playEmb]"); if (b) b.textContent = estado.embPlay ? L("Pausar", "Pause") : L("Reproduzir", "Play");
 }
 function entrarEmbriao() {
+  setIsolar("");
   estado.embriao = true;
   for (const g of Object.keys(grupos)) if (g !== "embriao" && g !== "regua") grupos[g].visible = false;
   grupos.embriao.visible = true;
@@ -1836,10 +2101,14 @@ const TAM = () => {
   const enc = grupos.cerebro.children.find((m) => m.userData.encefalo);
   return [
     { id: "nsq", nome: L("NSQ (cada)", "SCN (each)"), lo: 0.00025, hi: 0.00025, mod: volumeModelo("nsq").um },
+    { id: "habenula", nome: L("Habênula (cada)", "Habenula (each)"), lo: 0.015, hi: 0.03, mod: volumeModelo("habenula").um },
+    { id: "mamilares", nome: L("Corpo mamilar (cada)", "Mammillary body (each)"), lo: 0.045, hi: 0.085, mod: volumeModelo("mamilares").um },
     { id: "pineal", nome: "Pineal", lo: 0.05, hi: 0.2, mod: volumeModelo("pineal").total },
     { id: "adeno", nome: L("Hipófise", "Pituitary"), lo: 0.3, hi: 0.6, mod: volumeComparavel("adeno") },
     { id: "vent3", nome: L("3º ventrículo", "3rd ventricle"), lo: 0.5, hi: 1.0, mod: volumeModelo("vent3").total },
     { id: "aqueduto", nome: L("4º ventrículo", "4th ventricle"), lo: 0.9, hi: 1.6, mod: volumeModelo("aqueduto").total },
+    { id: "amigdala", nome: L("Amígdala (cada)", "Amygdala (each)"), lo: 1.1, hi: 1.5, mod: volumeModelo("amigdala").um },
+    { id: "hipocampo", nome: L("Hipocampo (cada)", "Hippocampus (each)"), lo: 3, hi: 4.5, mod: volumeModelo("hipocampo").um },
     { id: "talamo", nome: L("Tálamo (cada)", "Thalamus (each)"), lo: 5, hi: 7, mod: volumeModelo("talamo").um },
     { id: "olho", nome: L("Olho (cada)", "Eye (each)"), lo: 6.5, hi: 7.0, mod: volumeModelo("olho").um },
     { id: "ventlat", nome: L("Ventrículo lateral (cada)", "Lateral ventricle (each)"), lo: 7, hi: 10, mod: volumeModelo("ventlat").um },
@@ -1869,7 +2138,7 @@ acoes.tamIr = (b) => {
   const it = TAM()[+b.dataset.i];
   if (!it?.id) return;
   if (it.id === "liquor") { setCamada("c-liquor", true); mostrar("liquor"); voarParaId("vent3"); return; }
-  destacar([it.id], true); mostrar(it.id); voarParaId(it.id);
+  ligarCamadaDe(it.id); destacar([it.id], true); mostrar(it.id); voarParaId(it.id);
 };
 acoes.sairTam = () => sairModos();
 
@@ -2157,7 +2426,7 @@ function acharHit(e) {
   const r = renderer.domElement.getBoundingClientRect();
   ponteiro.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(ponteiro, camera);
-  const hits = ray.intersectObjects(pickables.filter(visivel), false).filter((h) => {
+  const hits = ray.intersectObjects(pickables.filter((m) => visivel(m) && noIsolar(m)), false).filter((h) => {
     if (estado.corte === "nenhum" || !clipaveis.includes(h.object)) return true;
     return planoCorte.distanceToPoint(h.point) >= 0;
   });
@@ -2337,12 +2606,13 @@ try { if (localStorage.getItem("menuAberto") === "0") setMenu(false); } catch (e
 
 // =====================================================================  RESTAURAR PADRÃO
 const CAMADAS_PADRAO = { "c-pele": true, "c-cerebro": true, "c-vent": true, "c-vasos": true, "c-planos": true, "c-circ": true,
-  "c-liquor": false, "c-porta": false, "c-simbolo": true, "c-rot": true };
+  "c-liquor": false, "c-porta": false, "c-simbolo": true, "c-cortex": false, "c-visao": false, "c-limbico": false, "c-papez": false, "c-rot": true };
 const SOM_PADRAO = { "g-efeitos": true, "s-clique": true, "s-circ": true, "s-emb": true, "g-voz": true, "s-nomes": true, "s-tour": true,
   "s-auto": false, "g-amb": true, "s-dia": true, "s-liq": true, "s-mel": false };
 function restaurarTudo() {
   sairModos();
   setCorte("nenhum");
+  setIsolar("");
   atualizarEmbriao(0); estado.embPlay = false;
   for (const [id, v] of Object.entries(CAMADAS_PADRAO)) setCamada(id, v);
   rotinaEl.value = "escura"; estado.rotina = "escura";
@@ -2398,6 +2668,10 @@ const I18N = [
   ["#t-camadas", "Layers"], ["label[for=c-pele]", "Skin"], ["label[for=c-cerebro]", "Brain"], ["label[for=c-vent]", "Ventricles"],
   ["label[for=c-vasos]", "Vessels"], ["label[for=c-planos]", "Planes"], ["label[for=c-circ]", "Circuit"], ["label[for=c-liquor]", "CSF flow"],
   ["label[for=c-porta]", "Portal system"], ["label[for=c-simbolo]", "Symbolic layer"], ["label[for=c-rot]", "Labels"],
+  ["label[for=c-cortex]", "Cortex (lobes)"], ["label[for=c-visao]", "Visual pathway"], ["label[for=c-limbico]", "Limbic system"], ["label[for=c-papez]", "Papez circuit"],
+  ["#t-novas", "Extra layers"], ["label[for=isolar]", "Isolate layer"], ["#isolar [value='']", "None"], ["#isolar [value=cortex]", "Cortex (lobes)"],
+  ["#isolar [value=visao]", "Visual pathway"], ["#isolar [value=limbico]", "Limbic system"], ["#isolar [value=porta]", "Portal system"],
+  ["#isolar [value=vent]", "Ventricles"], ["#isolar [value=vasos]", "Vessels"], ["#isolar [value=circ]", "Circuit"],
   ["#t-info", "Selected structure"], ["#t-config", "Settings"],
   ["#reset-txt", "Resets everything: view, cut, clock, layers, sound, menu and card positions."],
   ["#b-manual", "Manual"], ["#b-manual-pdf", "Manual (PDF)"],
@@ -2470,7 +2744,7 @@ redimensionar();
 atualizarTexto();
 
 const relogio = new THREE.Clock();
-const acum = { luz: 0, nervo: 0, mel: 0, liq: 0, lib: 0, hip: 0, axo: 0 };
+const acum = { luz: 0, nervo: 0, mel: 0, liq: 0, lib: 0, hip: 0, axo: 0, visao: 0, papez: 0 };
 let ultimoTexto = 0;
 function emitir(chave, taxa, dt, fn) {
   acum[chave] += dt * taxa;
@@ -2505,6 +2779,8 @@ function animar() {
       emitir("nervo", 4.0 * impulso, dt, () => { particula(CURVA_NERVO, 0xf07f5a, 0.16); espiga(); });
       emitir("mel", 10 * m, dt, () => { particula(CURVAS_MEL[Math.floor(Math.random() * CURVAS_MEL.length)], 0xf2b24a, 0.35 + Math.random() * 0.2); gota(); });
     }
+    if (grupos.visao.visible) emitir("visao", 1.6 * Math.log10(1 + L), dt, () => particula(CURVAS_VISAO[Math.floor(Math.random() * CURVAS_VISAO.length)], 0xcfe0ff, 0.2, "visao", 0.09));
+    if (grupos.papez.visible) emitir("papez", 2.2, dt, () => particula(CURVAS_PAPEZ[Math.floor(Math.random() * 2)], 0xff7ad9, 0.055, "papez", 0.1));
     if (grupos.liquor.visible) emitir("liq", 5, dt, () => particula(CURVAS_LIQUOR[Math.floor(Math.random() * 2)], 0x8fd0ff, 0.08 + Math.random() * 0.03, "liquor", 0.1));
     if (grupos.porta.visible) {
       emitir("lib", 3, dt, () => particula(CURVA_LIBERACAO, 0x5fd38a, 0.35, "porta", 0.06));

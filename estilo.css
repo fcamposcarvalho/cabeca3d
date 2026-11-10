@@ -191,3 +191,5 @@ fieldset.desligado .sub { opacity: 0.45; }
 .rodape a:hover { text-decoration: underline; }
 
 .manual-linha { margin-top: 12px; }
+
+.sub { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
