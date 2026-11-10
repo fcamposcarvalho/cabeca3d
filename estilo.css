@@ -192,4 +192,10 @@ fieldset.desligado .sub { opacity: 0.45; }
 
 .manual-linha { margin-top: 12px; }
 
-.sub { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
+h3.sub-tit { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px; }
+.forma-linha { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.forma-linha .seg { flex: 1; }
+.sub-inline { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+#forma { display: flex; } #forma button { flex: 1; }
+#isolar { width: 100%; }
+h3.sub-tit label { cursor: pointer; }

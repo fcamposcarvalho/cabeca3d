@@ -40,14 +40,15 @@ const P = (x, y, z = 0) => new THREE.Vector3(z, y, -(x - 9));
 const reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const grupos = {};
-for (const g of ["pele", "cerebro", "vent", "vasos", "planos", "circ", "liquor", "porta", "simbolo", "fixo", "embriao", "regua", "cortex", "visao", "limbico", "papez"]) {
+for (const g of ["pele", "cerebro", "vent", "vasos", "planos", "circ", "liquor", "porta", "simbolo", "fixo", "embriao", "regua", "cortex", "visao", "limbico", "papez", "cranio"]) {
   grupos[g] = new THREE.Group(); scene.add(grupos[g]);
 }
 grupos.liquor.visible = false;
 grupos.porta.visible = false;
 grupos.embriao.visible = false;
-for (const g of ["cortex", "visao", "limbico", "papez"]) grupos[g].visible = false; // camadas opcionais, desligadas no início
+for (const g of ["cortex", "visao", "limbico", "papez", "cranio"]) grupos[g].visible = false; // camadas opcionais, desligadas no início
 
+const forma = { atual: "esq" }; // forma das estruturas: "esq" (sólidos geométricos) ou "anat" (malhas reais)
 const pickables = [];
 const clipaveis = [];
 const porId = new Map();
@@ -120,7 +121,10 @@ const ID_DO_ROTULO = { "Pineal": "pineal", "Hipófise": "adeno", "Hipotálamo": 
   "Lobo frontal": "lobo_frontal", "Lobo parietal": "lobo_parietal", "Lobo temporal": "lobo_temporal", "Lobo occipital": "lobo_occipital",
   "Sulco central": "sulco_central", "Fissura lateral": "fissura_lateral", "Corpo geniculado lateral": "cgl", "Radiação óptica": "radiacao",
   "Córtex visual (V1)": "v1", "Hipocampo": "hipocampo", "Amígdala": "amigdala", "Fórnix": "fornix", "Corpos mamilares": "mamilares",
-  "Giro do cíngulo": "cingulo", "Habênula": "habenula", "Núcleo anterior do tálamo": "tal_anterior" };
+  "Giro do cíngulo": "cingulo", "Habênula": "habenula", "Núcleo anterior do tálamo": "tal_anterior",
+  "Ínsula": "insula", "Giro para-hipocampal": "parahipocampal", "Núcleos da base": "nucleos_base", "Osso frontal": "osso_frontal",
+  "Ossos parietais": "osso_parietal", "Osso occipital": "osso_occipital", "Ossos temporais": "osso_temporal", "Osso esfenoide": "osso_esfenoide",
+  "Osso etmoide": "osso_etmoide", "Ossos da face": "face_ossos", "Mandíbula": "mandibula" };
 const ROT_EN = { "Pineal": "Pineal", "Hipófise": "Pituitary", "Hipotálamo": "Hypothalamus", "3º ventrículo": "3rd ventricle", "Tálamo": "Thalamus",
   "Glabela": "Glabella", "Raiz do nariz": "Root of the nose", "Topo da cabeça": "Top of the head", "Parte de trás da cabeça": "Back of the head",
   "Quiasma óptico": "Optic chiasm", "Pirâmide nasal": "Nasal pyramid", "Corpo caloso": "Corpus callosum", "Cerebelo": "Cerebellum",
@@ -133,7 +137,9 @@ const ROT_EN = { "Pineal": "Pineal", "Hipófise": "Pituitary", "Hipotálamo": "H
   "Sulco central": "Central sulcus", "Fissura lateral": "Lateral fissure", "Corpo geniculado lateral": "Lateral geniculate nucleus",
   "Radiação óptica": "Optic radiation", "Córtex visual (V1)": "Visual cortex (V1)", "Hipocampo": "Hippocampus", "Amígdala": "Amygdala",
   "Fórnix": "Fornix", "Corpos mamilares": "Mammillary bodies", "Giro do cíngulo": "Cingulate gyrus", "Habênula": "Habenula",
-  "Núcleo anterior do tálamo": "Anterior thalamic nucleus" };
+  "Núcleo anterior do tálamo": "Anterior thalamic nucleus", "Ínsula": "Insula", "Giro para-hipocampal": "Parahippocampal gyrus",
+  "Núcleos da base": "Basal ganglia", "Osso frontal": "Frontal bone", "Ossos parietais": "Parietal bones", "Osso occipital": "Occipital bone",
+  "Ossos temporais": "Temporal bones", "Osso esfenoide": "Sphenoid bone", "Osso etmoide": "Ethmoid bone", "Ossos da face": "Facial bones", "Mandíbula": "Mandible" };
 const rotTexto = (t) => (idioma === "en" && ROT_EN[t]) || t;
 function textoRotulo(r) {
   r.el.innerHTML = `<i style="background:${r.cor}"></i>${rotTexto(r.texto)}`;
@@ -180,9 +186,11 @@ function layoutRotulos() {
     else ok = ok && r.grupo !== "embriao";
     if (r.grupo !== "regua" && !mostrar) ok = false;
     if (estado.isolar && !mantidosNoIsolar(estado.isolar).has(r.grupo)) ok = false;
+    if (r.soAnat && !(forma.atual === "anat" && r.posAnat)) ok = false;
+    if (ok && forma.atual === "anat" && r.id && !(porId.get(r.id) || []).some((m) => m.visible)) ok = false;
     if (!ok) { esconder(r); continue; }
     if (r.posFn) r.posFn(r.pos);
-    tmpV.copy(r.pos).project(camera);
+    tmpV.copy(forma.atual === "anat" && r.posAnat ? r.posAnat : r.pos).project(camera);
     if (tmpV.z > 1 || Math.abs(tmpV.x) > 1.2 || Math.abs(tmpV.y) > 1.2) { esconder(r); continue; }
     r.ax = (tmpV.x * 0.5 + 0.5) * W;
     r.ay = (-tmpV.y * 0.5 + 0.5) * H;
@@ -249,17 +257,17 @@ const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.7], [-2, 
   g.setIndex(idx);
   g.computeVertexNormals();
   const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: 0xc9d5ea, transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide, roughness: 0.4 }));
-  m.renderOrder = 10;
+  m.renderOrder = 10; m.userData.esq = "cabeca";
   registrar(m, null, "pele", { clip: true });
   const lm = new THREE.LineBasicMaterial({ color: 0x9fb2d6, transparent: true, opacity: 0.22 });
   for (let y = -16.5; y < 12; y += 1.5) {
     const xf = interp(FRENTE, y), xb = interp(TRAS, y), w = interp(LARG, y);
     const cx = (xf + xb) / 2, a = (xb - xf) / 2, pts = [];
     for (let j = 0; j <= 96; j++) { const t = (2 * Math.PI * j) / 96; pts.push(P(cx - a * Math.cos(t), y, w * Math.sin(t))); }
-    const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm);
+    const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm); l.userData.esq = "cabeca";
     grupos.pele.add(l); clipaveis.push(l);
   }
-  for (const s of [1, -1]) registrar(elipsoide([10.6, -1.4, s * 7.9], [0.9, 2.7, 0.45], 0xc9d5ea, { opacity: 0.18 }), null, "pele", { clip: true });
+  for (const s of [1, -1]) registrar(elipsoide([10.6, -1.4, s * 7.9], [0.9, 2.7, 0.45], 0xc9d5ea, { opacity: 0.18 }), null, "pele", { clip: true }).userData.esq = "cabeca";
 })();
 
 // rosto
@@ -278,7 +286,8 @@ for (const s of [1, -1]) {
   m.renderOrder = 5;
   m.userData.centro = P(-1.2, -3.3, 0);
   registrar(m, "piramide", "fixo");
-  grupos.fixo.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: 0xf07f5a, transparent: true, opacity: 0.8 })));
+  const arestas = new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: 0xf07f5a, transparent: true, opacity: 0.8 }));
+  arestas.userData.esq = "cabeca"; grupos.fixo.add(arestas);
 }
 registrar(elipsoide([-0.45, 1.3, 0], [0.22, 0.22, 0.22], 0xffffff, { emissive: 0xffffff, ei: 0.4 }), "glabela", "fixo");
 registrar(elipsoide([0, 0, 0], [0.2, 0.2, 0.2], 0xffffff, { emissive: 0xffffff, ei: 0.4 }), "nasio", "fixo");
@@ -286,7 +295,7 @@ registrar(elipsoide([0, 0, 0], [0.2, 0.2, 0.2], 0xffffff, { emissive: 0xffffff, 
 for (const [id, pos] of [["vertice", [9.5, 12.15, 0]], ["occipital", [19.5, 1.5, 0]]]) {
   registrar(elipsoide(pos, [0.32, 0.32, 0.32], 0xffffff, { emissive: 0xffffff, ei: 0.6 }), id, "fixo");
   const anel = new THREE.Mesh(new THREE.SphereGeometry(0.62, 24, 16), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false }));
-  anel.position.copy(P(...pos)); grupos.fixo.add(anel);
+  anel.position.copy(P(...pos)); anel.userData.marca = id; grupos.fixo.add(anel);
 }
 for (const s of [1, -1]) registrar(elipsoide([0.85, 2.3, s * 0.75], [0.45, 0.85, 0.6], 0x85b7eb, { opacity: 0.28 }), "seiofrontal", "fixo", { clip: true });
 registrar(elipsoide([6.5, -2.85, 0], [1.5, 0.9, 1.6], 0x85b7eb, { opacity: 0.22 }), "esfenoidal", "fixo", { clip: true });
@@ -294,7 +303,7 @@ registrar(elipsoide([6.5, -2.85, 0], [1.5, 0.9, 1.6], 0x85b7eb, { opacity: 0.22 
 // cérebro e tronco
 {
   const env = elipsoide([9.6, 4.4, 0], [8.3, 6.0, 6.7], 0xf0c6bd, { opacity: 0.08, side: THREE.DoubleSide });
-  env.renderOrder = 9; env.userData.encefalo = true;
+  env.renderOrder = 9; env.userData.encefalo = true; env.userData.esq = "cortex";
   registrar(env, null, "cerebro", { clip: true });
 }
 registrar(elipsoide([14.3, -2.4, 0], [2.8, 2.0, 4.8], 0xd9b8a8, { opacity: 0.38 }), "cerebelo", "cerebro", { clip: true });
@@ -323,7 +332,7 @@ const VENT3 = [[7.45, 2.45], [8.6, 2.55], [9.45, 2.25], [9.75, 1.75], [9.72, 1.4
 for (const s of [1, -1]) {
   registrar(tubo([[3.4, 3.6, s * 1.0], [5.5, 4.05, s * 1.35], [8.5, 4.25, s * 1.6], [11.5, 3.8, s * 2.2], [12.8, 2.6, s * 3.1], [15.6, 2.4, s * 2.4]], 0.4, 0x5ea6f2, { opacity: 0.42 }), "ventlat", "vent", { clip: true });
   registrar(tubo([[12.8, 2.6, s * 3.1], [12.3, 0.4, s * 3.6], [10.6, -1.0, s * 3.8], [8.9, -1.5, s * 3.6]], 0.32, 0x5ea6f2, { opacity: 0.42 }), "ventlat", "vent", { clip: true });
-  grupos.vent.add(tubo([[7.3, 3.3, s * 1.2], [7.4, 2.8, s * 0.6], [7.45, 2.45, 0]], 0.12, 0x5ea6f2, { opacity: 0.6 }));
+  grupos.vent.add(tubo([[7.3, 3.3, s * 1.2], [7.4, 2.8, s * 0.6], [7.45, 2.45, 0]], 0.12, 0x5ea6f2, { opacity: 0.6 })).userData.esq = "profundo";
 }
 registrar(tubo([[9.38, 0.72], [10.1, -0.2], [10.55, -1.15], [11.1, -2.1]], 0.11, 0x5ea6f2, { opacity: 0.85 }), "aqueduto", "vent");
 registrar(elipsoide([11.3, -2.6, 0], [0.5, 0.65, 0.7], 0x5ea6f2, { opacity: 0.5 }), "aqueduto", "vent");
@@ -662,6 +671,10 @@ rotulo("Corpos mamilares", [8.05, -0.15, 0.35], "#FFB3D1", "limbico", 2);
 rotulo("Giro do cíngulo", [8.5, 6.8, 0.6], "#D8A6FF", "limbico", 2);
 rotulo("Habênula", [9.55, 1.75, 0.35], "#9EF0D0", "limbico", 2);
 rotulo("Núcleo anterior do tálamo", [7.45, 2.65, 0.9], "#B3ADF2", "limbico", 5);
+// rótulos que só existem na forma anatômica (a posição vem da malha real)
+for (const [t, cor, g, pr] of [["Ínsula", "#C9A0E0", "cortex", 3], ["Giro para-hipocampal", "#E6B8F0", "limbico", 4], ["Núcleos da base", "#8FB4D9", "cerebro", 4],
+  ["Osso frontal", "#EEE3CF", "cranio", 3], ["Ossos parietais", "#EEE3CF", "cranio", 3], ["Osso occipital", "#EEE3CF", "cranio", 3], ["Ossos temporais", "#E6D8BF", "cranio", 4],
+  ["Osso esfenoide", "#F2C98F", "cranio", 2], ["Osso etmoide", "#E6D8BF", "cranio", 5], ["Ossos da face", "#E6D8BF", "cranio", 5], ["Mandíbula", "#EEE3CF", "cranio", 4]]) rotulo(t, [9, 0, 0], cor, g, pr).soAnat = true;
 
 // =====================================================================  INFORMAÇÕES
 const INFO = {
@@ -752,6 +765,20 @@ const INFO = {
     ["Papez achava que era o circuito das emoções; hoje se sabe que é sobretudo um circuito da memória.", "Uma lesão em qualquer elo, como nos corpos mamilares, atrapalha a formação de memórias novas.", "Os pulsos rosa mostram o sentido do sinal."]],
   habenula: ["Habênula", "#9EF0D0", "Pequeno núcleo par na base da haste da pineal: junto com ela, forma o epitálamo.",
     ["Funciona como um centro de \"antirrecompensa\": fica ativa quando algo sai pior do que o esperado.", "Vizinha da pineal desde o embrião; às vezes calcifica junto com ela."]],
+  insula: ["Ínsula", "#C9A0E0", "O \"quinto lobo\", escondido no fundo da fissura lateral, coberto pelos lobos frontal, parietal e temporal.",
+    ["Sente o estado de dentro do corpo: batimentos, respiração, fome, dor, nojo.", "Só aparece na forma anatômica: no esquema ela não foi desenhada."]],
+  parahipocampal: ["Giro para-hipocampal", "#E6B8F0", "Faixa de córtex na face de baixo do lobo temporal, logo por fora do hipocampo.",
+    ["Na frente fica o córtex entorrinal, a porta de entrada do hipocampo no circuito de Papez.", "Ajuda a reconhecer lugares e cenas."]],
+  nucleos_base: ["Núcleos da base (caudado, putâmen e globo pálido)", "#8FB4D9", "Massas de substância cinzenta no fundo de cada hemisfério, ao lado do tálamo.",
+    ["Escolhem e afinam os movimentos e os hábitos: é aqui que a doença de Parkinson age.", "O caudado contorna o ventrículo lateral; putâmen e globo pálido ficam por fora da cápsula interna.", "Só aparecem na forma anatômica."]],
+  osso_frontal: ["Osso frontal", "#EEE3CF", "A testa e o teto das órbitas.", ["Por dentro dele, atrás da glabela, fica o seio frontal.", "Encontra os ossos nasais na raiz do nariz (násio)."]],
+  osso_parietal: ["Ossos parietais", "#EEE3CF", "As duas grandes placas do alto e dos lados do crânio.", ["Encontram-se na linha do meio pela sutura sagital, no topo da cabeça."]],
+  osso_occipital: ["Osso occipital", "#EEE3CF", "A parte de trás e de baixo do crânio.", ["Tem o forame magno, por onde o tronco encefálico continua como medula.", "Abriga o cerebelo."]],
+  osso_temporal: ["Ossos temporais", "#E6D8BF", "Dos lados do crânio, na altura das orelhas.", ["Guardam a orelha média e a interna (audição e equilíbrio).", "Sua parte petrosa separa o lobo temporal do cerebelo."]],
+  osso_esfenoide: ["Osso esfenoide", "#F2C98F", "O osso em forma de borboleta no meio da base do crânio.", ["Em cima dele fica a sela túrcica, o \"berço\" da hipófise.", "Por dentro, o seio esfenoidal: o caminho do cirurgião até a hipófise pelo nariz."]],
+  osso_etmoide: ["Osso etmoide", "#E6D8BF", "Osso leve e cheio de cavidades entre as órbitas, no teto do nariz.", ["Sua placa crivosa deixa passar os nervos do olfato."]],
+  face_ossos: ["Ossos da face", "#E6D8BF", "Maxilas, zigomáticos, nasais, lacrimais, palatinos, vômer e conchas nasais.", ["Os ossos nasais formam o alto da pirâmide nasal; o resto do nariz é cartilagem."]],
+  mandibula: ["Mandíbula", "#EEE3CF", "O osso do queixo, o único do crânio que se move.", ["Articula-se com os ossos temporais, logo à frente das orelhas."]],
 };
 // ---------- versão em inglês: dados (o português continua sendo a fonte principal)
 const INFO_EN = {
@@ -842,6 +869,20 @@ const INFO_EN = {
     ["Papez thought it was the circuit of emotion; today it is known to be mainly a memory circuit.", "A lesion in any link, such as the mammillary bodies, impairs forming new memories.", "The pink pulses show the direction of the signal."]],
   habenula: ["Habenula", "A small paired nucleus at the base of the pineal stalk: together with the pineal it forms the epithalamus.",
     ["It works as an \"anti-reward\" center: it becomes active when something turns out worse than expected.", "A neighbor of the pineal since the embryo; it sometimes calcifies along with it."]],
+  insula: ["Insula", "The \"fifth lobe\", hidden at the bottom of the lateral fissure, covered by the frontal, parietal and temporal lobes.",
+    ["It senses the body's inner state: heartbeat, breathing, hunger, pain, disgust.", "It only appears in the anatomical form: the schematic one does not draw it."]],
+  parahipocampal: ["Parahippocampal gyrus", "A band of cortex on the underside of the temporal lobe, just outside the hippocampus.",
+    ["At its front lies the entorhinal cortex, the hippocampus's gateway in the Papez circuit.", "It helps recognize places and scenes."]],
+  nucleos_base: ["Basal ganglia (caudate, putamen and globus pallidus)", "Masses of gray matter deep in each hemisphere, beside the thalamus.",
+    ["They select and fine-tune movements and habits: this is where Parkinson's disease acts.", "The caudate curves around the lateral ventricle; putamen and globus pallidus lie outside the internal capsule.", "They only appear in the anatomical form."]],
+  osso_frontal: ["Frontal bone", "The forehead and the roof of the orbits.", ["Inside it, behind the glabella, lies the frontal sinus.", "It meets the nasal bones at the root of the nose (nasion)."]],
+  osso_parietal: ["Parietal bones", "The two large plates at the top and sides of the skull.", ["They meet in the midline at the sagittal suture, on top of the head."]],
+  osso_occipital: ["Occipital bone", "The back and lower part of the skull.", ["It has the foramen magnum, where the brainstem continues as the spinal cord.", "It houses the cerebellum."]],
+  osso_temporal: ["Temporal bones", "On the sides of the skull, at ear level.", ["They hold the middle and inner ear (hearing and balance).", "Their petrous part separates the temporal lobe from the cerebellum."]],
+  osso_esfenoide: ["Sphenoid bone", "The butterfly-shaped bone in the middle of the skull base.", ["On top of it sits the sella turcica, the pituitary's \"cradle\".", "Inside it is the sphenoid sinus: the surgeon's route to the pituitary through the nose."]],
+  osso_etmoide: ["Ethmoid bone", "A light, hollow bone between the orbits, at the roof of the nose.", ["Its cribriform plate lets the olfactory nerves through."]],
+  face_ossos: ["Facial bones", "Maxillae, zygomatic, nasal, lacrimal and palatine bones, vomer and nasal conchae.", ["The nasal bones form the top of the nasal pyramid; the rest of the nose is cartilage."]],
+  mandibula: ["Mandible", "The jaw bone, the only bone of the skull that moves.", ["It articulates with the temporal bones, just in front of the ears."]],
 };
 const TOUR_EN = [
   ["The center of the head", "Let's follow the path that takes daylight to nighttime melatonin, through the structures we saw on the posters."],
@@ -872,6 +913,7 @@ const ETAPAS_EMB_EN = [
 // com sinal do tetraedro (origem, a, b, c) = a·(b×c)/6. Tubos usam π·r²·comprimento da curva.
 const _va = new THREE.Vector3(), _vb = new THREE.Vector3(), _vc = new THREE.Vector3();
 function volumeMalha(m) {
+  if (m.userData.v0 !== undefined) return m.userData.v0; // malha real: volume da malha original, antes do encaixe
   if (m.userData.curve) return Math.PI * m.userData.raio ** 2 * m.userData.curve.getLength();
   m.updateWorldMatrix(true, false);
   const pos = m.geometry.attributes.position, idx = m.geometry.index, M = m.matrixWorld;
@@ -887,14 +929,14 @@ function volumeMalha(m) {
   return Math.abs(v);
 }
 const PARES = new Set(["olho", "talamo", "hipotalamo", "nsq", "npv", "ventlat", "seiofrontal", "cavernoso", "gcs",
-  "cgl", "v1", "hipocampo", "amigdala", "mamilares", "tal_anterior", "habenula"]);
+  "cgl", "v1", "hipocampo", "amigdala", "mamilares", "tal_anterior", "habenula", "insula", "parahipocampal", "nucleos_base", "osso_parietal", "osso_temporal", "cingulo"]);
 const SEM_VOLUME = new Set(["glabela", "nasio", "vertice", "occipital", "ajna", "coroa", "porta", "carotida", "veia",
-  "lobo_frontal", "lobo_parietal", "lobo_temporal", "lobo_occipital", "sulco_central", "fissura_lateral", "radiacao", "papez", "fornix", "mamilotalamico", "cingulo"]);
+  "lobo_frontal", "lobo_parietal", "lobo_temporal", "lobo_occipital", "sulco_central", "fissura_lateral", "radiacao", "papez", "fornix", "mamilotalamico"]);
 const cacheVol = new Map();
 // volume do modelo: total (todas as partes) e de um lado só (para estruturas em par)
 function volumeModelo(id) {
   if (cacheVol.has(id)) return cacheVol.get(id);
-  const ms = porId.get(id) || [];
+  const ms = (porId.get(id) || []).filter((m) => m.visible);
   let total = 0, lado = 0;
   const caixa = new THREE.Box3(), caixaLado = new THREE.Box3();
   for (const m of ms) {
@@ -906,6 +948,7 @@ function volumeModelo(id) {
     if (centroDe(m).x > 0.01) { lado += v; caixaLado.union(b); }
   }
   const par = PARES.has(id);
+  if (par && lado === 0 && total > 0) { lado = total / 2; caixaLado.copy(caixa); caixaLado.min.x = Math.max(caixa.min.x, 0); } // malha única cruzando a linha do meio
   const tam = (par ? caixaLado : caixa).getSize(new THREE.Vector3());
   // eixos anatômicos: comprimento (frente-trás) = Z da cena, altura = Y, largura = X
   const r = { total, um: par ? lado : total, par, dims: [tam.z, tam.y, tam.x] };
@@ -951,8 +994,11 @@ function volumeComparavel(id) {
 function blocoVolume(id) {
   if (SEM_VOLUME.has(id) || !porId.get(id)) return "";
   const vm = volumeModelo(id), ref = refDe(id), hip = id === "adeno" || id === "neuro";
-  const linhas = [];
-  if (hip) {
+  const linhas = [], real = forma.atual === "anat" && (porId.get(id) || []).some((m) => m.visible && m.userData.v0);
+  if (real) {
+    if (vm.par) { linhas.push([L("Malha real, cada um", "Real mesh, each"), fmtVol(vm.um)]); linhas.push([L("Malha real, os dois", "Real mesh, both"), fmtVol(vm.total)]); }
+    else linhas.push([L("Malha real", "Real mesh"), fmtVol(vm.total)]);
+  } else if (hip) {
     linhas.push([L("Esta parte, no modelo", "This part, in the model"), fmtVol(vm.total)]);
     linhas.push([L("Hipófise inteira, no modelo", "Whole pituitary, in the model"), fmtVol(volumeComparavel(id))]);
   } else if (vm.par) {
@@ -968,14 +1014,18 @@ function blocoVolume(id) {
   let desvio = "";
   if (ref) {
     const vc = volumeComparavel(id), tip = Math.sqrt(ref.lo * ref.hi);
-    if (vc >= ref.lo * 0.95 && vc <= ref.hi * 1.05) desvio = L("No modelo, o volume fica dentro da faixa real.", "In the model, the volume falls within the real range.");
+    if (forma.atual === "anat" && (porId.get(id) || []).some((m) => m.visible && m.userData.v0)) desvio = vc >= ref.lo * 0.95 && vc <= ref.hi * 1.05
+      ? L("A malha real (de uma só pessoa) fica dentro da faixa típica.", "The real mesh (from a single person) falls within the typical range.")
+      : vc > tip ? L(`A malha real é de uma só pessoa: ela tem cerca de ${fmtRazao(vc / tip)} vezes o volume típico, uma variação entre pessoas ou do método de reconstrução.`, `The real mesh is from a single person: it has about ${fmtRazao(vc / tip)} times the typical volume, a variation between people or of the reconstruction method.`)
+      : L(`A malha real é de uma só pessoa: ela tem cerca de ${Math.round((100 * vc) / tip)}% do volume típico, uma variação entre pessoas ou do método de reconstrução.`, `The real mesh is from a single person: it has about ${Math.round((100 * vc) / tip)}% of the typical volume, a variation between people or of the reconstruction method.`);
+    else if (vc >= ref.lo * 0.95 && vc <= ref.hi * 1.05) desvio = L("No modelo, o volume fica dentro da faixa real.", "In the model, the volume falls within the real range.");
     else if (vc > tip) desvio = L(`O modelo é esquemático: aqui ele ficou cerca de ${fmtRazao(vc / tip)} vezes maior que o típico.`, `The model is schematic: here it came out about ${fmtRazao(vc / tip)} times larger than typical.`);
     else desvio = L(`O modelo é esquemático: aqui ele ficou com cerca de ${Math.round((100 * vc) / tip)}% do volume típico.`, `The model is schematic: here it came out at about ${Math.round((100 * vc) / tip)}% of the typical volume.`);
   }
   return `<div class="vol"><div class="vol-tit">${L("Volume", "Volume")}</div>` +
     linhas.map(([k, v]) => `<div class="vol-lin"><span>${k}</span><b>${v}</b></div>`).join("") +
     (ref ? `<p class="vol-nota">${L(...ref.nota)} ${desvio}</p>` : "") +
-    `<p class="vol-nota">${L("Tamanho: comprimento (frente-trás) × altura × largura.", "Size: length (front-back) × height × width.")}</p>` +
+    `<p class="vol-nota">${L("Tamanho: comprimento (frente-trás) × altura × largura.", "Size: length (front-back) × height × width.")}${forma.atual === "anat" && (porId.get(id) || []).some((m) => m.visible && m.userData.v0) ? L(" Forma anatômica: volume medido na malha original do BodyParts3D, antes do encaixe nas coordenadas do modelo.", " Anatomical form: volume measured on the original BodyParts3D mesh, before fitting it to the model's coordinates.") : ""}</p>` +
     `<button type="button" class="b-esfera" data-esfera="${id}">${esfera.id === id ? L("Esconder esfera de mesmo volume", "Hide equal-volume sphere") : L("Mostrar esfera de mesmo volume", "Show equal-volume sphere")}</button></div>`;
 }
 
@@ -992,7 +1042,7 @@ function mostrarEsfera(id) {
   const vm = volumeModelo(id);
   const V = id === "adeno" || id === "neuro" ? vm.total : vm.um;
   const d = Math.cbrt((6 * V) / Math.PI), r = d / 2;
-  const ms = (porId.get(id) || []).filter((m) => !vm.par || centroDe(m).x > 0.01);
+  const ms = (porId.get(id) || []).filter((m) => m.visible && (!vm.par || centroDe(m).x > 0.01));
   const caixa = new THREE.Box3();
   for (const m of ms) caixa.union(new THREE.Box3().setFromObject(m));
   const centro = caixa.getCenter(new THREE.Vector3()), raioEst = caixa.getSize(new THREE.Vector3()).length() / 2;
@@ -1384,7 +1434,8 @@ const FAMILIA = { pineal: "glandula", adeno: "glandula", neuro: "glandula", hipo
   piramide: "face", olho: "face", seiofrontal: "face", esfenoidal: "face", vertice: "face", occipital: "face", ajna: "simb", coroa: "simb",
   lobo_frontal: "nervo", lobo_parietal: "nervo", lobo_temporal: "nervo", lobo_occipital: "nervo", sulco_central: "nervo", fissura_lateral: "nervo",
   cgl: "nervo", radiacao: "nervo", v1: "nervo", hipocampo: "nervo", amigdala: "nervo", fornix: "nervo", mamilares: "nervo",
-  mamilotalamico: "nervo", tal_anterior: "nervo", cingulo: "nervo", papez: "nervo", habenula: "glandula" };
+  mamilotalamico: "nervo", tal_anterior: "nervo", cingulo: "nervo", papez: "nervo", habenula: "glandula", insula: "nervo", parahipocampal: "nervo",
+  nucleos_base: "nervo", osso_frontal: "face", osso_parietal: "face", osso_occipital: "face", osso_temporal: "face", osso_esfenoide: "face", osso_etmoide: "face", face_ossos: "face", mandibula: "face" };
 function somEstrutura(id) {
   if (!opc.clique) return;
   switch (FAMILIA[id]) {
@@ -1595,8 +1646,8 @@ document.addEventListener("visibilitychange", () => {
 
 // =====================================================================  CAMADAS
 const mapa = { "c-pele": "pele", "c-cerebro": "cerebro", "c-vent": "vent", "c-vasos": "vasos", "c-planos": "planos", "c-circ": "circ", "c-liquor": "liquor", "c-porta": "porta", "c-simbolo": "simbolo",
-  "c-cortex": "cortex", "c-visao": "visao", "c-limbico": "limbico", "c-papez": "papez" };
-const AO_LIGAR = { porta: "porta", liquor: "liquor", simbolo: "ajna", cortex: "lobo_frontal", visao: "cgl", limbico: "hipocampo", papez: "papez" };
+  "c-cortex": "cortex", "c-visao": "visao", "c-limbico": "limbico", "c-papez": "papez", "c-cranio": "cranio" };
+const AO_LIGAR = { porta: "porta", liquor: "liquor", simbolo: "ajna", cortex: "lobo_frontal", visao: "cgl", limbico: "hipocampo", papez: "papez", cranio: "osso_esfenoide" };
 for (const [id, g] of Object.entries(mapa)) {
   $(id).addEventListener("change", (e) => {
     grupos[g].visible = e.target.checked && !estado.embriao;
@@ -1605,6 +1656,8 @@ for (const [id, g] of Object.entries(mapa)) {
     if (g === "papez" && e.target.checked) setCamada("c-limbico", true); // o circuito corre por dentro do sistema límbico
     if (g === "limbico" && !e.target.checked) setCamada("c-papez", false);
     if (!e.target.checked && estado.isolar === g) setIsolar("");
+    if (g === "cortex") atualizarGemeos();
+    if (g === "cranio" && e.target.checked && !ANAT.ok.cabeca) carregarPacote("cabeca").then(() => { aplicarForma(); if (AO_LIGAR.cranio) mostrar(AO_LIGAR.cranio); }).catch(() => {});
   });
 }
 function setCamada(id, v) { const el = $(id); if (el.checked !== v) { el.checked = v; el.dispatchEvent(new Event("change")); } }
@@ -1617,7 +1670,7 @@ function ligarCamadaDe(id) {
 }
 
 // ---------- ISOLAR CAMADA: a camada escolhida fica normal e todo o resto fica bem apagado
-const ISOLAVEIS = { cortex: "c-cortex", visao: "c-visao", limbico: "c-limbico", porta: "c-porta", vent: "c-vent", vasos: "c-vasos", circ: "c-circ" };
+const ISOLAVEIS = { cortex: "c-cortex", visao: "c-visao", limbico: "c-limbico", porta: "c-porta", vent: "c-vent", vasos: "c-vasos", circ: "c-circ", cranio: "c-cranio" };
 estado.isolar = "";
 const mantidosNoIsolar = (g) => new Set([g, "regua", ...(g === "limbico" ? ["papez"] : []), ...(g === "visao" ? ["circ"] : [])]);
 function esmaecerMat(mt, on) {
@@ -1647,6 +1700,158 @@ function setIsolar(g) {
 }
 $("isolar").addEventListener("change", (e) => setIsolar(e.target.value));
 const noIsolar = (o) => { if (!estado.isolar) return true; const g = grupoDe(o); return mantidosNoIsolar(estado.isolar).has(g); };
+
+// =====================================================================  FORMA ANATÔMICA (malhas reais, carregadas sob demanda)
+// Malhas do BodyParts3D (© The Database Center for Life Science, CC BY 4.0), de um homem adulto japonês, reduzidas e
+// encaixadas nas coordenadas do modelo por uma rotação + uma deformação suave (thin-plate spline) que leva pineal,
+// hipófise, quiasma, olhos, tálamos, násio e glabela às posições dos pôsteres. Ver malhas_build/ e o manual.
+
+const ANAT = { ok: {}, prom: {}, subst: new Set(), gemeos: [], marcas: {} };
+const PACOTES_ANAT = ["cortex", "profundo", "cabeca"];
+const EXTRA_SUBST = { cortex: ["sulco_central", "fissura_lateral"], profundo: ["neuro"], cabeca: [] };
+const formaTxt = $("forma-txt");
+function carregarPacote(nome) {
+  if (ANAT.ok[nome]) return Promise.resolve();
+  if (ANAT.prom[nome]) return ANAT.prom[nome];
+  ANAT.prom[nome] = (async () => {
+    const r = await fetch(`anatomia/anat_${nome}.glb`);
+    if (!r.ok) throw new Error(`anat_${nome}.glb: ${r.status}`);
+    const buf = await r.arrayBuffer(), dv = new DataView(buf);
+    // GLB: cabeçalho de 12 bytes, bloco JSON e bloco BIN (glTF 2.0 com KHR_mesh_quantization)
+    const nj = dv.getUint32(12, true);
+    const gl = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, nj)));
+    const base = 20 + nj + 8;
+    const vista = (a) => { const v = gl.bufferViews[gl.accessors[a].bufferView]; return base + (v.byteOffset || 0); };
+    for (const no of gl.nodes) {
+      const malha = gl.meshes[no.mesh], e = malha.extras, pr = malha.primitives[0];
+      const ap = gl.accessors[pr.attributes.POSITION], ai = gl.accessors[pr.indices];
+      const q = new Int16Array(buf, vista(pr.attributes.POSITION), ap.count * 3), pos = new Float32Array(ap.count * 3);
+      const [tx, ty, tz] = no.translation, [sx, sy, sz] = no.scale;
+      for (let k = 0; k < ap.count; k++) {
+        pos[3 * k] = tx + sx * Math.max(q[3 * k] / 32767, -1);
+        pos[3 * k + 1] = ty + sy * Math.max(q[3 * k + 1] / 32767, -1);
+        pos[3 * k + 2] = tz + sz * Math.max(q[3 * k + 2] / 32767, -1);
+      }
+      const idx = ai.componentType === 5125 ? new Uint32Array(buf, vista(pr.indices), ai.count) : new Uint16Array(buf, vista(pr.indices), ai.count);
+      const g = new THREE.BufferGeometry();
+      g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      g.setIndex(new THREE.BufferAttribute(idx.slice(), 1));
+      g.computeVertexNormals(); g.computeBoundingSphere();
+      const material = e.id === "pineal" ? pinealMat : mat(e.cor, { opacity: e.op, side: THREE.DoubleSide });
+      if (e.grupo === "cranio") material.roughness = 0.75;
+      const m = new THREE.Mesh(g, material);
+      if (e.op < 0.6) m.renderOrder = e.grupo === "pele" ? 10 : e.grupo === "cortex" ? 8 : 5;
+      if (e.grupo !== "cranio") m.userData.forma = "anat";
+      if (e.arq === "SKIN") ANAT.pele = m;
+      if (e.v0 > 0) m.userData.v0 = e.v0;
+      registrar(m, e.id, e.grupo, { clip: true });
+      if (estado.corte !== "nenhum") { m.material.clippingPlanes = [planoCorte]; m.material.needsUpdate = true; }
+      if (e.id && e.grupo !== "cranio") ANAT.subst.add(e.id);
+      if (e.grupo === "cortex" && e.id && e.id.startsWith("lobo_")) {
+        // gêmeo neutro na camada Cérebro (mesma geometria): o cérebro real aparece mesmo com o Córtex desligado
+        const gm = new THREE.Mesh(g, mat(0xf0c6bd, { opacity: 0.14, side: THREE.DoubleSide }));
+        gm.renderOrder = 9; gm.userData.forma = "anat"; gm.userData.gemeo = true;
+        registrar(gm, null, "cerebro", { clip: true });
+        if (estado.corte !== "nenhum") { gm.material.clippingPlanes = [planoCorte]; gm.material.needsUpdate = true; }
+        ANAT.gemeos.push(gm);
+      }
+    }
+    for (const id of EXTRA_SUBST[nome]) ANAT.subst.add(id);
+    if (nome === "cabeca") marcasDaPele();
+    ANAT.ok[nome] = true;
+    cacheVol.clear();
+    posicoesAnat();
+  })();
+  ANAT.prom[nome].catch(() => { delete ANAT.prom[nome]; });
+  return ANAT.prom[nome];
+}
+// topo da cabeça e ponto mais posterior, achados na pele real
+function marcasDaPele() {
+  const pele = ANAT.pele;
+  if (!pele) return;
+  const p = pele.geometry.attributes.position, v = new THREE.Vector3();
+  let top = null, tras = null;
+  for (let i = 0; i < p.count; i++) {
+    v.fromBufferAttribute(p, i);
+    if (Math.abs(v.x) > 0.6) continue;
+    if (!top || v.y > top.y) top = v.clone();
+    if (v.y > -1 && v.y < 6 && (!tras || v.z < tras.z)) tras = v.clone();
+  }
+  ANAT.marcas = { vertice: top, occipital: tras };
+}
+// ponto da superfície de cada estrutura real, para ancorar o rótulo (o lado esquerdo da pessoa, nas pares)
+const CENTRO_ENC = P(9.6, 3, 0);
+function pontoRotulo(id) {
+  let ms = (porId.get(id) || []).filter((m) => m.userData.forma === "anat" || (ANAT.ok.cabeca && m.parent === grupos.cranio));
+  if (!ms.length) return null;
+  const esq = ms.filter((m) => m.geometry.boundingSphere.center.x > 0.3);
+  if (esq.length) ms = esq;
+  const c = new THREE.Vector3(); let n = 0;
+  for (const m of ms) { const p = m.geometry.attributes.position; for (let i = 0; i < p.count; i += 7) { c.x += p.getX(i); c.y += p.getY(i); c.z += p.getZ(i); n++; } }
+  c.divideScalar(n);
+  const dir = c.clone().sub(CENTRO_ENC); if (dir.lengthSq() < 0.01) dir.set(0, 1, 0); dir.normalize();
+  let melhor = null, mv = -Infinity; const v = new THREE.Vector3();
+  for (const m of ms) { const p = m.geometry.attributes.position; for (let i = 0; i < p.count; i += 3) { v.fromBufferAttribute(p, i); const s = v.clone().sub(c).dot(dir); if (s > mv) { mv = s; melhor = v.clone(); } } }
+  return melhor;
+}
+function posicoesAnat() {
+  for (const r of ROT) if (r.id) { const p = pontoRotulo(r.id); if (p) r.posAnat = p; }
+  if (ANAT.marcas.vertice) for (const r of ROT) if (r.id === "vertice") r.posAnat = ANAT.marcas.vertice;
+  if (ANAT.marcas.occipital) for (const r of ROT) if (r.id === "occipital") r.posAnat = ANAT.marcas.occipital;
+}
+function emUso(o) { // o objeto pertence à forma ativa?
+  const u = o.userData;
+  if (u.forma === "anat") return forma.atual === "anat" && (!u.gemeo || !grupos.cortex.visible);
+  if (forma.atual !== "anat") return true;
+  if (u.esq) return !ANAT.ok[u.esq];
+  if (u.id && ANAT.subst.has(u.id)) return false;
+  return true;
+}
+function aplicarForma() {
+  for (const g of Object.values(grupos)) for (const o of g.children) {
+    const u = o.userData;
+    if (u.forma || u.esq || u.id) o.visible = emUso(o);
+  }
+  // marcas do topo e de trás da cabeça vão para a pele real
+  for (const id of ["vertice", "occipital"]) {
+    for (const o of [...(porId.get(id) || []), ...grupos.fixo.children.filter((x) => x.userData.marca === id)]) {
+      o.userData.pos0 ||= o.position.clone();
+      const alvo = forma.atual === "anat" && ANAT.marcas[id] ? ANAT.marcas[id] : o.userData.pos0;
+      o.position.copy(alvo); if (o.userData.centro) o.userData.centro.copy(alvo);
+    }
+  }
+  cacheVol.clear();
+  if (estado.isolar) aplicarIsolar();
+  if (esfera.id) removerEsfera();
+  if (infoRender) infoRender();
+}
+function atualizarGemeos() { for (const g of ANAT.gemeos) g.visible = emUso(g); }
+async function setForma(f) {
+  document.querySelectorAll("#forma button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.f === f)));
+  if (f === "anat") {
+    try {
+      for (let i = 0; i < PACOTES_ANAT.length; i++) {
+        if (!ANAT.ok[PACOTES_ANAT[i]]) formaTxt.textContent = L(`Carregando as malhas reais (${i + 1} de 3)…`, `Loading the real meshes (${i + 1} of 3)…`);
+        await carregarPacote(PACOTES_ANAT[i]);
+      }
+    } catch (e) {
+      formaTxt.textContent = L("Não consegui carregar as malhas reais (pasta anatomia/). A forma esquemática continua.", "Could not load the real meshes (anatomia/ folder). The schematic form stays on.");
+      document.querySelectorAll("#forma button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.f === "esq")));
+      return;
+    }
+  }
+  forma.atual = f;
+  aplicarForma();
+  textoForma();
+}
+function textoForma() {
+  formaTxt.textContent = forma.atual === "anat"
+    ? L("Formas reais do BodyParts3D (um homem adulto), encaixadas nas coordenadas do modelo. Os pulsos, planos e vasos continuam esquemáticos.",
+      "Real shapes from BodyParts3D (one adult man), fitted to the model's coordinates. Pulses, planes and vessels stay schematic.")
+    : L("Sólidos geométricos com as medidas dos pôsteres.", "Geometric solids with the posters' measurements.");
+}
+document.querySelectorAll("#forma button").forEach((b) => b.addEventListener("click", () => setForma(b.dataset.f)));
+textoForma();
 
 // =====================================================================  CÂMERA
 const VISTAS = {
@@ -1823,7 +2028,8 @@ $("b-tour").addEventListener("click", () => {
 const QUIZ_IDS = ["pineal", "adeno", "neuro", "hipotalamo", "nsq", "talamo", "vent3", "ventlat", "aqueduto", "quiasma", "olho", "piramide",
   "glabela", "nasio", "vertice", "occipital", "caloso", "cerebelo", "tronco", "medula", "gcs", "cavernoso", "carotida", "veia", "esfenoidal", "seiofrontal",
   "lobo_frontal", "lobo_parietal", "lobo_temporal", "lobo_occipital", "sulco_central", "fissura_lateral", "cgl", "radiacao", "v1",
-  "hipocampo", "amigdala", "fornix", "mamilares", "cingulo", "habenula", "tal_anterior"];
+  "hipocampo", "amigdala", "fornix", "mamilares", "cingulo", "habenula", "tal_anterior", "insula", "parahipocampal", "nucleos_base",
+  "osso_frontal", "osso_parietal", "osso_occipital", "osso_temporal", "osso_esfenoide", "mandibula"];
 const quiz = { alvo: null, acertos: 0, total: 0, respondido: false };
 function visivel(m) { let o = m; while (o) { if (!o.visible) return false; o = o.parent; } return true; }
 const embaralhar = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -2114,7 +2320,7 @@ const TAM = () => {
     { id: "ventlat", nome: L("Ventrículo lateral (cada)", "Lateral ventricle (each)"), lo: 7, hi: 10, mod: volumeModelo("ventlat").um },
     { id: "liquor", nome: L("Líquor total", "Total CSF"), lo: 125, hi: 150, mod: null },
     { id: "cerebelo", nome: L("Cerebelo", "Cerebellum"), lo: 105, hi: 150, mod: volumeModelo("cerebelo").total },
-    { id: null, nome: L("Encéfalo", "Brain"), lo: 1130, hi: 1260, mod: enc ? volumeMalha(enc) + volumeModelo("cerebelo").total + volumeModelo("tronco").total : null },
+    { id: null, nome: L("Encéfalo", "Brain"), lo: 1130, hi: 1260, mod: enc && forma.atual !== "anat" ? volumeMalha(enc) + volumeModelo("cerebelo").total + volumeModelo("tronco").total : null },
   ];
 };
 const LOG0 = -4, LOG1 = 3.4, xLog = (v) => ((Math.log10(v) - LOG0) / (LOG1 - LOG0)) * 100;
@@ -2525,7 +2731,7 @@ function comporImagem() {
     c.fillText(r.el.textContent.trim(), x + 21, y + h / 2 + 0.5);
   }
   c.fillStyle = "rgba(230,235,242,0.75)"; c.font = "13px 'IBM Plex Sans', 'Segoe UI', sans-serif"; c.textBaseline = "alphabetic";
-  c.fillText(L("A pineal no centro da cabeça · modelo 3D esquemático · v2.1", "The pineal at the center of the head · schematic 3D model · v2.1"), 16, H / dpr - 16);
+  c.fillText(forma.atual === "anat" ? L("Cabeça humana · modelo 3D, forma anatômica (BodyParts3D, CC BY 4.0) · v2.1", "Human head · 3D model, anatomical form (BodyParts3D, CC BY 4.0) · v2.1") : L("Cabeça humana · modelo 3D esquemático · v2.1", "Human head · schematic 3D model · v2.1"), 16, H / dpr - 16);
   return cv;
 }
 // na página publicada o download passa pela confirmação do próprio Claude (capacidade "downloads");
@@ -2606,13 +2812,14 @@ try { if (localStorage.getItem("menuAberto") === "0") setMenu(false); } catch (e
 
 // =====================================================================  RESTAURAR PADRÃO
 const CAMADAS_PADRAO = { "c-pele": true, "c-cerebro": true, "c-vent": true, "c-vasos": true, "c-planos": true, "c-circ": true,
-  "c-liquor": false, "c-porta": false, "c-simbolo": true, "c-cortex": false, "c-visao": false, "c-limbico": false, "c-papez": false, "c-rot": true };
+  "c-liquor": false, "c-porta": false, "c-simbolo": true, "c-cortex": false, "c-visao": false, "c-limbico": false, "c-papez": false, "c-cranio": false, "c-rot": true };
 const SOM_PADRAO = { "g-efeitos": true, "s-clique": true, "s-circ": true, "s-emb": true, "g-voz": true, "s-nomes": true, "s-tour": true,
   "s-auto": false, "g-amb": true, "s-dia": true, "s-liq": true, "s-mel": false };
 function restaurarTudo() {
   sairModos();
   setCorte("nenhum");
   setIsolar("");
+  if (forma.atual !== "esq") setForma("esq");
   atualizarEmbriao(0); estado.embPlay = false;
   for (const [id, v] of Object.entries(CAMADAS_PADRAO)) setCamada(id, v);
   rotinaEl.value = "escura"; estado.rotina = "escura";
@@ -2649,8 +2856,8 @@ function restaurarTudo() {
 // =====================================================================  IDIOMA (PT / EN)
 // Textos fixos do HTML: [seletor, inglês]. O português é lido do próprio HTML na abertura.
 const I18N = [
-  ["#painel h1", "The pineal at the center of the head"],
-  ["#painel .lead", "Schematic 3D model, with the same measurements as the posters. Drag to rotate, scroll to zoom and click a structure to see what it does."],
+  ["#painel h1", "Human head"],
+  ["#painel .lead", "3D model with the same measurements as the posters, as geometric solids or as real anatomical shapes. Drag to rotate, scroll to zoom and click a structure to see what it does."],
   ["#t-explorar", "Explore"], ["#b-tour", "Guided tour"], ["#b-quiz", "Quiz"], ["#b-embriao", "Embryo mode"], ["#b-regua", "Ruler"],
   ["#b-tam", "Sizes"], ["#b-kura", "SCN network"], ["#b-jet", "Jet lag and shifts"],
   ["#t-som", "Sound"], ["#b-testar", "Test"], ["label[for=som-vol]", "Volume"],
@@ -2672,12 +2879,15 @@ const I18N = [
   ["#t-novas", "Extra layers"], ["label[for=isolar]", "Isolate layer"], ["#isolar [value='']", "None"], ["#isolar [value=cortex]", "Cortex (lobes)"],
   ["#isolar [value=visao]", "Visual pathway"], ["#isolar [value=limbico]", "Limbic system"], ["#isolar [value=porta]", "Portal system"],
   ["#isolar [value=vent]", "Ventricles"], ["#isolar [value=vasos]", "Vessels"], ["#isolar [value=circ]", "Circuit"],
+  ["#isolar [value=cranio]", "Skull"], ["label[for=c-cranio]", "Skull (real bones)"], ["#t-forma", "Shape"],
+  ["#forma [data-f=esq]", "Schematic"], ["#forma [data-f=anat]", "Anatomical"],
   ["#t-info", "Selected structure"], ["#t-config", "Settings"],
   ["#reset-txt", "Resets everything: view, cut, clock, layers, sound, menu and card positions."],
   ["#b-manual", "Manual"], ["#b-manual-pdf", "Manual (PDF)"],
   ["#rod-tit", "© 2026 3D Head: pineal and pituitary · v2.1. All rights reserved."],
   ["#rod-aviso", "The information in this model is for educational and study purposes only and is not a diagnosis, medical advice or recommendation. Measurements are approximate and shapes are schematic; real values come from published studies and vary between people. The symbolic layer gathers readings from spiritual traditions, with no physiological evidence."],
   ["#rod-cri", "Created by Francisco Campos de Carvalho, email:"],
+  ["#rod-anat1", "Anatomical form: meshes from"], ["#rod-anat2", ", © The Database Center for Life Science, CC BY 4.0 license; reduced and fitted to this model's coordinates."],
   ["#rod-form", "Bachelor's degree in Mathematics and postgraduate degree in Information Systems and Databases."],
   [".hint", "Drag to rotate, scroll to zoom, click a structure, double-click to fly to it"],
   ["#legenda span:nth-child(1)", "light: retina → SCN"], ["#legenda span:nth-child(2)", "nerve signal to the pineal"], ["#legenda span:nth-child(3)", "melatonin"],
@@ -2710,6 +2920,7 @@ function aplicarIdioma(novo) {
   if (regua.rotFn) rotuloMedida(regua.rotFn);
   if (esfera.rotFn) { esfera.rot.el.innerHTML = `<i style="background:#F2B24A"></i>${esfera.rotFn()}`; esfera.rot.w = 0; }
   if (!liqBox.hidden) textoLiq();
+  textoForma();
   setTocando(estado.tocando);
   botaoSom.textContent = som.ligado ? L("Desligar som", "Turn sound off") : L("Ligar som", "Turn sound on");
   textoMenu(); textoReset(); textoCorte();

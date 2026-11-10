@@ -23,9 +23,54 @@
         <button type="button" data-l="pt" aria-pressed="true" title="Português">PT</button>
         <button type="button" data-l="en" aria-pressed="false" title="English">EN</button>
       </div>
-      <h1>A pineal no centro da cabeça</h1>
-      <p class="lead">Modelo 3D esquemático, com as mesmas medidas dos pôsteres. Arraste para girar, role para aproximar e clique numa estrutura para ver o que ela faz.</p>
+      <h1>Cabeça humana</h1>
+      <p class="lead">Modelo 3D com as mesmas medidas dos pôsteres, em sólidos geométricos ou em formas anatômicas reais. Arraste para girar, role para aproximar e clique numa estrutura para ver o que ela faz.</p>
     </header>
+
+    <section aria-labelledby="t-forma">
+      <h2 id="t-forma">Forma</h2>
+      <div class="seg" id="forma" role="group" aria-label="Forma das estruturas">
+        <button type="button" data-f="esq" aria-pressed="true">Esquemática</button>
+        <button type="button" data-f="anat" aria-pressed="false">Anatômica</button>
+      </div>
+      <p class="cap" id="forma-txt"></p>
+    </section>
+
+    <section aria-labelledby="t-camadas">
+      <h2 id="t-camadas">Camadas</h2>
+      <div class="grid2">
+        <label class="chk" for="c-pele"><input type="checkbox" id="c-pele" checked> Pele</label>
+        <label class="chk" for="c-cerebro"><input type="checkbox" id="c-cerebro" checked> Cérebro</label>
+        <label class="chk" for="c-vent"><input type="checkbox" id="c-vent" checked> Ventrículos</label>
+        <label class="chk" for="c-vasos"><input type="checkbox" id="c-vasos" checked> Vasos</label>
+        <label class="chk" for="c-planos"><input type="checkbox" id="c-planos" checked> Planos</label>
+        <label class="chk" for="c-circ"><input type="checkbox" id="c-circ" checked> Circuito</label>
+        <label class="chk" for="c-liquor"><input type="checkbox" id="c-liquor"> Fluxo do líquor</label>
+        <label class="chk" for="c-porta"><input type="checkbox" id="c-porta"> Sistema porta</label>
+        <label class="chk" for="c-simbolo"><input type="checkbox" id="c-simbolo" checked> Camada simbólica</label>
+        <label class="chk" for="c-rot"><input type="checkbox" id="c-rot" checked> Rótulos</label>
+      </div>
+      <h3 class="sub-tit" id="t-novas">Camadas extras</h3>
+      <div class="grid2">
+        <label class="chk" for="c-cortex"><input type="checkbox" id="c-cortex"> Córtex (lobos)</label>
+        <label class="chk" for="c-visao"><input type="checkbox" id="c-visao"> Via da visão</label>
+        <label class="chk" for="c-limbico"><input type="checkbox" id="c-limbico"> Sistema límbico</label>
+        <label class="chk" for="c-papez"><input type="checkbox" id="c-papez"> Circuito de Papez</label>
+        <label class="chk" for="c-cranio"><input type="checkbox" id="c-cranio"> Crânio (ossos reais)</label>
+      </div>
+      <h3 class="sub-tit"><label for="isolar">Isolar camada</label></h3>
+      <select id="isolar">
+        <option value="">Nenhuma</option>
+        <option value="cortex">Córtex (lobos)</option>
+        <option value="visao">Via da visão</option>
+        <option value="limbico">Sistema límbico</option>
+        <option value="porta">Sistema porta</option>
+        <option value="vent">Ventrículos</option>
+        <option value="vasos">Vasos</option>
+        <option value="circ">Circuito</option>
+        <option value="cranio">Crânio</option>
+      </select>
+    </section>
 
     <section aria-labelledby="t-explorar">
       <h2 id="t-explorar">Explorar</h2>
@@ -122,43 +167,6 @@
       <div class="cap">Modelo didático, do meio-dia ao meio-dia, todos comandados pelo NSQ; valores aproximados de um adulto. Faixa escura: horário de sono da rotina. Tracejado: melatonina na noite escura, para comparar.</div>
     </section>
 
-    <section aria-labelledby="t-camadas">
-      <h2 id="t-camadas">Camadas</h2>
-      <div class="grid2">
-        <label class="chk" for="c-pele"><input type="checkbox" id="c-pele" checked> Pele</label>
-        <label class="chk" for="c-cerebro"><input type="checkbox" id="c-cerebro" checked> Cérebro</label>
-        <label class="chk" for="c-vent"><input type="checkbox" id="c-vent" checked> Ventrículos</label>
-        <label class="chk" for="c-vasos"><input type="checkbox" id="c-vasos" checked> Vasos</label>
-        <label class="chk" for="c-planos"><input type="checkbox" id="c-planos" checked> Planos</label>
-        <label class="chk" for="c-circ"><input type="checkbox" id="c-circ" checked> Circuito</label>
-        <label class="chk" for="c-liquor"><input type="checkbox" id="c-liquor"> Fluxo do líquor</label>
-        <label class="chk" for="c-porta"><input type="checkbox" id="c-porta"> Sistema porta</label>
-        <label class="chk" for="c-simbolo"><input type="checkbox" id="c-simbolo" checked> Camada simbólica</label>
-        <label class="chk" for="c-rot"><input type="checkbox" id="c-rot" checked> Rótulos</label>
-      </div>
-      <h3 class="sub" id="t-novas">Camadas extras</h3>
-      <div class="grid2">
-        <label class="chk" for="c-cortex"><input type="checkbox" id="c-cortex"> Córtex (lobos)</label>
-        <label class="chk" for="c-visao"><input type="checkbox" id="c-visao"> Via da visão</label>
-        <label class="chk" for="c-limbico"><input type="checkbox" id="c-limbico"> Sistema límbico</label>
-        <label class="chk" for="c-papez"><input type="checkbox" id="c-papez"> Circuito de Papez</label>
-      </div>
-      <div class="row">
-        <label class="sel" for="isolar">Isolar camada
-          <select id="isolar">
-            <option value="">Nenhuma</option>
-            <option value="cortex">Córtex (lobos)</option>
-            <option value="visao">Via da visão</option>
-            <option value="limbico">Sistema límbico</option>
-            <option value="porta">Sistema porta</option>
-            <option value="vent">Ventrículos</option>
-            <option value="vasos">Vasos</option>
-            <option value="circ">Circuito</option>
-          </select>
-        </label>
-      </div>
-    </section>
-
     <section aria-labelledby="t-info">
       <h2 id="t-info">Estrutura selecionada</h2>
       <div class="info" id="info"></div>
@@ -177,6 +185,7 @@
     <footer class="rodape">
       <p class="rod-tit" id="rod-tit">© 2026 Cabeça 3D: pineal e hipófise · v2.1. Todos os direitos reservados.</p>
       <p id="rod-aviso">As informações deste modelo são apenas para fins educativos e de estudo, não constituindo diagnóstico, orientação ou recomendação médica. As medidas são aproximadas e as formas, esquemáticas; os valores reais vêm de estudos publicados e variam entre pessoas. A camada simbólica reúne leituras de tradições espirituais, sem comprovação fisiológica.</p>
+      <p><span id="rod-anat1">Forma anatômica: malhas do</span> <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/download.html" target="_blank" rel="noopener">BodyParts3D</a><span id="rod-anat2">, © The Database Center for Life Science, licença CC BY 4.0; reduzidas e encaixadas nas coordenadas deste modelo.</span></p>
       <p><span id="rod-cri">Criado por Francisco Campos de Carvalho, email:</span> <a href="mailto:fcamposcarvalho@yahoo.com.br">fcamposcarvalho@yahoo.com.br</a>, <span id="rod-form">Bacharel em Matemática e Pós-Graduado em Sistemas de Informação e Banco de Dados.</span></p>
     </footer>
   </aside>
