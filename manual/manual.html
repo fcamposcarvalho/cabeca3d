@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual da Cabeça 3D: pineal e hipófise (v2.1)</title>
+<link rel="stylesheet" href="katex/katex.min.css">
+<style>
+  :root {
+    --tinta: #1B2230; --suave: #5B6577; --linha: #E2E6EE; --fundo: #FFFFFF; --papel: #F6F7FA;
+    --azul: #2459A8; --ambar: #B8730E; --ambar-claro: #FBF1DF; --codigo: #F3F4F8;
+    --sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "DejaVu Sans Mono", Consolas, "Courier New", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font-family: var(--sans); font-size: 16px; line-height: 1.62; }
+  a { color: var(--azul); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* barra do topo (só na tela) */
+  .topo { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 16px; padding: 10px 24px;
+          background: rgba(255,255,255,0.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--linha); font-size: 0.92rem; }
+  .topo .nome { font-weight: 600; margin-right: auto; }
+  .topo a.botao { border: 1px solid var(--linha); border-radius: 8px; padding: 6px 12px; color: var(--tinta); background: #fff; }
+  .topo a.botao.principal { background: var(--azul); border-color: var(--azul); color: #fff; }
+  .topo a.botao:hover { text-decoration: none; filter: brightness(0.97); }
+
+  .layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 40px; max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; }
+  nav.sumario { position: sticky; top: 72px; align-self: start; max-height: calc(100vh - 96px); overflow: auto; font-size: 0.9rem; }
+  nav.sumario h2 { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--suave); margin: 0 0 10px; border: 0; padding: 0; }
+  nav.sumario ol { list-style: none; padding: 0; margin: 0; }
+  nav.sumario li a { display: block; padding: 5px 10px; border-radius: 6px; color: var(--tinta); }
+  nav.sumario li a:hover { background: #E9EDF5; text-decoration: none; }
+
+  main { background: var(--fundo); border: 1px solid var(--linha); border-radius: 14px; padding: 48px 56px; min-width: 0; }
+
+  /* capa */
+  .capa { border-bottom: 1px solid var(--linha); padding-bottom: 32px; margin-bottom: 8px; }
+  .capa .kicker { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ambar); font-weight: 600; }
+  .capa h1 { font-size: 2.5rem; line-height: 1.1; letter-spacing: -0.02em; margin: 10px 0 12px; }
+  .capa .sub { font-size: 1.12rem; color: var(--suave); max-width: 40em; margin: 0 0 18px; }
+  .capa .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.9rem; color: var(--suave); }
+  .capa .meta b { color: var(--tinta); font-weight: 600; }
+  .capa figure { margin: 26px 0 0; }
+
+  h2 { font-size: 1.6rem; letter-spacing: -0.01em; line-height: 1.2; margin: 52px 0 14px; padding-top: 18px; border-top: 3px solid var(--tinta); scroll-margin-top: 72px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 14px; padding-left: 24px; }
+  li { margin: 3px 0; }
+  strong { font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 20px; font-size: 0.9rem; line-height: 1.45; }
+  th { text-align: left; background: #EEF1F7; font-weight: 600; }
+  th, td { padding: 7px 10px; border: 1px solid var(--linha); vertical-align: top; }
+  tr:nth-child(even) td { background: #FAFBFD; }
+
+  pre { background: var(--codigo); border: 1px solid var(--linha); border-radius: 8px; padding: 12px 14px; overflow-x: auto;
+        font-family: var(--mono); font-size: 0.8rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--codigo); padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  blockquote { margin: 14px 0; padding: 10px 16px; background: var(--ambar-claro); border-left: 4px solid var(--ambar); border-radius: 0 8px 8px 0; }
+  blockquote p { margin: 0; }
+
+  .formula { margin: 12px 0 18px; padding: 12px 10px; background: #F7F8FC; border: 1px solid var(--linha); border-radius: 10px; overflow-x: auto; }
+  .formula .katex-display { margin: 0; }
+  .formula .katex { font-size: 1.12em; }
+
+  figure { margin: 18px auto 22px; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--linha); }
+  figure.media { max-width: 560px; }
+  figure.estreita { max-width: 340px; }
+  figcaption { font-size: 0.84rem; color: var(--suave); margin-top: 6px; text-align: center; }
+
+  .rodape { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--linha); font-size: 0.82rem; color: var(--suave); text-align: center; }
+  .rodape b { color: var(--tinta); }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; padding: 16px 10px 40px; }
+    nav.sumario { position: static; max-height: none; background: #fff; border: 1px solid var(--linha); border-radius: 12px; padding: 16px; }
+    main { padding: 28px 20px; }
+    .capa h1 { font-size: 1.9rem; }
+  }
+
+  .so-impressao { display: none; }
+  /* impressão e PDF */
+  @page { size: A4; margin: 16mm 15mm 18mm; }
+  @media print {
+    body { background: #fff; font-size: 10.5pt; line-height: 1.5; }
+    .topo, .so-tela { display: none !important; }
+    .so-impressao { display: flex; }
+    .layout { display: block; max-width: none; padding: 0; }
+    main { border: 0; padding: 0; border-radius: 0; }
+    .capa { min-height: 245mm; display: flex; flex-direction: column; justify-content: center; border: 0; break-after: page; }
+    .capa h1 { font-size: 30pt; }
+    nav.sumario { position: static; max-height: none; overflow: visible; break-after: page; font-size: 11pt; }
+    nav.sumario h2 { font-size: 16pt; letter-spacing: 0; text-transform: none; color: var(--tinta); margin-bottom: 14px; }
+    nav.sumario li a { padding: 4px 0; border-bottom: 1px dotted var(--linha); border-radius: 0; }
+    h2 { break-before: page; margin-top: 0; font-size: 18pt; }
+    h3 { break-after: avoid; }
+    table, figure, .formula, pre, blockquote { break-inside: avoid; }
+    tr { break-inside: avoid; }
+    a { color: var(--tinta); }
+    figure.larga { max-width: 92%; }
+  }
+</style>
+</head>
+<body>
+<header class="topo">
+  <a class="botao" href="../index.html">&larr; Voltar ao modelo 3D</a>
+  <span class="nome">Manual da Cabeça 3D · v2.1</span>
+  <a class="botao principal" href="manual.pdf" download="Manual_Cabeca3D_v2.1.pdf">Baixar PDF</a>
+</header>
+<section class="capa so-impressao">
+      <div class="kicker">Manual do usuário · versão v2.1</div>
+      <h1>Cabeça 3D: pineal e hipófise</h1>
+      <p class="sub">Modelo interativo da pineal, da hipófise e do caminho que leva a luz do dia até a melatonina da noite: instalação, recursos, a matemática por trás e roteiros de estudo.</p>
+      <div class="meta"><span><b>Autor:</b> Francisco Campos de Carvalho</span><span><b>Data:</b> 10 de novembro de 2026</span><span><b>Versão:</b> v2.1</span></div>
+      <figure class="larga"><img src="img/01_visao_geral.jpg" alt="A Cabeça 3D na vista inicial"></figure>
+    </section>
+<div class="layout">
+  <nav class="sumario" aria-label="Sumário">
+    <h2>Sumário</h2>
+    <ol><li><a href="#1-apresentacao">1. Apresentação</a></li><li><a href="#2-conhecendo-a-tela">2. Conhecendo a tela</a></li><li><a href="#3-as-estruturas-do-modelo">3. As estruturas do modelo</a></li><li><a href="#4-as-ferramentas-de-explorar">4. As ferramentas de Explorar</a></li><li><a href="#5-relogio-de-24-horas-e-ritmos-do-dia">5. Relógio de 24 horas e ritmos do dia</a></li><li><a href="#6-vistas-cortes-camadas-e-imagens">6. Vistas, cortes, camadas e imagens</a></li><li><a href="#7-som-e-voz">7. Som e voz</a></li><li><a href="#8-volumes-o-modelo-e-o-corpo-real">8. Volumes: o modelo e o corpo real</a></li><li><a href="#9-a-matematica-por-tras">9. A matemática por trás</a></li><li><a href="#10-roteiros-de-estudo">10. Roteiros de estudo</a></li><li><a href="#11-os-scripts-python">11. Os scripts Python</a></li><li><a href="#12-por-dentro-do-codigo">12. Por dentro do código</a></li><li><a href="#13-solucao-de-problemas">13. Solução de problemas</a></li><li><a href="#14-linha-do-tempo-do-projeto">14. Linha do tempo do projeto</a></li><li><a href="#15-glossario">15. Glossário</a></li><li><a href="#16-fontes-e-creditos">16. Fontes e créditos</a></li></ol>
+  </nav>
+  <main>
+    <section class="capa so-tela">
+      <div class="kicker">Manual do usuário · versão v2.1</div>
+      <h1>Cabeça 3D: pineal e hipófise</h1>
+      <p class="sub">Modelo interativo da pineal, da hipófise e do caminho que leva a luz do dia até a melatonina da noite: instalação, recursos, a matemática por trás e roteiros de estudo.</p>
+      <div class="meta"><span><b>Autor:</b> Francisco Campos de Carvalho</span><span><b>Data:</b> 10 de novembro de 2026</span><span><b>Versão:</b> v2.1</span></div>
+      <figure class="larga"><img src="img/01_visao_geral.jpg" alt="A Cabeça 3D na vista inicial"></figure>
+    </section>
+    <h2 id="1-apresentacao">1. Apresentação</h2>
+<p>A Cabeça 3D é um modelo interativo, feito no navegador, que mostra onde ficam a pineal e a hipófise e como a luz do dia vira melatonina à noite. A versão descrita aqui é a <strong>v2.1</strong>, de 10 de novembro de 2026.</p>
+<p>O projeto nasceu de uma conversa sobre a pineal e o "terceiro olho", com uma regra desde o início: falar do simbolismo sem se desviar da fisiologia. Daí vieram pôsteres em Python, uma simulação da melatonina e, por fim, o modelo 3D, que foi crescendo a cada pedido.</p>
+<p><strong>O que o modelo faz, em uma linha por área:</strong></p>
+<ul>
+<li><strong>Anatomia:</strong> cerca de 30 estruturas clicáveis, cada uma com ficha, função e volume.</li>
+<li><strong>Fisiologia:</strong> o circuito luz → NSQ → medula → gânglio cervical → pineal, o líquor e o sistema porta da hipófise, animados.</li>
+<li><strong>Tempo:</strong> relógio de 24 horas, rotinas de luz, ritmos do dia (melatonina, cortisol, temperatura, pressão do sono), jet lag e turnos.</li>
+<li><strong>Medidas:</strong> régua de distância, ângulo, volume e tetraedro; comparação de tamanhos em escala logarítmica.</li>
+<li><strong>Estudo:</strong> tour guiado com narração, quiz, modo embrião, rede do NSQ (modelo de Kuramoto).</li>
+<li><strong>Uso:</strong> som e voz, português e inglês, salvar imagem, menu retrátil.</li>
+</ul>
+<p><strong>Onde ele roda:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Lugar</th>
+<th>Endereço</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Servidor local</td>
+<td>http://endereço-do-servidor:8002</td>
+<td>Uso na rede local</td>
+</tr>
+<tr>
+<td>Página publicada no Claude</td>
+<td><a href="https://claude.ai/artifact/9hRaVuziihda7P5EFw1brn" target="_blank" rel="noopener">Cabeça 3D: pineal e hipófise</a></td>
+<td>Compartilhar por link</td>
+</tr>
+<tr>
+<td>GitHub Pages (planejado)</td>
+<td>https://fcamposcarvalho.github.io/cabeca3d/</td>
+<td>Site público em https</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Como usar este manual:</strong> a seção 2 basta para começar. As seções 3 a 8 explicam cada recurso. A seção 9 traz a matemática por trás, e a 10, exercícios guiados. As seções 11 a 13 são para quem quer mexer no código ou resolver problemas.</p>
+<h2 id="2-conhecendo-a-tela">2. Conhecendo a tela</h2>
+<p>A tela tem duas partes: o <strong>menu</strong> à esquerda, com todos os controles, e o <strong>palco 3D</strong> à direita, onde fica a cabeça. Os cartões das ferramentas (tour, quiz, régua...) aparecem sobre o palco e podem ser arrastados.</p>
+<figure class="larga"><img src="img/01_visao_geral.jpg" alt="Tela inicial: menu à esquerda e a cabeça em vista 3/4 com os rótulos"><figcaption>Tela inicial: menu à esquerda e a cabeça em vista 3/4 com os rótulos</figcaption></figure>
+
+<h3 id="21-o-menu-de-cima-para-baixo">2.1 O menu, de cima para baixo</h3>
+<ol>
+<li><strong>Cabeçalho</strong> com o título e os botões <strong>PT | EN</strong>.</li>
+<li><strong>Explorar:</strong> Tour guiado, Quiz, Modo embrião, Régua, Tamanhos, Rede do NSQ, Jet lag e turnos.</li>
+<li><strong>Som:</strong> ligar, testar, volume e as opções de efeitos, voz e ambiente.</li>
+<li><strong>Vista:</strong> Perfil, Frente, Topo, 3/4, Salvar imagem, Copiar imagem.</li>
+<li><strong>Corte:</strong> Nenhum, Perfil, Frente, Topo e a posição do plano.</li>
+<li><strong>Relógio de 24 horas:</strong> hora, rotina e o gráfico dos ritmos.</li>
+<li><strong>Camadas:</strong> pele, cérebro, ventrículos, vasos, planos, circuito, fluxo do líquor, sistema porta, camada simbólica, rótulos.</li>
+<li><strong>Estrutura selecionada:</strong> a ficha do que você clicou.</li>
+<li><strong>Configurações:</strong> Restaurar padrão.</li>
+<li><strong>Manual e rodapé:</strong> links para este manual (página e PDF), aviso educativo, autoria e versão (v2.1).</li>
+</ol>
+<h3 id="22-mouse-e-teclado">2.2 Mouse e teclado</h3>
+<table>
+<thead>
+<tr>
+<th>Ação</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arrastar com o botão esquerdo</td>
+<td>Gira em volta da cabeça</td>
+</tr>
+<tr>
+<td>Arrastar com o botão direito</td>
+<td>Desliza a cena para os lados</td>
+</tr>
+<tr>
+<td>Roda do mouse (ou pinça no touchpad)</td>
+<td>Aproxima e afasta</td>
+</tr>
+<tr>
+<td>Clique numa estrutura, no nome ou na bolinha</td>
+<td>Seleciona e abre a ficha</td>
+</tr>
+<tr>
+<td>Duplo clique numa estrutura</td>
+<td>A câmera voa até ela e para de perto</td>
+</tr>
+<tr>
+<td>Arrastar o topo de um cartão</td>
+<td>Move o cartão; duplo clique no topo devolve ao lugar</td>
+</tr>
+<tr>
+<td>Tecla M</td>
+<td>Recolhe ou abre o menu</td>
+</tr>
+</tbody>
+</table>
+<p>Ao clicar, o modelo prefere a estrutura pequena que está bem sob o cursor. Assim, clicar na bolinha da pineal seleciona a pineal, e não o tálamo translúcido que fica na frente dela.</p>
+<h3 id="23-idioma">2.3 Idioma</h3>
+<p>Os botões <strong>PT | EN</strong> trocam tudo na hora: menu, rótulos, fichas, cartões, voz e formato dos números (vírgula em português, ponto em inglês). O que estiver aberto continua aberto, inclusive uma medida em andamento. A escolha fica gravada no navegador.</p>
+<h3 id="24-restaurar-padrao">2.4 Restaurar padrão</h3>
+<p>O botão pede confirmação: o primeiro clique vira "Clique de novo para confirmar" por 4 segundos. Ele volta vista, corte, relógio, camadas, som, menu e posição dos cartões ao início. O idioma não muda.</p>
+<h2 id="3-as-estruturas-do-modelo">3. As estruturas do modelo</h2>
+<p>O modelo tem 31 estruturas clicáveis. O sistema de coordenadas é o dos pôsteres, em centímetros: origem na raiz do nariz (násio), x da frente para trás, y para cima, z para o lado (positivo = esquerda da pessoa).</p>
+<table>
+<thead>
+<tr>
+<th>Estrutura</th>
+<th>Onde fica</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pineal</strong></td>
+<td>Teto do 3º ventrículo, entre os pulvinares</td>
+<td>Produz melatonina no escuro; cone de 5 a 8 mm com a base à frente e o ápice para trás</td>
+</tr>
+<tr>
+<td><strong>Adeno-hipófise</strong></td>
+<td>Frente da hipófise, na sela túrcica</td>
+<td>Produz GH, prolactina, TSH, ACTH, FSH e LH; veio do teto da boca do embrião</td>
+</tr>
+<tr>
+<td><strong>Neuro-hipófise e haste</strong></td>
+<td>Parte de trás da hipófise</td>
+<td>Libera ocitocina e vasopressina, feitas no hipotálamo</td>
+</tr>
+<tr>
+<td><strong>Hipotálamo</strong></td>
+<td>Assoalho e paredes baixas do 3º ventrículo</td>
+<td>Comanda a hipófise; contém o NSQ e o NPV</td>
+</tr>
+<tr>
+<td><strong>NSQ</strong> (núcleo supraquiasmático)</td>
+<td>Logo acima do quiasma óptico</td>
+<td>Relógio mestre; recebe luz direto da retina</td>
+</tr>
+<tr>
+<td><strong>NPV</strong> (núcleo paraventricular)</td>
+<td>Hipotálamo, junto ao 3º ventrículo</td>
+<td>Inicia a via que desce pela medula até a pineal</td>
+</tr>
+<tr>
+<td><strong>Tálamos</strong></td>
+<td>Paredes altas do 3º ventrículo</td>
+<td>Estação de passagem das sensações; não transportam hormônios</td>
+</tr>
+<tr>
+<td><strong>3º ventrículo</strong></td>
+<td>Fenda na linha média do diencéfalo</td>
+<td>Pineal no teto (atrás, em cima), hipófise no assoalho (frente, embaixo)</td>
+</tr>
+<tr>
+<td><strong>Ventrículos laterais</strong></td>
+<td>Um em cada hemisfério, em forma de C</td>
+<td>Produzem boa parte do líquor</td>
+</tr>
+<tr>
+<td><strong>Aqueduto e 4º ventrículo</strong></td>
+<td>Logo abaixo da pineal</td>
+<td>Saída do líquor; um tumor de pineal pode apertá-lo</td>
+</tr>
+<tr>
+<td><strong>Quiasma, nervos e tratos ópticos</strong></td>
+<td>Acima da hipófise</td>
+<td>Cruzamento dos nervos ópticos; ponto de partida da luz para o NSQ</td>
+</tr>
+<tr>
+<td><strong>Olhos</strong></td>
+<td>Órbitas</td>
+<td>"Irmãos" da pineal no embrião; dizem a ela se é dia ou noite</td>
+</tr>
+<tr>
+<td><strong>Pirâmide nasal</strong></td>
+<td>Nariz externo</td>
+<td>Pirâmide de três faces, vértice na raiz do nariz</td>
+</tr>
+<tr>
+<td><strong>Glabela</strong></td>
+<td>Entre as sobrancelhas</td>
+<td>Onde sai o plano horizontal da pineal</td>
+</tr>
+<tr>
+<td><strong>Raiz do nariz (násio)</strong></td>
+<td>Encontro do frontal com os ossos nasais</td>
+<td>Origem das coordenadas; o plano da hipófise sai um pouco abaixo</td>
+</tr>
+<tr>
+<td><strong>Topo da cabeça (vértice)</strong></td>
+<td>Ponto mais alto do couro cabeludo</td>
+<td>Fica quase em cima da pineal, uns 10,7 cm acima</td>
+</tr>
+<tr>
+<td><strong>Parte de trás da cabeça (opistocrânio)</strong></td>
+<td>Ponto mais posterior, sobre o occipital</td>
+<td>Glabela até aqui = comprimento da cabeça, uns 20 cm</td>
+</tr>
+<tr>
+<td><strong>Seio frontal</strong></td>
+<td>Atrás da glabela</td>
+<td>Cavidade de ar que drena para o nariz</td>
+</tr>
+<tr>
+<td><strong>Seio esfenoidal</strong></td>
+<td>Logo abaixo da sela túrcica</td>
+<td>Caminho do cirurgião até a hipófise, pelo nariz</td>
+</tr>
+<tr>
+<td><strong>Corpo caloso</strong></td>
+<td>Acima do diencéfalo</td>
+<td>Ponte entre os hemisférios; a pineal fica sob o esplênio</td>
+</tr>
+<tr>
+<td><strong>Cerebelo</strong></td>
+<td>Atrás do tronco</td>
+<td>Coordena movimento e equilíbrio</td>
+</tr>
+<tr>
+<td><strong>Tronco encefálico</strong></td>
+<td>Entre cérebro e medula</td>
+<td>Os colículos superiores ficam logo abaixo da pineal</td>
+</tr>
+<tr>
+<td><strong>Medula espinhal</strong></td>
+<td>Desce pelo pescoço</td>
+<td>A via da pineal desce por ela até T1–T2</td>
+</tr>
+<tr>
+<td><strong>Gânglio cervical superior</strong></td>
+<td>Pescoço</td>
+<td>Suas fibras sobem com as artérias e entram na pineal por trás</td>
+</tr>
+<tr>
+<td><strong>Seios cavernosos</strong></td>
+<td>Dos dois lados da hipófise</td>
+<td>Veias com a carótida interna por dentro</td>
+</tr>
+<tr>
+<td><strong>Carótida interna</strong></td>
+<td>Atravessa o seio cavernoso</td>
+<td>Dá ramos para a hipófise e para o olho</td>
+</tr>
+<tr>
+<td><strong>Veias angular e oftálmica superior</strong></td>
+<td>Canto do olho ao seio cavernoso</td>
+<td>Rota do "triângulo do perigo" da face</td>
+</tr>
+<tr>
+<td><strong>Sistema porta hipofisário</strong></td>
+<td>Haste da hipófise</td>
+<td>Leva os hormônios de comando do hipotálamo direto à adeno-hipófise</td>
+</tr>
+<tr>
+<td><strong>Fluxo do líquor</strong></td>
+<td>Ventrículos</td>
+<td>Ventrículos laterais → forames de Monro → 3º ventrículo → aqueduto</td>
+</tr>
+<tr>
+<td><strong>Ajna</strong> (simbólico)</td>
+<td>Glabela</td>
+<td>"Terceiro olho" das tradições hindus; leitura simbólica</td>
+</tr>
+<tr>
+<td><strong>Coroa</strong> (simbólico)</td>
+<td>Topo da cabeça</td>
+<td>Chacra do topo; eixo vertical desenhado sobre a pineal</td>
+</tr>
+</tbody>
+</table>
+<p>A camada simbólica (eixo vertical, ajna e coroa) reúne leituras de tradições espirituais, sem comprovação fisiológica. A ligação entre pineal e "terceiro olho" vem da Teosofia.</p>
+<h2 id="4-as-ferramentas-de-explorar">4. As ferramentas de Explorar</h2>
+<p>Cada botão de Explorar abre um cartão sobre o palco; clicar de novo no mesmo botão, ou em Sair, fecha. Só uma ferramenta fica aberta por vez.</p>
+<h3 id="41-tour-guiado">4.1 Tour guiado</h3>
+<p>São 14 passos que seguem o caminho da luz do dia até a melatonina da noite. A câmera voa até cada estrutura, que se acende, e a ficha correspondente abre no menu.</p>
+<ol>
+<li>O centro da cabeça</li>
+<li>A luz entra pelos olhos</li>
+<li>Quiasma e relógio mestre (NSQ)</li>
+<li>A noite chega e o freio se solta (NPV)</li>
+<li>O sinal desce pela medula até T1–T2</li>
+<li>Gânglio cervical superior</li>
+<li>As fibras entram na pineal por trás</li>
+<li>A pineal libera melatonina</li>
+<li>O terceiro ventrículo e o líquor</li>
+<li>Hipófise e sistema porta</li>
+<li>Glabela, raiz do nariz e os dois planos</li>
+<li>Da raiz do nariz ao seio cavernoso</li>
+<li>Vista de cima</li>
+<li>Fim do tour</li>
+</ol>
+<p>Com <strong>Narração do tour</strong> ligada, uma voz lê cada passo. Com <strong>Tour avança sozinho</strong>, o próximo passo vem quando a fala termina (ou depois de um tempo proporcional ao texto).</p>
+<figure class="larga"><img src="img/diagrama_via.png" alt="Via da luz até a melatonina, como aparece no tour e na camada Circuito"><figcaption>Via da luz até a melatonina, como aparece no tour e na camada Circuito</figcaption></figure>
+
+<p>O sinal não vai direto do NSQ à pineal, que fica a uns 3 cm: ele desce até o tórax e volta pelo pescoço, entrando na pineal por trás.</p>
+<h3 id="42-quiz">4.2 Quiz</h3>
+<p>Uma estrutura pisca e quatro opções aparecem. A resposta certa fica verde, a errada vermelha, e o cartão completa com a frase da ficha (por exemplo: "Isso mesmo! Parte da frente da hipófise..."). O placar conta acertos e tentativas; a câmera se aproxima de cada estrutura sorteada.</p>
+<h3 id="43-modo-embriao">4.3 Modo embrião</h3>
+<p>Mostra, de forma esquemática, de onde vêm a pineal, os olhos e a hipófise. Um controle desliza da 3ª à 8ª semana, e o botão Reproduzir anima sozinho.</p>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semanas 3–4</td>
+<td>O diencéfalo é uma vesícula do tubo neural com quatro brotos: duas vesículas ópticas, um para cima e para trás (pineal), um para baixo (infundíbulo)</td>
+</tr>
+<tr>
+<td>Semanas 4–5</td>
+<td>As vesículas ópticas crescem para os lados; a bolsa de Rathke sobe do teto da boca</td>
+</tr>
+<tr>
+<td>Semana 6</td>
+<td>A bolsa encontra o infundíbulo: a parte da boca vira adeno-hipófise, a do cérebro, neuro-hipófise</td>
+</tr>
+<tr>
+<td>Semanas 7–8</td>
+<td>A bolsa perde a ligação com a boca; os olhos vão para a frente do rosto</td>
+</tr>
+<tr>
+<td>Depois</td>
+<td>Retinas, pineal e neuro-hipófise são irmãs; a adeno-hipófise veio da boca</td>
+</tr>
+</tbody>
+</table>
+<p>Com o som ligado, há um batimento cardíaco ao fundo (opção "Embrião com batimento").</p>
+<figure class="larga"><img src="img/10_embriao.jpg" alt="Modo embrião entre a 4ª e a 5ª semana: bolsa de Rathke subindo da boca primitiva"><figcaption>Modo embrião entre a 4ª e a 5ª semana: bolsa de Rathke subindo da boca primitiva</figcaption></figure>
+
+<h3 id="44-regua">4.4 Régua</h3>
+<p>A régua tem quatro modos, escolhidos no topo do cartão. Uma unidade do modelo vale cerca de 1 cm.</p>
+<table>
+<thead>
+<tr>
+<th>Modo</th>
+<th>Cliques</th>
+<th>Resultado</th>
+<th>Experimente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Distância</td>
+<td>2</td>
+<td>Distância em linha reta, em cm</td>
+<td>Glabela e pineal</td>
+</tr>
+<tr>
+<td>Ângulo</td>
+<td>3</td>
+<td>Ângulo no ponto do meio, com o arco desenhado</td>
+<td>Glabela, pineal e topo da cabeça: 87,5°</td>
+</tr>
+<tr>
+<td>Volume</td>
+<td>1 ou 2</td>
+<td>Volume de uma estrutura; com duas, quantas vezes uma cabe na outra</td>
+<td>Pineal e hipófise: 3,8 vezes</td>
+</tr>
+<tr>
+<td>Tetraedro</td>
+<td>4</td>
+<td>Desenha o tetraedro e calcula o volume pelo produto misto</td>
+<td>Glabela, pineal, hipófise e um olho: 16,1 cm³</td>
+</tr>
+</tbody>
+</table>
+<p>O resultado aparece no cartão, num rótulo dourado no 3D e no painel lateral, com a fórmula usada. Um novo clique depois da medida completa começa outra. No modo Tetraedro, quatro pontos da linha média dão volume zero, porque estão no mesmo plano.</p>
+<figure class="larga"><img src="img/04_regua_angulo.jpg" alt="Régua no modo Ângulo: glabela, pineal e topo da cabeça dão 87,5 graus"><figcaption>Régua no modo Ângulo: glabela, pineal e topo da cabeça dão 87,5 graus</figcaption></figure>
+
+<figure class="larga"><img src="img/05_tetraedro.jpg" alt="Régua no modo Tetraedro: glabela, pineal, hipófise e olho dão 16,1 cm³"><figcaption>Régua no modo Tetraedro: glabela, pineal, hipófise e olho dão 16,1 cm³</figcaption></figure>
+
+<h3 id="45-tamanhos">4.5 Tamanhos</h3>
+<p>Um gráfico de barras em escala logarítmica, do NSQ (0,25 mm³) ao encéfalo (1.130 a 1.260 cm³): quase 7 ordens de grandeza. Cada linha mostra o valor real típico, a faixa entre adultos (trecho claro) e o volume do modelo (◆). Clicar numa linha voa até a estrutura.</p>
+<figure class="media"><img src="img/06_tamanhos.jpg" alt="Cartão Tamanhos, do NSQ ao encéfalo em escala logarítmica"><figcaption>Cartão Tamanhos, do NSQ ao encéfalo em escala logarítmica</figcaption></figure>
+
+<h3 id="46-rede-do-nsq-modelo-de-kuramoto">4.6 Rede do NSQ (modelo de Kuramoto)</h3>
+<p>O NSQ é feito de milhares de neurônios, cada um com seu próprio período, que entram em sincronia. O cartão simula 200 deles num círculo de fases: azul = mais rápido, laranja = mais lento. A seta mostra a fase média; o comprimento dela é a sincronia r, de 0 a 1.</p>
+<ul>
+<li><strong>Acoplamento K:</strong> abaixo do valor crítico (≈ 0,017) os neurônios se desencontram; acima, sincronizam. O padrão é 0,06.</li>
+<li><strong>Ciclo de luz diário:</strong> arrasta a rede para 24 h.</li>
+<li><strong>Embaralhar fases</strong> e <strong>Pulso de luz:</strong> perturbam a rede para ver a sincronia voltar.</li>
+<li>A simulação anda 24 horas por segundo; o gráfico de baixo mostra r nos últimos 10 dias.</li>
+</ul>
+<figure class="media"><img src="img/08_rede_nsq.jpg" alt="Rede do NSQ sincronizada: círculo de fases e a sincronia r nos últimos dias"><figcaption>Rede do NSQ sincronizada: círculo de fases e a sincronia r nos últimos dias</figcaption></figure>
+
+<h3 id="47-jet-lag-e-turnos">4.7 Jet lag e turnos</h3>
+<p>Um modelo didático de quantos dias o relógio leva para se acertar.</p>
+<ul>
+<li><strong>Viagem:</strong> um controle de −12 a +12 fusos, com exemplos (São Paulo → Lisboa, Paris, Tóquio...). O gráfico mostra o início da melatonina dia a dia; a linha tracejada é a viagem no sentido contrário. Para leste costuma ser mais difícil: 6 fusos levam uns 5 dias, contra uns 4 para oeste.</li>
+<li><strong>Turno noturno:</strong> trabalho das 23h às 7h, sono das 8h às 15h, com opções de óculos escuros na volta e folgas no fim de semana. Mostra onde a melatonina fica depois de 3 semanas.</li>
+</ul>
+<figure class="media"><img src="img/07_jetlag.jpg" alt="Jet lag no modo Viagem: início da melatonina dia a dia após a mudança de fuso"><figcaption>Jet lag no modo Viagem: início da melatonina dia a dia após a mudança de fuso</figcaption></figure>
+
+<h2 id="5-relogio-de-24-horas-e-ritmos-do-dia">5. Relógio de 24 horas e ritmos do dia</h2>
+<p>O relógio anda 1,1 hora do modelo por segundo real (um dia em uns 22 segundos). A hora muda a luz da cena, a atividade do circuito e o brilho da pineal. O controle deslizante leva a qualquer hora; Pausar congela tudo.</p>
+<h3 id="51-as-tres-rotinas">5.1 As três rotinas</h3>
+<table>
+<thead>
+<tr>
+<th>Rotina</th>
+<th>Luz à noite</th>
+<th>Sono</th>
+<th>Efeito no relógio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Noite escura</td>
+<td>30 lux até as 23h, depois escuro</td>
+<td>23h às 7h</td>
+<td>Referência</td>
+</tr>
+<tr>
+<td>Luz e telas até 1h (1ª noite)</td>
+<td>150 lux até a 1h</td>
+<td>1h às 7h</td>
+<td>A luz corta a melatonina na hora</td>
+</tr>
+<tr>
+<td>Luz e telas até 1h (após 2 semanas)</td>
+<td>150 lux até a 1h</td>
+<td>1h às 7h</td>
+<td>Relógio atrasado em cerca de 2,8 h</td>
+</tr>
+</tbody>
+</table>
+<p>De dia a luz é de 1.000 lux. O texto abaixo do relógio explica o momento: Dia, Entardecer, Noite, Noite com telas ou Madrugada.</p>
+<h3 id="52-o-grafico-dos-ritmos">5.2 O gráfico dos ritmos</h3>
+<p>Um único gráfico, do meio-dia ao meio-dia, com quatro curvas comandadas pelo NSQ. A faixa escura é o horário de sono da rotina; a linha vertical, a hora atual; a legenda mostra o valor naquele instante. Com uma rotina de telas, a linha tracejada mostra a melatonina da noite escura, para comparar.</p>
+<figure class="estreita"><img src="img/03_relogio.jpg" alt="Relógio de 24 horas e o gráfico dos ritmos do dia"><figcaption>Relógio de 24 horas e o gráfico dos ritmos do dia</figcaption></figure>
+
+<table>
+<thead>
+<tr>
+<th>Curva</th>
+<th>Unidade</th>
+<th>Comportamento no modelo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Melatonina</td>
+<td>% do pico</td>
+<td>Abre a janela perto das 21h, pico de madrugada, cai de manhã; a luz suprime</td>
+</tr>
+<tr>
+<td>Cortisol</td>
+<td>µg/dL</td>
+<td>Mínimo perto da meia-noite (3), pico logo depois de acordar (cerca de 20)</td>
+</tr>
+<tr>
+<td>Temperatura</td>
+<td>°C</td>
+<td>Mínima de madrugada (perto das 5h), máxima no fim da tarde (perto das 17h), em torno de 36,8</td>
+</tr>
+<tr>
+<td>Pressão do sono</td>
+<td>%</td>
+<td>Sobe acordado, cai dormindo, menos o alerta circadiano</td>
+</tr>
+</tbody>
+</table>
+<p>Os valores são aproximados de um adulto e servem para ver as fases umas contra as outras, não para medir alguém.</p>
+<h2 id="6-vistas-cortes-camadas-e-imagens">6. Vistas, cortes, camadas e imagens</h2>
+<h3 id="61-vistas">6.1 Vistas</h3>
+<p>Quatro botões levam a câmera a posições prontas: <strong>Perfil</strong> (de lado, como o pôster), <strong>Frente</strong>, <strong>Topo</strong> e <strong>3/4</strong> (a vista inicial). A troca é um voo suave, e o mouse continua livre depois.</p>
+<h3 id="62-cortes">6.2 Cortes</h3>
+<p>Um plano fatia pele, cérebro e vasos para mostrar o interior; as estruturas pequenas do centro nunca são cortadas.</p>
+<table>
+<thead>
+<tr>
+<th>Corte</th>
+<th>Remove</th>
+<th>Posição inicial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perfil (sagital)</td>
+<td>O lado esquerdo da pessoa</td>
+<td>0 = linha média</td>
+</tr>
+<tr>
+<td>Frente (coronal)</td>
+<td>A parte da frente da cabeça</td>
+<td>0,3 cm atrás da raiz do nariz</td>
+</tr>
+<tr>
+<td>Topo (axial)</td>
+<td>O topo da cabeça</td>
+<td>1,6 cm de altura, logo acima da pineal</td>
+</tr>
+</tbody>
+</table>
+<p>O controle abaixo dos botões move o plano. Escolher um corte também vira a câmera para a vista que combina com ele.</p>
+<h3 id="63-camadas">6.3 Camadas</h3>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Ligada no início</th>
+<th>O que mostra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pele</td>
+<td>Sim</td>
+<td>Contorno translúcido da cabeça e do pescoço</td>
+</tr>
+<tr>
+<td>Cérebro</td>
+<td>Sim</td>
+<td>Envoltório cerebral, cerebelo, tronco, corpo caloso</td>
+</tr>
+<tr>
+<td>Ventrículos</td>
+<td>Sim</td>
+<td>Laterais, 3º, aqueduto e 4º</td>
+</tr>
+<tr>
+<td>Vasos</td>
+<td>Sim</td>
+<td>Carótidas, seios cavernosos, veias angular e oftálmica</td>
+</tr>
+<tr>
+<td>Planos</td>
+<td>Sim</td>
+<td>Plano horizontal da pineal (sai na glabela) e o da hipófise</td>
+</tr>
+<tr>
+<td>Circuito</td>
+<td>Sim</td>
+<td>Pulsos azuis (luz) e vermelhos (sinal até a pineal), pontos laranja (melatonina)</td>
+</tr>
+<tr>
+<td>Fluxo do líquor</td>
+<td>Não</td>
+<td>Partículas azuis pelos ventrículos e o quadro de volumes em mL</td>
+</tr>
+<tr>
+<td>Sistema porta</td>
+<td>Não</td>
+<td>Veias porta e partículas verdes, roxas e verde-claras</td>
+</tr>
+<tr>
+<td>Camada simbólica</td>
+<td>Sim</td>
+<td>Eixo vertical, ajna e coroa</td>
+</tr>
+<tr>
+<td>Rótulos</td>
+<td>Sim</td>
+<td>Nomes com linhas-guia, sem sobreposição</td>
+</tr>
+</tbody>
+</table>
+<p>No sistema porta, o verde é o dos hormônios de comando descendo pelas veias porta, o roxo o dos hormônios da adeno-hipófise saindo para o seio cavernoso, e o verde-claro o da ocitocina e da vasopressina descendo por dentro dos axônios.</p>
+<figure class="larga"><img src="img/11_corte_porta.jpg" alt="Corte de perfil com o sistema porta ligado, após duplo clique na hipófise"><figcaption>Corte de perfil com o sistema porta ligado, após duplo clique na hipófise</figcaption></figure>
+
+<h3 id="64-salvar-e-copiar-imagem">6.4 Salvar e copiar imagem</h3>
+<p><strong>Salvar imagem</strong> gera um PNG da vista atual, com os rótulos, as linhas de medida e uma legenda com a versão. No servidor local vai direto para Downloads; na página publicada, o Claude pede confirmação antes. <strong>Copiar imagem</strong> põe o PNG na área de transferência, mas só funciona em https ou localhost (no GitHub Pages, sim; num endereço http da rede local, não).</p>
+<h2 id="7-som-e-voz">7. Som e voz</h2>
+<p>O som começa <strong>desligado</strong>, porque os navegadores só tocam áudio depois de um clique. Clique em <strong>Ligar som</strong> (ou marque qualquer opção, ou mexa no volume, que ele liga sozinho). <strong>Testar</strong> toca notas e uma frase falada; sem som, confira se a aba não está silenciada e o volume do Windows.</p>
+<p>Todo o áudio é sintetizado na hora pelo próprio navegador (Web Audio), sem arquivos de som. A voz usa a síntese de fala do sistema: em português, uma voz pt-BR (no Edge, as vozes "Natural" são as melhores); em inglês, uma voz en-US.</p>
+<table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Opção</th>
+<th>Ligada no início</th>
+<th>O que se ouve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Efeitos</td>
+<td>Cliques, quiz e régua</td>
+<td>Sim</td>
+<td>Um tom por estrutura, acerto e erro no quiz, notas da régua (mais agudas para distâncias e ângulos menores)</td>
+</tr>
+<tr>
+<td>Efeitos</td>
+<td>Circuito audível</td>
+<td>Sim</td>
+<td>Pings da luz, estalos do sinal nervoso, gotas da melatonina</td>
+</tr>
+<tr>
+<td>Efeitos</td>
+<td>Embrião com batimento</td>
+<td>Sim</td>
+<td>Batimento cardíaco no modo embrião</td>
+</tr>
+<tr>
+<td>Voz</td>
+<td>Nomes ao clicar</td>
+<td>Sim</td>
+<td>Nome e frase da estrutura clicada; resultados da régua</td>
+</tr>
+<tr>
+<td>Voz</td>
+<td>Narração do tour</td>
+<td>Sim</td>
+<td>Lê cada passo do tour</td>
+</tr>
+<tr>
+<td>Voz</td>
+<td>Tour avança sozinho</td>
+<td>Não</td>
+<td>Passa ao próximo passo quando a fala termina</td>
+</tr>
+<tr>
+<td>Ambiente</td>
+<td>Dia e noite</td>
+<td>Sim</td>
+<td>Fundo suave que muda com a hora</td>
+</tr>
+<tr>
+<td>Ambiente</td>
+<td>Líquor pulsando</td>
+<td>Sim</td>
+<td>Pulso grave quando o fluxo do líquor está visível</td>
+</tr>
+<tr>
+<td>Ambiente</td>
+<td>Melodia da melatonina</td>
+<td>Não</td>
+<td>Notas de caixinha de música que acompanham o nível de melatonina</td>
+</tr>
+</tbody>
+</table>
+<p>Desmarcar uma opção corta o som dela na hora, inclusive o eco. Isso foi corrigido depois que a melodia da melatonina continuava tocando mesmo desligada.</p>
+<h2 id="8-volumes-o-modelo-e-o-corpo-real">8. Volumes: o modelo e o corpo real</h2>
+<p>Sete das dez estruturas comparadas têm, no modelo, um volume dentro da faixa real de um adulto. As três que fogem são o 3º ventrículo (cerca de 4 vezes maior), o encéfalo (cerca de 1,3 vez) e o NSQ, ampliado de propósito para aparecer: o real tem só uns 0,25 mm³, e o do modelo, 9,1 mm³.</p>
+<figure class="larga"><img src="img/grafico_volumes.png" alt="Volumes do modelo (calculados das formas 3D) e faixas reais de adultos das fontes da seção 8.4"><figcaption>Volumes do modelo (calculados das formas 3D) e faixas reais de adultos das fontes da seção 8.4</figcaption></figure>
+
+<p>O NSQ aparece umas 36 vezes maior que o real porque foi ampliado de propósito; o 3º ventrículo ficou largo demais no desenho.</p>
+<h3 id="81-onde-os-volumes-aparecem">8.1 Onde os volumes aparecem</h3>
+<ul>
+<li><strong>Na ficha de cada estrutura:</strong> volume no modelo (cada lado e os dois, nas estruturas em par), valor real de adulto, tamanho em comprimento × altura × largura e uma frase dizendo se o modelo ficou dentro da faixa. Na hipófise, a ficha soma adeno e neuro para comparar com a glândula inteira.</li>
+<li><strong>Na régua,</strong> nos modos Volume e Tetraedro (seção 4.4).</li>
+<li><strong>Em Tamanhos,</strong> com a escala logarítmica (seção 4.5).</li>
+<li><strong>No quadro do líquor,</strong> ao ligar a camada Fluxo do líquor.</li>
+</ul>
+<figure class="estreita"><img src="img/02_ficha_pineal.jpg" alt="Ficha da pineal com o bloco de volume"><figcaption>Ficha da pineal com o bloco de volume</figcaption></figure>
+
+<h3 id="82-esfera-de-mesmo-volume">8.2 Esfera de mesmo volume</h3>
+<p>O botão da ficha põe ao lado da estrutura uma esfera dourada com o mesmo volume, e a câmera se aproxima para mostrar as duas. O rótulo dá o diâmetro equivalente: a pineal equivale a uma esfera de 0,62 cm. Serve para sentir o tamanho de formas irregulares, como os ventrículos. Selecionar outra estrutura tira a esfera.</p>
+<h3 id="83-liquor-em-mililitros">8.3 Líquor em mililitros</h3>
+<p>Com a camada Fluxo do líquor ligada, um quadro no canto direito mostra os volumes dos ventrículos, o total no corpo (125 a 150 mL, quase tudo em volta do cérebro e da medula) e a produção: uns 20 mL por hora, ou 500 mL por dia, o que renova o líquor 3 a 4 vezes por dia. Um contador soma o que foi produzido desde que a camada foi ligada, conforme o relógio do modelo anda. Os ventrículos do modelo somam 21,6 mL.</p>
+<figure class="larga"><img src="img/12_liquor.jpg" alt="Camada Fluxo do líquor ligada, com o quadro de volumes em mililitros no canto"><figcaption>Camada Fluxo do líquor ligada, com o quadro de volumes em mililitros no canto</figcaption></figure>
+
+<h3 id="84-de-onde-vem-os-valores-reais">8.4 De onde vêm os valores reais</h3>
+<table>
+<thead>
+<tr>
+<th>Estrutura</th>
+<th>Fonte</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pineal</td>
+<td><a href="https://www.wjgnet.com/1949-8470/full/v5/i4/166.htm" target="_blank" rel="noopener">World J Radiol 2013</a>; <a href="https://doaj.org/article/bfea774cb7534e0cb40e241dcd54abe0" target="_blank" rel="noopener">Sci World J 2012</a></td>
+<td>Varia até 20 vezes entre pessoas, sobretudo por cistos</td>
+</tr>
+<tr>
+<td>Hipófise</td>
+<td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4485185" target="_blank" rel="noopener">J Clin Imaging Sci</a>; <a href="https://link.springer.com/10.1007/s11102-021-01150-7" target="_blank" rel="noopener">Pituitary 2021</a></td>
+<td>Maior nas mulheres; cresce na gravidez</td>
+</tr>
+<tr>
+<td>Ventrículos laterais</td>
+<td><a href="https://www.ajnr.org/node/74388" target="_blank" rel="noopener">AJNR, anatomia dos ventrículos</a></td>
+<td>Valor de cada um; crescem uns 0,5 mL por ano (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3999285" target="_blank" rel="noopener">PMC3999285</a>)</td>
+</tr>
+<tr>
+<td>3º e 4º ventrículos</td>
+<td><a href="https://core.ac.uk/download/154383085.pdf" target="_blank" rel="noopener">Revisão de volumetria ventricular</a></td>
+<td>Médias de vários estudos</td>
+</tr>
+<tr>
+<td>Líquor total e produção</td>
+<td><a href="https://www.ncbi.nlm.nih.gov/books/NBK519007/" target="_blank" rel="noopener">NCBI Bookshelf</a></td>
+<td>125 mL em volta do cérebro, 25 mL nos ventrículos</td>
+</tr>
+<tr>
+<td>Tálamo</td>
+<td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6726201/table/pone.0222002.t004" target="_blank" rel="noopener">PLoS One 2019</a></td>
+<td>Médias de 5,6 a 6 cm³ por lado</td>
+</tr>
+<tr>
+<td>Cerebelo</td>
+<td><a href="https://jsurgmed.com/article/view/582135/5380" target="_blank" rel="noopener">J Surg Med 2019</a></td>
+<td>Maior nos homens</td>
+</tr>
+<tr>
+<td>Olho</td>
+<td><a href="https://eyewiki.org/Eye_in_Numbers" target="_blank" rel="noopener">EyeWiki, Eye in Numbers</a></td>
+<td>Quase uma esfera de 2,4 cm</td>
+</tr>
+<tr>
+<td>NSQ</td>
+<td><a href="https://springerlink.bibliotecabuap.elogim.com/10.1007/978-1-4939-3450-8_4" target="_blank" rel="noopener">Swaab, NSQ humano</a></td>
+<td>Cada um com uns 0,25 mm³</td>
+</tr>
+<tr>
+<td>Encéfalo</td>
+<td><a href="https://graphsearch.epfl.ch/en/concept/3763482" target="_blank" rel="noopener">EPFL Graph, tamanho do cérebro</a></td>
+<td>Médias de 1.130 cm³ (mulheres) e 1.260 cm³ (homens)</td>
+</tr>
+</tbody>
+</table>
+<p>Não existe um "humano médio" com um número único: cada valor é uma faixa típica, que muda com sexo, idade, população e método de medida. As comparações do dia a dia (ervilha, grão-de-bico, uva, laranja) são só para dar ideia de tamanho.</p>
+<h2 id="9-a-matematica-por-tras">9. A matemática por trás</h2>
+<p>Tudo o que o modelo mede ou simula vem de poucas fórmulas, todas visíveis no código. Esta seção reúne cada uma, com um exemplo tirado do próprio modelo.</p>
+<h3 id="91-coordenadas">9.1 Coordenadas</h3>
+<p>As medidas anatômicas usam (x, y, z) em cm, com origem no násio. O three.js usa outro sistema, então cada ponto passa por esta troca, que também centraliza a cabeça em x = 9:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>z</mi><mo stretchy="false">)</mo><mtext>  </mtext><mo>↦</mo><mtext>  </mtext><mo stretchy="false">(</mo><mtext> </mtext><mi>z</mi><mo separator="true">,</mo><mtext>  </mtext><mi>y</mi><mo separator="true">,</mo><mtext>  </mtext><mo>−</mo><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mn>9</mn><mo stretchy="false">)</mo><mtext> </mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(x, y, z) \;\mapsto\; (\,z,\; y,\; -(x - 9)\,)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">↦</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">9</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose">)</span></span></span></span></span></div>
+
+<h3 id="92-distancia-e-angulo">9.2 Distância e ângulo</h3>
+<p>A distância é a norma do vetor entre os dois pontos. O ângulo no ponto B, entre A e C, sai do produto escalar:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>d</mi><mo>=</mo><mo stretchy="false">∥</mo><mi>B</mi><mo>−</mo><mi>A</mi><mo stretchy="false">∥</mo><mo separator="true">,</mo><mspace width="2em"/><mi>θ</mi><mo>=</mo><mi>arccos</mi><mo>⁡</mo><mfrac><mrow><mo stretchy="false">(</mo><mi>A</mi><mo>−</mo><mi>B</mi><mo stretchy="false">)</mo><mo>⋅</mo><mo stretchy="false">(</mo><mi>C</mi><mo>−</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mo stretchy="false">∥</mo><mi>A</mi><mo>−</mo><mi>B</mi><mo stretchy="false">∥</mo><mtext> </mtext><mo stretchy="false">∥</mo><mi>C</mi><mo>−</mo><mi>B</mi><mo stretchy="false">∥</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">d = \lVert B - A \rVert, \qquad \theta = \arccos\frac{(A - B)\cdot(C - B)}{\lVert A - B \rVert\,\lVert C - B \rVert}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∥</span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="mclose">∥</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mop">arccos</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">∥</span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">∥</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">∥</span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">∥</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+
+<p>Exemplo: glabela → pineal → topo da cabeça dá 87,5°. O plano horizontal da pineal e o eixo vertical da cabeça são quase perpendiculares, o que confirma que o topo fica quase em cima da pineal.</p>
+<h3 id="93-tetraedro-e-produto-misto">9.3 Tetraedro e produto misto</h3>
+<p>Com u = B − A, v = C − A e w = D − A, o produto misto é o determinante da matriz com u, v e w nas linhas. Ele dá o volume do paralelepípedo; o tetraedro ocupa um sexto dele:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>V</mi><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mtext> </mtext><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">∣</mo><mtext> </mtext><mi>u</mi><mo>⋅</mo><mo stretchy="false">(</mo><mi>v</mi><mo>×</mo><mi>w</mi><mo stretchy="false">)</mo><mtext> </mtext><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">∣</mo><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mrow><mo fence="true">∣</mo><mi>det</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>u</mi><mi>x</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>u</mi><mi>y</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>u</mi><mi>z</mi></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>v</mi><mi>x</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>v</mi><mi>y</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>v</mi><mi>z</mi></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>w</mi><mi>x</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>w</mi><mi>y</mi></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>w</mi><mi>z</mi></msub></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo fence="true">∣</mo></mrow></mrow><annotation encoding="application/x-tex">V = \frac{1}{6}\,\bigl|\,u\cdot(v\times w)\,\bigr| = \frac{1}{6}\left|\det\begin{pmatrix} u_x &amp; u_y &amp; u_z\\ v_x &amp; v_y &amp; v_z\\ w_x &amp; w_y &amp; w_z \end{pmatrix}\right|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-2.85em;"><span class="pstrut" style="height:3.2em;"></span><span style="width:0.333em;height:1.2em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="1.2em" viewBox="0 0 333 1200"><path d="M145 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-2.85em;"><span class="pstrut" style="height:3.2em;"></span><span style="width:0.333em;height:1.2em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="1.2em" viewBox="0 0 333 1200"><path d="M145 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.333em;height:3.6em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="3.6em" viewBox="0 0 333 3600"><path d="M145 15 v585 v2400 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v-2400 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v2400 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mop">det</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.6em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.6em" viewBox="0 0 875 3600"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,84c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-92c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.6em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.6em" viewBox="0 0 875 3600"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,9
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.333em;height:3.6em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="3.6em" viewBox="0 0 333 3600"><path d="M145 15 v585 v2400 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v-2400 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v2400 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></span></div>
+
+<p>Se os quatro pontos estão num mesmo plano, o determinante é zero. É por isso que glabela, pineal, hipófise e topo da cabeça, todos na linha média, dão volume 0; trocando o topo por um olho, dá 16,1 cm³.</p>
+<h3 id="94-volume-de-qualquer-forma-o-teorema-da-divergencia">9.4 Volume de qualquer forma: o teorema da divergência</h3>
+<p>O teorema da divergência troca uma integral de volume por uma integral na superfície. Com o campo F = r/3, cuja divergência é 1:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>V</mi><mo>=</mo><msub><mo>∭</mo><mi mathvariant="normal">Ω</mi></msub><mn>1</mn><mtext> </mtext><mi>d</mi><mi>V</mi><mo>=</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><msub><mo>∯</mo><mrow><mi mathvariant="normal">∂</mi><mi mathvariant="normal">Ω</mi></mrow></msub><mi mathvariant="bold">r</mi><mo>⋅</mo><mi mathvariant="bold">n</mi><mtext> </mtext><mi>d</mi><mi>S</mi><mo>=</mo><munder><mo>∑</mo><mrow><mtext>tri</mtext><mover accent="true"><mtext>a</mtext><mo>ˆ</mo></mover><mtext>ngulos</mtext></mrow></munder><mfrac><mrow><mi mathvariant="bold">a</mi><mo>⋅</mo><mo stretchy="false">(</mo><mi mathvariant="bold">b</mi><mo>×</mo><mi mathvariant="bold">c</mi><mo stretchy="false">)</mo></mrow><mn>6</mn></mfrac></mrow><annotation encoding="application/x-tex">V = \iiint_\Omega 1\,dV = \frac{1}{3}\oiint_{\partial\Omega} \mathbf{r}\cdot\mathbf{n}\,dS = \sum_{\text{triângulos}} \frac{\mathbf{a}\cdot(\mathbf{b}\times\mathbf{c})}{6}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2717em;vertical-align:-0.9117em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.001em;">∭</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:-0.4334em;"><span style="top:-1.7883em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">Ω</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9117em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2717em;vertical-align:-0.9117em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop vlist-t vlist-t2" style="position:relative;top:-0.001em;"><span class="vlist-r"><span class="vlist" style="height:1.36em;"><span style="top:-3.36em;"><span class="pstrut" style="height:3.36em;"></span><span class="mop op-symbol large-op" style="margin-right:0.4445em;">∬</span></span><span style="top:-3.28em;"><span class="pstrut" style="height:3.36em;"></span><span class="overlay" style="height:0.659em;width:1.472em;"><svg xmlns="http://www.w3.org/2000/svg" width="1.472em" height="0.659em" style="width:1.472em" viewBox="0 0 1472 659" preserveAspectRatio="xMinYMin"><path d="M757.8 100.1c384.7 0 451.1 137.6 451.1 230 0 91.3-66.4 228.8
+-451.1 228.8-386.3 0-452.7-137.5-452.7-228.8 0-92.4 66.4-230 452.7-230z
+m502.4 230c0-111.2-82.4-277.2-502.4-277.2s-504 166-504 277.2
+c0 110 84 276 504 276s502.4-166 502.4-276z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.862em;"><span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:-0.4256em;"><span style="top:-1.7883em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.0556em;">∂</span><span class="mord mtight">Ω</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9117em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathbf">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathbf">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.8652em;vertical-align:-1.4382em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8479em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">tri</span><span class="mord accent mtight"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord mtight">a</span></span><span style="top:-2.7em;"><span class="pstrut" style="height:2.7em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord mtight">ˆ</span></span></span></span></span></span></span><span class="mord mtight">ngulos</span></span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4382em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathbf">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord mathbf">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathbf">c</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+
+<p>Numa malha de triângulos, a integral vira a soma, para cada triângulo (a, b, c), do volume com sinal do tetraedro que ele forma com a origem. Os tetraedros de fora se cancelam e sobra o volume da forma. É a mesma conta da régua no modo Tetraedro, repetida milhares de vezes. Nos tubos (vasos, ventrículos laterais, tronco), que são abertos nas pontas, o modelo usa πr² vezes o comprimento da curva.</p>
+<p>Para conferir com fórmulas fechadas:</p>
+<table>
+<thead>
+<tr>
+<th>Forma</th>
+<th>Fórmula</th>
+<th>Exemplo no modelo</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elipsóide</td>
+<td>4/3 · π · a · b · c</td>
+<td>Tálamo: semieixos 1,6 × 1,05 × 1,0 cm</td>
+<td>7,0 cm³</td>
+</tr>
+<tr>
+<td>Esfera</td>
+<td>4/3 · π · r³</td>
+<td>Olho: r = 1,2 cm</td>
+<td>7,2 cm³</td>
+</tr>
+<tr>
+<td>Cone</td>
+<td>π · r² · h / 3</td>
+<td>Pineal: r = 0,34 cm, h = 1,02 cm</td>
+<td>0,12 cm³</td>
+</tr>
+<tr>
+<td>Cilindro (tubo)</td>
+<td>π · r² · L</td>
+<td>Ventrículo lateral: dois trechos de r = 0,4 e 0,32 cm</td>
+<td>8,7 cm³</td>
+</tr>
+</tbody>
+</table>
+<h3 id="95-esfera-equivalente-e-escala-logaritmica">9.5 Esfera equivalente e escala logarítmica</h3>
+<p>A esfera de mesmo volume tem diâmetro d = ∛(6V/π). Em Tamanhos, cada volume vira uma posição pela escala logarítmica, de 0,0001 a cerca de 2.500 cm³:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>d</mi><mo>=</mo><mroot><mfrac><mrow><mn>6</mn><mi>V</mi></mrow><mi>π</mi></mfrac><mn>3</mn></mroot><mo separator="true">,</mo><mspace width="2em"/><mi>x</mi><mo>=</mo><mfrac><mrow><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><mi>V</mi><mo>−</mo><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><msub><mi>V</mi><mi>min</mi><mo>⁡</mo></msub></mrow><mrow><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><msub><mi>V</mi><mi>max</mi><mo>⁡</mo></msub><mo>−</mo><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><msub><mi>V</mi><mi>min</mi><mo>⁡</mo></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">d = \sqrt[3]{\frac{6V}{\pi}}, \qquad x = \frac{\log_{10} V - \log_{10} V_{\min}}{\log_{10} V_{\max} - \log_{10} V_{\min}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.44em;vertical-align:-0.769em;"></span><span class="mord sqrt"><span class="root"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8635em;"><span style="top:-3.0412em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size6 size1 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.671em;"><span class="svg-align" style="top:-4.4em;"><span class="pstrut" style="height:4.4em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">π</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.631em;"><span class="pstrut" style="height:4.4em;"></span><span class="hide-tail" style="min-width:1.02em;height:2.48em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="2.48em" viewBox="0 0 400000 2592" preserveAspectRatio="xMinYMin slice"><path d="M424,2478
+c-1.3,-0.7,-38.5,-172,-111.5,-514c-73,-342,-109.8,-513.3,-110.5,-514
+c0,-2,-10.7,14.3,-32,49c-4.7,7.3,-9.8,15.7,-15.5,25c-5.7,9.3,-9.8,16,-12.5,20
+s-5,7,-5,7c-4,-3.3,-8.3,-7.7,-13,-13s-13,-13,-13,-13s76,-122,76,-122s77,-121,77,-121
+s209,968,209,968c0,-2,84.7,-361.7,254,-1079c169.3,-717.3,254.7,-1077.7,256,-1081
+l0 -0c4,-6.7,10,-10,18,-10 H400000
+v40H1014.6
+s-87.3,378.7,-272.6,1166c-185.3,787.3,-279.3,1182.3,-282,1185
+c-2,6,-10,9,-24,9
+c-8,0,-12,-0.7,-12,-2z M1001 80
+h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.769em;"><span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3016em;vertical-align:-0.9301em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">a</span><span class="mtight">x</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9301em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+
+<p>Na escala log, distâncias iguais são razões iguais: de uma marca à seguinte, o volume cresce 100 vezes. O encéfalo tem uns 5 milhões de vezes o volume de um NSQ, e mesmo assim os dois cabem no mesmo gráfico.</p>
+<h3 id="96-o-relogio-circadiano-e-a-melatonina">9.6 O relógio circadiano e a melatonina</h3>
+<p>O script modelo.py simula a melatonina com três partes, a cada minuto:</p>
+<ol>
+<li><strong>Relógio:</strong> um oscilador de fase com período próprio τ = 24,2 h. A luz o adianta ou atrasa conforme uma curva de resposta de fase (PRC) senoidal, saturada em L / (L + 100 lux).</li>
+<li><strong>Pineal:</strong> a síntese só é liberada na noite interna e é suprimida na hora pela luz, por uma função de Hill com metade da supressão em 100 lux.</li>
+<li><strong>Sangue:</strong> a melatonina é eliminada com meia-vida de 45 minutos.</li>
+</ol>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>ϕ</mi></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mn>24</mn><mo>−</mo><mi>τ</mi></mrow><mi>τ</mi></mfrac><mo>+</mo><mi>K</mi><mtext> </mtext><mfrac><mi>L</mi><mrow><mi>L</mi><mo>+</mo><mn>100</mn></mrow></mfrac><mtext> </mtext><mi>sin</mi><mo>⁡</mo><mtext> ⁣</mtext><mfrac><mrow><mn>2</mn><mi>π</mi><mo stretchy="false">(</mo><msub><mi>ϕ</mi><mi>i</mi></msub><mo>−</mo><mn>2,3</mn><mo stretchy="false">)</mo></mrow><mn>24</mn></mfrac><mo separator="true">,</mo><mspace width="2em"/><mfrac><mrow><mi>d</mi><mi>M</mi></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac><mo>=</mo><mi>A</mi><mtext> </mtext><mi>J</mi><mo stretchy="false">(</mo><msub><mi>ϕ</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo fence="true" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><mn>1</mn><mo>−</mo><mfrac><msup><mi>L</mi><mn>1,2</mn></msup><mrow><msup><mi>L</mi><mn>1,2</mn></msup><mo>+</mo><msup><mn>100</mn><mn>1,2</mn></msup></mrow></mfrac><mo fence="true" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo><mo>−</mo><mfrac><mrow><mi>ln</mi><mo>⁡</mo><mn>2</mn></mrow><mn>0,75</mn></mfrac><mtext> </mtext><mi>M</mi></mrow><annotation encoding="application/x-tex">\frac{d\phi}{dt} = \frac{24-\tau}{\tau} + K\,\frac{L}{L+100}\,\sin\!\frac{2\pi(\phi_i - 2{,}3)}{24}, \qquad \frac{dM}{dt} = A\,J(\phi_i)\Bigl(1 - \frac{L^{1{,}2}}{L^{1{,}2} + 100^{1{,}2}}\Bigr) - \frac{\ln 2}{0{,}75}\,M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal">ϕ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">24</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.1963em;vertical-align:-0.7693em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">100</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">24</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.0359em;">π</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">ϕ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">2</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">3</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0962em;">J</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">ϕ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mopen"><span class="delimsizing size2">(</span></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.2604em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight"><span class="mpunct mtight">,</span></span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">10</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight"><span class="mpunct mtight">,</span></span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight"><span class="mpunct mtight">,</span></span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose"><span class="delimsizing size2">)</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.2519em;vertical-align:-0.8804em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">75</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></span></div>
+
+<p>Aqui K = 0,3, A = 60 pg/mL por hora, φᵢ é a hora interna e J, a janela da noite interna, com bordas suaves. Os parâmetros reproduzem início perto das 21h, pico perto das 3h e fim perto das 7h a 8h. Com luz e telas até 1h, duas semanas atrasam o relógio em cerca de 2,8 h. É um modelo didático, não clínico.</p>
+<h3 id="97-a-rede-do-nsq-o-modelo-de-kuramoto">9.7 A rede do NSQ: o modelo de Kuramoto</h3>
+<p>Cada um dos 200 neurônios tem uma fase θᵢ e uma frequência própria ωᵢ = ω₀(1 + 0,04·N(0,1)), com ω₀ = 2π/24,2 rad/h. A sincronia r e a fase média ψ vêm da média dos vetores unitários:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>r</mi><mtext> </mtext><msup><mi>e</mi><mrow><mi>i</mi><mi>ψ</mi></mrow></msup><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msup><mi>e</mi><mrow><mi>i</mi><msub><mi>θ</mi><mi>j</mi></msub></mrow></msup><mo separator="true">,</mo><mspace width="2em"/><mfrac><mrow><mi>d</mi><msub><mi>θ</mi><mi>i</mi></msub></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac><mo>=</mo><msub><mi>ω</mi><mi>i</mi></msub><mo>+</mo><mi>K</mi><mtext> </mtext><mi>r</mi><mtext> </mtext><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>ψ</mi><mo>−</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo>+</mo><mi>F</mi><mtext> </mtext><mi mathvariant="normal">ℓ</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><mi>sin</mi><mo>⁡</mo><mtext> ⁣</mtext><mo fence="true" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><mfrac><mrow><mn>2</mn><mi>π</mi><mi>t</mi></mrow><mn>24</mn></mfrac><mo>−</mo><msub><mi>θ</mi><mi>i</mi></msub><mo fence="true" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo></mrow><annotation encoding="application/x-tex">r\,e^{i\psi} = \frac{1}{N}\sum_{j=1}^{N} e^{i\theta_j}, \qquad \frac{d\theta_i}{dt} = \omega_i + K\,r\,\sin(\psi - \theta_i) + F\,\ell(t)\,\sin\!\Bigl(\frac{2\pi t}{24} - \theta_i\Bigr)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8991em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">ψ</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.2421em;vertical-align:-1.4138em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4138em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.0278em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">ψ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">ℓ</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mopen"><span class="delimsizing size2">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">24</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.0359em;">π</span><span class="mord mathnormal">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing size2">)</span></span></span></span></span></span></div>
+
+<p>O último termo só vale com o ciclo de luz ligado (ℓ = 1 das 7h às 18h, F = 0,03). Para frequências com distribuição normal de desvio σ, a teoria de Kuramoto dá o acoplamento crítico:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mn>2</mn><mrow><mi>π</mi><mtext> </mtext><mi>g</mi><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></mfrac><mo>=</mo><mfrac><mn>2</mn><mi>π</mi></mfrac><mtext> </mtext><mi>σ</mi><msqrt><mrow><mn>2</mn><mi>π</mi></mrow></msqrt><mo separator="true">,</mo><mspace width="2em"/><mi>σ</mi><mo>=</mo><mn>0,04</mn><mtext> </mtext><msub><mi>ω</mi><mn>0</mn></msub><mo>≈</mo><mn>0,0104</mn><mtext>  </mtext><mo>⇒</mo><mtext>  </mtext><msub><mi>K</mi><mi>c</mi></msub><mo>≈</mo><mn>0,017</mn></mrow><annotation encoding="application/x-tex">K_c = \frac{2}{\pi\,g(0)} = \frac{2}{\pi}\,\sigma\sqrt{2\pi}, \qquad \sigma = 0{,}04\,\omega_0 \approx 0{,}0104 \;\Rightarrow\; K_c \approx 0{,}017</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2574em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">π</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mopen">(</span><span class="mord">0</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">π</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9561em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.0359em;">π</span></span></span><span style="top:-2.9161em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.0839em;"><span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">04</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">0104</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⇒</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">017</span></span></span></span></span></div>
+
+<p>É exatamente o valor que o cartão mostra. Abaixo dele, cada neurônio segue seu próprio ritmo e r fica perto de 0; acima, a rede se organiza e r sobe em direção a 1. O pulso de luz desloca cada fase em −0,9·sin(θ − alvo), como uma luz forte que reajusta o relógio.</p>
+<h3 id="98-curvas-catmull-rom-e-bezier">9.8 Curvas: Catmull-Rom e Bézier</h3>
+<p>Nervos, vasos e ventrículos laterais são tubos ao longo de curvas de Catmull-Rom, que passam exatamente pelos pontos anatômicos dados. O script bezier_anim.py anima a curva de Bézier quadrática e a construção de De Casteljau:</p>
+<div class="formula"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>B</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>t</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup><msub><mi>P</mi><mn>0</mn></msub><mo>+</mo><mn>2</mn><mi>t</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>P</mi><mn>1</mn></msub><mo>+</mo><msup><mi>t</mi><mn>2</mn></msup><msub><mi>P</mi><mn>2</mn></msub><mo separator="true">,</mo><mspace width="2em"/><mi>B</mi><mo stretchy="false">(</mo><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo fence="true" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><msub><mi>P</mi><mn>0</mn></msub><mo>+</mo><msub><mi>P</mi><mn>2</mn></msub></mrow><mn>2</mn></mfrac></mstyle><mo fence="true" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo><mo>+</mo><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><msub><mi>P</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">B(t) = (1-t)^2 P_0 + 2t(1-t)\,P_1 + t^2 P_2, \qquad B(\tfrac12) = \tfrac12\Bigl(\tfrac{P_0 + P_2}{2}\Bigr) + \tfrac12 P_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mord mathnormal">t</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2091em;vertical-align:-0.345em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mopen"><span class="delimsizing size2">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8884em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4101em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.1389em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.1389em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose"><span class="delimsizing size2">)</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+
+<p>Em t = 0,5 a curva chega só à metade do caminho entre o meio de P₀P₂ e o ponto de controle P₁: o controle puxa a curva, mas ela nunca o alcança.</p>
+<h2 id="10-roteiros-de-estudo">10. Roteiros de estudo</h2>
+<p>Oito exercícios curtos, de 5 a 10 minutos cada, para usar o modelo como laboratório. Cada um diz o que fazer e o que você deve encontrar.</p>
+<h3 id="roteiro-1-o-terceiro-olho-com-regua">Roteiro 1: o "terceiro olho" com régua</h3>
+<ol>
+<li>Abra a Régua no modo Distância e clique em Glabela e Pineal.</li>
+<li>Troque para Ângulo e clique em Glabela, Pineal e Topo da cabeça.</li>
+<li>Volte para Distância e meça Pineal até Topo da cabeça.</li>
+</ol>
+<p><strong>O que encontrar:</strong> uns 10,6 cm da glabela até a pineal, um ângulo de 87,5° e uns 10,7 cm até o topo. A pineal fica no cruzamento de um eixo horizontal (que sai na glabela, onde fica o ajna) com um vertical (que sai no topo, onde fica a coroa).</p>
+<h3 id="roteiro-2-seguir-a-luz">Roteiro 2: seguir a luz</h3>
+<ol>
+<li>Ligue o som e faça o Tour guiado com narração.</li>
+<li>Depois, pause o relógio às 13h e olhe o circuito; leve o relógio para as 2h e olhe de novo.</li>
+</ol>
+<p><strong>O que encontrar:</strong> de dia, só os pulsos azuis da retina ao NSQ; de madrugada, os pulsos vermelhos descem pela medula, sobem pelo pescoço e a pineal brilha e solta pontos laranja.</p>
+<h3 id="roteiro-3-o-preco-das-telas">Roteiro 3: o preço das telas</h3>
+<ol>
+<li>Escolha a rotina "Luz e telas até 1h (1ª noite)" e compare a curva laranja com a tracejada.</li>
+<li>Troque para "após 2 semanas".</li>
+</ol>
+<p><strong>O que encontrar:</strong> na 1ª noite, a melatonina é cortada até a 1h; depois de duas semanas, a curva inteira se desloca cerca de 2,8 h, e o cortisol e a temperatura vão junto.</p>
+<h3 id="roteiro-4-leste-e-mais-dificil">Roteiro 4: leste é mais difícil</h3>
+<ol>
+<li>Abra Jet lag e turnos, modo Viagem.</li>
+<li>Coloque +6 fusos e anote os dias; depois −6.</li>
+</ol>
+<p><strong>O que encontrar:</strong> uns 5 dias para leste e uns 4 para oeste. O relógio humano tem período um pouco maior que 24 h, então atrasar (oeste) é mais natural que adiantar (leste).</p>
+<h3 id="roteiro-5-achar-o-acoplamento-critico">Roteiro 5: achar o acoplamento crítico</h3>
+<ol>
+<li>Abra a Rede do NSQ e clique em Embaralhar fases.</li>
+<li>Ponha K em 0,010 e espere alguns dias; depois 0,030; depois 0,060.</li>
+</ol>
+<p><strong>O que encontrar:</strong> com 0,010, r fica baixo e os pontos se espalham; acima de uns 0,017, a seta cresce e os pontos se juntam. Compare com o Kᶜ = 0,017 calculado na seção 9.7.</p>
+<h3 id="roteiro-6-quantas-pineais-cabem">Roteiro 6: quantas pineais cabem</h3>
+<ol>
+<li>Régua no modo Volume: Pineal, depois Hipófise.</li>
+<li>Depois Pineal e Tálamo.</li>
+<li>Abra a ficha do 3º ventrículo e mostre a esfera de mesmo volume.</li>
+</ol>
+<p><strong>O que encontrar:</strong> a adeno-hipófise tem uns 3,8 volumes de pineal; um tálamo, uns 57. A esfera do 3º ventrículo tem uns 1,8 cm de diâmetro, e a ficha avisa que o modelo ficou umas 4 vezes maior que o real.</p>
+<h3 id="roteiro-7-quando-o-volume-e-zero">Roteiro 7: quando o volume é zero</h3>
+<ol>
+<li>Régua no modo Tetraedro: Glabela, Pineal, Hipófise e Topo da cabeça.</li>
+<li>Repita trocando o Topo da cabeça por um Olho.</li>
+</ol>
+<p><strong>O que encontrar:</strong> primeiro 0 mm³, porque os quatro pontos estão na linha média, no mesmo plano; depois 16,1 cm³. O painel explica o produto misto como determinante.</p>
+<h3 id="roteiro-8-o-sistema-porta-de-perto">Roteiro 8: o sistema porta de perto</h3>
+<ol>
+<li>Corte → Perfil. Camadas → ligue Sistema porta.</li>
+<li>Dê duplo clique em Hipófise.</li>
+</ol>
+<p><strong>O que encontrar:</strong> as partículas verdes descem pela haste até a adeno-hipófise, as roxas saem para o seio cavernoso e as verde-claras descem por dentro dos axônios até a neuro-hipófise.</p>
+<h2 id="11-os-scripts-python">11. Os scripts Python</h2>
+<p>A pasta python tem cinco scripts que geram os pôsteres, a simulação da melatonina e a animação de Bézier. Eles usam matplotlib, numpy e pillow, todos em requirements.txt, e salvam as imagens ao lado de si mesmos.</p>
+<pre><code class="language-bash">cd pineal_projeto/python
+pip install -r requirements.txt
+python cabeca.py
+python vistas.py
+python grafico.py
+python bezier_anim.py
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>O que gera</th>
+<th>Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cabeca.py</td>
+<td>cabeca_pineal_hipofise.png e .pdf</td>
+<td>Pôster do corte sagital mediano: pineal, hipófise, diencéfalo, 3º ventrículo, planos da glabela e do násio, pirâmide nasal</td>
+</tr>
+<tr>
+<td>vistas.py</td>
+<td>cabeca_frente_e_topo.png e .pdf</td>
+<td>Pôster com a vista de frente (coronal) e a de cima (axial), no mesmo sistema de coordenadas</td>
+</tr>
+<tr>
+<td>modelo.py</td>
+<td>(nada sozinho)</td>
+<td>O modelo da melatonina da seção 9.6: relógio, PRC, supressão pela luz, meia-vida; usado por grafico.py</td>
+</tr>
+<tr>
+<td>grafico.py</td>
+<td>Gráfico da melatonina (PNG)</td>
+<td>Curvas de melatonina com noite escura contra luz e telas, na 1ª noite e depois de 2 semanas</td>
+</tr>
+<tr>
+<td>bezier_anim.py</td>
+<td>GIF animado e quadros PNG</td>
+<td>Construção de De Casteljau e o ponto de controle "puxando" a curva</td>
+</tr>
+</tbody>
+</table>
+<p>Os pôsteres foram a primeira forma do projeto: as medidas do modelo 3D vieram deles, por isso os dois usam a mesma origem no násio e as mesmas distâncias.</p>
+<h2 id="12-por-dentro-do-codigo">12. Por dentro do código</h2>
+<p>O modelo inteiro são cerca de 2.900 linhas em três arquivos, sem etapa de compilação: o navegador lê o JavaScript como está. A única biblioteca é o three.js 0.160, carregado por um import map.</p>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>index.html</td>
+<td>177</td>
+<td>Estrutura do menu e do palco; textos em português</td>
+</tr>
+<tr>
+<td>estilo.css</td>
+<td>191</td>
+<td>Tema escuro, cartões, rótulos, gráficos, rodapé</td>
+</tr>
+<tr>
+<td>app.js</td>
+<td>2.528</td>
+<td>Toda a lógica: anatomia, animação, ferramentas, som, tradução</td>
+</tr>
+<tr>
+<td>abrir_modelo3d.py</td>
+<td>215</td>
+<td>Servidor web local (não faz parte do site)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="121-as-secoes-do-appjs-na-ordem">12.1 As seções do app.js, na ordem</h3>
+<table>
+<thead>
+<tr>
+<th>Seção</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idioma e WebGL</td>
+<td>Funções L(pt, en) e NUM(); cria o renderizador ou mostra o erro de WebGL</td>
+</tr>
+<tr>
+<td>Rótulos</td>
+<td>Nomes com linha-guia e bolinha, posicionados sem se sobrepor a cada quadro</td>
+</tr>
+<tr>
+<td>Anatomia</td>
+<td>Cria cada malha com registrar(): elipsóides, tubos de Catmull-Rom, extrusões, cones</td>
+</tr>
+<tr>
+<td>Partículas</td>
+<td>Pulsos do circuito, melatonina, líquor e sistema porta</td>
+</tr>
+<tr>
+<td>Embrião</td>
+<td>Vesículas e brotos que se transformam conforme a semana</td>
+</tr>
+<tr>
+<td>Volumes</td>
+<td>Teorema da divergência, valores de referência, bloco da ficha, esfera equivalente</td>
+</tr>
+<tr>
+<td>Informações</td>
+<td>O dicionário INFO (id → nome, cor, frase, itens) e INFO_EN, a versão em inglês</td>
+</tr>
+<tr>
+<td>Destaque</td>
+<td>Halos, marcadores e centro de cada estrutura</td>
+</tr>
+<tr>
+<td>Relógio e ritmos</td>
+<td>Rotinas, curvas de melatonina, cortisol, temperatura e sono; o gráfico</td>
+</tr>
+<tr>
+<td>Som</td>
+<td>Web Audio (tons, estalos, reverberação, categorias que se cortam) e síntese de fala</td>
+</tr>
+<tr>
+<td>Camadas, câmera e corte</td>
+<td>Mostrar e esconder grupos, voos de câmera, planos de corte</td>
+</tr>
+<tr>
+<td>Cartão e ferramentas</td>
+<td>Tour, quiz, embrião, régua (quatro modos), tamanhos, jet lag, rede do NSQ</td>
+</tr>
+<tr>
+<td>Clique</td>
+<td>Raycasting com preferência pela estrutura pequena, duplo clique para voar</td>
+</tr>
+<tr>
+<td>Imagem</td>
+<td>Compõe o 3D e os rótulos num PNG; download ou área de transferência</td>
+</tr>
+<tr>
+<td>Menu e restaurar</td>
+<td>Menu retrátil (tecla M) e o botão Restaurar padrão</td>
+</tr>
+<tr>
+<td>Idioma (PT / EN)</td>
+<td>Troca os textos fixos do HTML e redesenha o que estiver aberto</td>
+</tr>
+<tr>
+<td>Animação</td>
+<td>O laço que roda a cada quadro: relógio, partículas, rótulos, som, líquor</td>
+</tr>
+</tbody>
+</table>
+<h3 id="122-como-a-traducao-funciona">12.2 Como a tradução funciona</h3>
+<ul>
+<li>Textos do JavaScript passam por L("português", "English"), que escolhe pelo idioma atual.</li>
+<li>Textos fixos do HTML estão na lista I18N, como pares [seletor, inglês]; o português é lido do próprio HTML na abertura.</li>
+<li>Fichas, tour e embrião têm versões inglesas próprias: INFO_EN, TOUR_EN, ETAPAS_EMB_EN. Os rótulos usam ROT_EN.</li>
+<li>Ao trocar o idioma, aplicarIdioma() refaz rótulos, fichas e o cartão aberto, sem perder o estado.</li>
+</ul>
+<h3 id="123-mudancas-comuns">12.3 Mudanças comuns</h3>
+<table>
+<thead>
+<tr>
+<th>Quero...</th>
+<th>Onde mexer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mudar a porta padrão</td>
+<td>PORTA_PADRAO em abrir_modelo3d.py</td>
+</tr>
+<tr>
+<td>Corrigir o texto de uma ficha</td>
+<td>INFO (português) e INFO_EN (inglês), pelo id da estrutura</td>
+</tr>
+<tr>
+<td>Mudar um valor real de volume</td>
+<td>VOL_REF, na seção Volumes</td>
+</tr>
+<tr>
+<td>Mudar a velocidade do relógio</td>
+<td>O fator 1.1 no laço de animação (horas por segundo)</td>
+</tr>
+<tr>
+<td>Acrescentar uma estrutura</td>
+<td>registrar(malha, id, grupo) na Anatomia, uma entrada em INFO e INFO_EN, um rótulo</td>
+</tr>
+<tr>
+<td>Trocar a versão</td>
+<td>O rodapé (#rod-tit) no index.html e a entrada correspondente em I18N</td>
+</tr>
+</tbody>
+</table>
+<h3 id="124-a-pagina-publicada">12.4 A página publicada</h3>
+<p>A versão publicada no Claude é um único arquivo: o mesmo index.html com o CSS e o JavaScript embutidos e o three.js vindo do jsDelivr, em vez da pasta vendor. Ela tem a permissão de downloads do Claude, que é o que deixa o botão Salvar imagem funcionar lá.</p>
+<h2 id="13-solucao-de-problemas">13. Solução de problemas</h2>
+<p>Quase todos os problemas que apareceram no projeto tiveram uma destas causas. A tabela vem na ordem em que eles costumam surgir.</p>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Solução</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Address already in use" ao rodar o script</td>
+<td>Outro programa já usa a porta</td>
+<td>O script já pula para a próxima porta livre; ou use --porta</td>
+</tr>
+<tr>
+<td>O notebook não abre o endereço</td>
+<td>Servidor rodando com --local, ou firewall ativo</td>
+<td>Rode sem --local; se o ufw estiver ativo, sudo ufw allow 8002/tcp</td>
+</tr>
+<tr>
+<td>Erro de X11 ao rodar via SSH</td>
+<td>O script tentou abrir um navegador no servidor</td>
+<td>Já corrigido: via SSH ele não tenta; use --sem-navegador se precisar</td>
+</tr>
+<tr>
+<td>"WebGL indisponível" no Edge</td>
+<td>Aceleração de gráficos desligada</td>
+<td>Ligue em edge://settings/system e confira em edge://gpu que o WebGL está acelerado por hardware</td>
+</tr>
+<tr>
+<td>A cabeça sumiu depois de atualizar</td>
+<td>Só o app.js foi trocado, ou o navegador usou o cache</td>
+<td>Troque os três arquivos e aperte Ctrl+F5</td>
+</tr>
+<tr>
+<td>Não vejo uma novidade</td>
+<td>Cache do navegador</td>
+<td>Ctrl+F5 e confira a versão no rodapé do menu</td>
+</tr>
+<tr>
+<td>Extrair o zip no Windows demora 30 a 40 s</td>
+<td>O Microsoft Defender examina cada arquivo</td>
+<td>Use tar -xf no PowerShell ou descompacte no servidor</td>
+</tr>
+<tr>
+<td>O navegador bloqueia o download do app.js</td>
+<td>Arquivos .js soltos parecem perigosos ao navegador</td>
+<td>As atualizações vêm em zip por isso</td>
+</tr>
+<tr>
+<td>Não sai som</td>
+<td>O som começa desligado</td>
+<td>Clique em Ligar som; depois em Testar; confira se a aba não está silenciada</td>
+</tr>
+<tr>
+<td>A voz soa estranha ou em outro idioma</td>
+<td>Falta a voz pt-BR (ou en-US) no sistema</td>
+<td>No Windows, instale a voz em Configurações → Hora e idioma → Fala; no Edge, as vozes Natural são as melhores</td>
+</tr>
+<tr>
+<td>Clico na pineal e abre o tálamo</td>
+<td>Versão antiga</td>
+<td>Desde a correção, clicar no nome ou na bolinha seleciona a pineal</td>
+</tr>
+<tr>
+<td>Copiar imagem não funciona</td>
+<td>Página em http</td>
+<td>Use Salvar imagem, ou a versão em https (GitHub Pages)</td>
+</tr>
+<tr>
+<td>Salvar imagem não faz nada na página publicada</td>
+<td>O pedido de confirmação foi recusado ou fechado</td>
+<td>Clique de novo e aceite a confirmação do Claude</td>
+</tr>
+<tr>
+<td>Uma estrutura não aparece</td>
+<td>A camada dela está desligada, ou um corte a escondeu</td>
+<td>Confira as Camadas e ponha o Corte em Nenhum</td>
+</tr>
+</tbody>
+</table>
+<h2 id="14-linha-do-tempo-do-projeto">14. Linha do tempo do projeto</h2>
+<p>O projeto saiu de uma pergunta sobre onde fica a pineal e chegou à v2.1 em poucos dias, sempre por pedidos seus. A tabela vai do mais recente ao mais antigo; as etapas iniciais não têm data registrada.</p>
+<table>
+<thead>
+<tr>
+<th>Quando</th>
+<th>Marco</th>
+<th>O que entrou</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10 nov 2026</td>
+<td><strong>v2.1</strong></td>
+<td>Rodapé com autoria e aviso, versão visível, ventrículos laterais com valor medido (7 a 10 mL cada), este manual</td>
+</tr>
+<tr>
+<td>10 nov 2026</td>
+<td>Volumes</td>
+<td>Volume na ficha, régua Volume e Tetraedro, esfera equivalente, Tamanhos, líquor em mL</td>
+</tr>
+<tr>
+<td>10 nov 2026</td>
+<td>Duplo clique</td>
+<td>A câmera voa até a estrutura</td>
+</tr>
+<tr>
+<td>9 nov 2026, 17h</td>
+<td>Um só gráfico</td>
+<td>O gráfico de melatonina entrou no de ritmos; cortisol sem degrau</td>
+</tr>
+<tr>
+<td>9 nov 2026, 16h</td>
+<td>Inglês, ângulo, imagem</td>
+<td>Versão PT/EN, régua de ângulos, Salvar e Copiar imagem</td>
+</tr>
+<tr>
+<td>9 nov 2026, 14h</td>
+<td>Relógio do NSQ</td>
+<td>Rede do NSQ (Kuramoto), jet lag e turnos, ritmos do dia</td>
+</tr>
+<tr>
+<td>Antes de 9 nov</td>
+<td>Conforto</td>
+<td>Menu retrátil, Restaurar padrão, clique preferindo estruturas pequenas, pontos no topo e atrás da cabeça</td>
+</tr>
+<tr>
+<td>Antes de 9 nov</td>
+<td>Som</td>
+<td>Efeitos, voz e ambiente; melodia refeita e cortes instantâneos</td>
+</tr>
+<tr>
+<td>Antes de 9 nov</td>
+<td>Estudo</td>
+<td>Tour guiado, quiz, modo embrião, régua de distância, cortes, fichas</td>
+</tr>
+<tr>
+<td>Antes de 9 nov</td>
+<td>Servidor</td>
+<td>abrir_modelo3d.py com rede, porta 8002, QR code e serviço systemd</td>
+</tr>
+<tr>
+<td>Início</td>
+<td>Modelo 3D</td>
+<td>Primeira cabeça em three.js com pineal, hipófise, tálamos, hipotálamo, 3º ventrículo e glabela</td>
+</tr>
+<tr>
+<td>Início</td>
+<td>Python</td>
+<td>Pôsteres de perfil, frente e topo; simulação da melatonina; animação de Bézier</td>
+</tr>
+<tr>
+<td>Início</td>
+<td>A pergunta</td>
+<td>Onde fica a pineal, a forma de cone, o plano que sai na glabela e o "terceiro olho"</td>
+</tr>
+</tbody>
+</table>
+<h2 id="15-glossario">15. Glossário</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acoplamento (K)</td>
+<td>No modelo de Kuramoto, a força com que cada neurônio é puxado para a fase média da rede</td>
+</tr>
+<tr>
+<td>Adeno-hipófise</td>
+<td>Parte da frente da hipófise, glândula de verdade; veio do teto da boca do embrião</td>
+</tr>
+<tr>
+<td>Aqueduto</td>
+<td>Canal estreito que leva o líquor do 3º ao 4º ventrículo, logo abaixo da pineal</td>
+</tr>
+<tr>
+<td>Bolsa de Rathke</td>
+<td>Bolsa que sobe do teto da boca do embrião e forma a adeno-hipófise</td>
+</tr>
+<tr>
+<td>Corte sagital, coronal, axial</td>
+<td>De perfil (divide esquerda e direita), de frente (divide frente e trás), de cima (divide cima e baixo)</td>
+</tr>
+<tr>
+<td>Diencéfalo</td>
+<td>Parte central do cérebro: tálamos, hipotálamo, epitálamo (com a pineal) e 3º ventrículo</td>
+</tr>
+<tr>
+<td>DLMO</td>
+<td>Início da melatonina sob luz baixa: a hora em que ela começa a subir, usada para medir o relógio</td>
+</tr>
+<tr>
+<td>Glabela</td>
+<td>Ponto entre as sobrancelhas, onde sai o plano horizontal da pineal</td>
+</tr>
+<tr>
+<td>Infundíbulo</td>
+<td>Broto do diencéfalo que desce e forma a haste e a neuro-hipófise</td>
+</tr>
+<tr>
+<td>Líquor (LCR)</td>
+<td>Líquido cefalorraquidiano, que banha o cérebro e enche os ventrículos</td>
+</tr>
+<tr>
+<td>Lux</td>
+<td>Unidade de iluminância: uns 30 lux numa sala com luz quente, 150 com telas, 1.000 ou mais de dia</td>
+</tr>
+<tr>
+<td>Melatonina</td>
+<td>Hormônio da noite, produzido pela pineal no escuro</td>
+</tr>
+<tr>
+<td>Násio</td>
+<td>Raiz do nariz; origem das coordenadas do modelo</td>
+</tr>
+<tr>
+<td>Neuro-hipófise</td>
+<td>Parte de trás da hipófise, prolongamento do hipotálamo; libera ocitocina e vasopressina</td>
+</tr>
+<tr>
+<td>NPV</td>
+<td>Núcleo paraventricular do hipotálamo; inicia a via até a pineal</td>
+</tr>
+<tr>
+<td>NSQ</td>
+<td>Núcleo supraquiasmático; o relógio mestre, logo acima do quiasma</td>
+</tr>
+<tr>
+<td>Opistocrânio</td>
+<td>Ponto mais posterior da cabeça</td>
+</tr>
+<tr>
+<td>PRC</td>
+<td>Curva de resposta de fase: quanto a luz adianta ou atrasa o relógio conforme a hora interna</td>
+</tr>
+<tr>
+<td>Produto misto</td>
+<td>u·(v×w), igual ao determinante dos três vetores; dá o volume do paralelepípedo</td>
+</tr>
+<tr>
+<td>Quiasma óptico</td>
+<td>Cruzamento em X dos nervos ópticos, acima da hipófise</td>
+</tr>
+<tr>
+<td>Sela túrcica</td>
+<td>Depressão do osso esfenoide onde fica a hipófise; aberta em cima</td>
+</tr>
+<tr>
+<td>Seio cavernoso</td>
+<td>Veia de cada lado da hipófise, com a carótida interna por dentro</td>
+</tr>
+<tr>
+<td>Sincronia (r)</td>
+<td>No modelo de Kuramoto, de 0 (todos desencontrados) a 1 (todos juntos)</td>
+</tr>
+<tr>
+<td>Sistema porta</td>
+<td>Duas redes de capilares em sequência, ligadas por veias, sem passar pelo coração</td>
+</tr>
+<tr>
+<td>Teorema da divergência</td>
+<td>Troca uma integral de volume por uma de superfície; é como o modelo calcula volumes</td>
+</tr>
+<tr>
+<td>Vértice</td>
+<td>Ponto mais alto da cabeça, quase em cima da pineal</td>
+</tr>
+<tr>
+<td>WebGL</td>
+<td>Tecnologia do navegador para desenhar 3D com a placa de vídeo</td>
+</tr>
+</tbody>
+</table>
+<h2 id="16-fontes-e-creditos">16. Fontes e créditos</h2>
+<p><strong>Autoria:</strong> Francisco Campos de Carvalho (fcamposcarvalho@yahoo.com.br), Bacharel em Matemática e Pós-Graduado em Sistemas de Informação e Banco de Dados. O código, os pôsteres e este manual foram desenvolvidos com o auxílio do Claude, da Anthropic, a partir dos pedidos e das decisões do autor.</p>
+<p><strong>Software:</strong> <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> 0.160 (licença MIT), matplotlib, numpy e pillow. Áudio e voz usam as APIs Web Audio e Speech Synthesis do próprio navegador.</p>
+<p><strong>Valores de referência</strong> (volumes e líquor; detalhes na seção 8.4):</p>
+<ul>
+<li><a href="https://www.wjgnet.com/1949-8470/full/v5/i4/166.htm" target="_blank" rel="noopener">Microstructural analysis of pineal volume using trueFISP imaging (World J Radiol, 2013)</a></li>
+<li><a href="https://doaj.org/article/bfea774cb7534e0cb40e241dcd54abe0" target="_blank" rel="noopener">Comparison of three methods for the estimation of pineal gland volume (Sci World J, 2012)</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4485185" target="_blank" rel="noopener">MRI volumetric measurements of the normal pituitary gland (J Clin Imaging Sci)</a></li>
+<li><a href="https://link.springer.com/10.1007/s11102-021-01150-7" target="_blank" rel="noopener">Normative data for pituitary size and volume, HUNT MRI (Pituitary, 2021)</a></li>
+<li><a href="https://www.ajnr.org/node/74388" target="_blank" rel="noopener">Anatomia dos ventrículos laterais (AJNR)</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3999285" target="_blank" rel="noopener">Volumetria do líquor dos ventrículos laterais, idade e sexo (PMC3999285)</a></li>
+<li><a href="https://core.ac.uk/download/154383085.pdf" target="_blank" rel="noopener">Volume ventricular total e de 3º e 4º ventrículos (revisão, core.ac.uk)</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/books/NBK519007/" target="_blank" rel="noopener">Physiology, Cerebrospinal Fluid (NCBI Bookshelf)</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6726201/table/pone.0222002.t004" target="_blank" rel="noopener">Volumes do tálamo em controles saudáveis (PLoS One, 2019)</a></li>
+<li><a href="https://jsurgmed.com/article/view/582135/5380" target="_blank" rel="noopener">Normal cerebellar volume in healthy population (J Surg Med, 2019)</a></li>
+<li><a href="https://eyewiki.org/Eye_in_Numbers" target="_blank" rel="noopener">Eye in Numbers (EyeWiki)</a></li>
+<li><a href="https://springerlink.bibliotecabuap.elogim.com/10.1007/978-1-4939-3450-8_4" target="_blank" rel="noopener">Human suprachiasmatic nucleus (Swaab, Springer)</a></li>
+<li><a href="https://graphsearch.epfl.ch/en/concept/3763482" target="_blank" rel="noopener">Brain size (EPFL Graph Search)</a></li>
+</ul>
+<p><strong>Aviso:</strong> o modelo e este manual são para estudo. As formas são esquemáticas, as medidas aproximadas, e nada aqui é diagnóstico ou orientação médica. A camada simbólica reúne leituras de tradições espirituais, sem comprovação fisiológica.</p>
+    <footer class="rodape">
+      <p><b>© 2026 Cabeça 3D: pineal e hipófise · v2.1. Todos os direitos reservados.</b></p>
+      <p>Criado por Francisco Campos de Carvalho, email: fcamposcarvalho@yahoo.com.br, Bacharel em Matemática e Pós-Graduado em Sistemas de Informação e Banco de Dados. Conteúdo educativo, sem valor de diagnóstico ou orientação médica.</p>
+    </footer>
+  </main>
+</div>
+</body>
+</html>
