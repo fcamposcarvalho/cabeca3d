@@ -1,0 +1,23 @@
+Malhas anatômicas da Cabeça 3D (forma "Anatômica")
+===================================================
+
+Origem: BodyParts3D, © The Database Center for Life Science (DBCLS), licença
+Creative Commons Atribuição 4.0 Internacional (CC BY 4.0).
+https://dbarchive.biosciencedbc.jp/en/bodyparts3d/download.html
+(arquivos STL convertidos da versão 3.0, obtidos em
+https://github.com/Kevin-Mattheus-Moerman/BodyParts3D)
+
+Modificações feitas para este projeto:
+- seleção de 105 malhas da cabeça (giros do córtex, estruturas profundas,
+  pele, cartilagens do nariz e ossos do crânio);
+- redução do número de triângulos (fast-simplification);
+- conversão de milímetros para centímetros e para o sistema de coordenadas
+  do modelo (origem no násio, x para trás, y para cima, z para a esquerda);
+- encaixe por rotação rígida + deformação suave (thin-plate spline) que leva
+  pineal, hipófise, quiasma, olhos, tálamos, násio e glabela às posições dos
+  pôsteres; os volumes mostrados no modelo são os das malhas originais;
+- empacotamento em glTF 2.0 binário (anat_cortex.glb, anat_profundo.glb,
+  anat_cabeca.glb), com posições quantizadas (KHR_mesh_quantization) e os
+  dados do modelo (id, camada, cor) em mesh.extras.
+
+Estes arquivos derivados seguem a mesma licença CC BY 4.0, com a atribuição acima.
