@@ -110,7 +110,7 @@
 <header class="topo">
   <a class="botao" href="../index.html">&larr; Voltar ao modelo 3D</a>
   <span class="nome">Manual da Cabeça 3D · v2.1</span>
-  <a class="botao principal" href="manual.pdf" download="Manual_Cabeca3D_v2.1.pdf">Baixar PDF</a>
+  <a class="botao principal" href="manual.pdf" target="_blank" rel="noopener">Abrir PDF</a>
 </header>
 <section class="capa so-impressao">
       <div class="kicker">Manual do usuário · versão v2.1</div>
@@ -184,7 +184,7 @@
 <li><strong>Vista:</strong> Perfil, Frente, Topo, 3/4, Salvar imagem, Copiar imagem.</li>
 <li><strong>Corte:</strong> Nenhum, Perfil, Frente, Topo e a posição do plano.</li>
 <li><strong>Relógio de 24 horas:</strong> hora, rotina e o gráfico dos ritmos.</li>
-<li><strong>Camadas:</strong> pele, cérebro, ventrículos, vasos, planos, circuito, fluxo do líquor, sistema porta, camada simbólica, rótulos.</li>
+<li><strong>Camadas:</strong> pele, cérebro, ventrículos, vasos, planos, circuito, fluxo do líquor, sistema porta, camada simbólica, rótulos; logo abaixo, as camadas extras (córtex, via da visão, sistema límbico, circuito de Papez) e o seletor Isolar camada.</li>
 <li><strong>Estrutura selecionada:</strong> a ficha do que você clicou.</li>
 <li><strong>Configurações:</strong> Restaurar padrão.</li>
 <li><strong>Manual e rodapé:</strong> links para este manual (página e PDF), aviso educativo, autoria e versão (v2.1).</li>
@@ -234,7 +234,7 @@
 <h3 id="24-restaurar-padrao">2.4 Restaurar padrão</h3>
 <p>O botão pede confirmação: o primeiro clique vira "Clique de novo para confirmar" por 4 segundos. Ele volta vista, corte, relógio, camadas, som, menu e posição dos cartões ao início. O idioma não muda.</p>
 <h2 id="3-as-estruturas-do-modelo">3. As estruturas do modelo</h2>
-<p>O modelo tem 31 estruturas clicáveis. O sistema de coordenadas é o dos pôsteres, em centímetros: origem na raiz do nariz (násio), x da frente para trás, y para cima, z para o lado (positivo = esquerda da pessoa).</p>
+<p>O modelo tem 49 estruturas clicáveis; 18 delas ficam nas camadas extras (Córtex, Via da visão e Sistema límbico), que começam desligadas. O sistema de coordenadas é o dos pôsteres, em centímetros: origem na raiz do nariz (násio), x da frente para trás, y para cima, z para o lado (positivo = esquerda da pessoa).</p>
 <table>
 <thead>
 <tr>
@@ -399,17 +399,108 @@
 <td>Topo da cabeça</td>
 <td>Chacra do topo; eixo vertical desenhado sobre a pineal</td>
 </tr>
+<tr>
+<td><strong>Lobo frontal</strong></td>
+<td>Frente de cada hemisfério, até o sulco central</td>
+<td>Planejamento, decisão e movimento voluntário; área de Broca (fala)</td>
+</tr>
+<tr>
+<td><strong>Lobo parietal</strong></td>
+<td>Alto e atrás, entre o sulco central e o occipital</td>
+<td>Tato, dor e posição do corpo; onde as coisas estão no espaço</td>
+</tr>
+<tr>
+<td><strong>Lobo temporal</strong></td>
+<td>Dos lados, abaixo da fissura lateral</td>
+<td>Audição, compreensão da linguagem e rostos; guarda o hipocampo e a amígdala</td>
+</tr>
+<tr>
+<td><strong>Lobo occipital</strong></td>
+<td>Parte de trás do cérebro</td>
+<td>Visão; o V1 fica na face interna</td>
+</tr>
+<tr>
+<td><strong>Sulco central</strong></td>
+<td>Do alto da cabeça até perto da fissura lateral</td>
+<td>Separa o frontal (motor) do parietal (sensitivo)</td>
+</tr>
+<tr>
+<td><strong>Fissura lateral</strong></td>
+<td>Dos lados, subindo de frente para trás</td>
+<td>Separa o lobo temporal; esconde a ínsula no fundo</td>
+</tr>
+<tr>
+<td><strong>Corpo geniculado lateral</strong></td>
+<td>Tálamo, um de cada lado, no fim do trato óptico</td>
+<td>Estação da visão consciente; recebe uns 90% das fibras da retina</td>
+</tr>
+<tr>
+<td><strong>Radiação óptica</strong></td>
+<td>Do tálamo ao lobo occipital</td>
+<td>Leva a imagem ao córtex visual; uma parte faz a alça de Meyer no lobo temporal</td>
+</tr>
+<tr>
+<td><strong>Córtex visual primário (V1)</strong></td>
+<td>Face interna do lobo occipital</td>
+<td>Onde a imagem começa a ser montada; cada lado vê a metade oposta do mundo</td>
+</tr>
+<tr>
+<td><strong>Hipocampo</strong></td>
+<td>Assoalho do corno temporal do ventrículo lateral</td>
+<td>Forma memórias de longo prazo e ajuda a se orientar no espaço</td>
+</tr>
+<tr>
+<td><strong>Amígdala</strong></td>
+<td>Logo à frente do hipocampo</td>
+<td>Medo, ameaça e a cor emocional das memórias</td>
+</tr>
+<tr>
+<td><strong>Fórnix</strong></td>
+<td>Do hipocampo, por baixo do corpo caloso, até os corpos mamilares</td>
+<td>Principal saída do hipocampo</td>
+</tr>
+<tr>
+<td><strong>Corpos mamilares</strong></td>
+<td>Base do hipotálamo, atrás da haste da hipófise</td>
+<td>Elo do circuito de Papez; encolhem na falta grave de vitamina B1</td>
+</tr>
+<tr>
+<td><strong>Trato mamilotalâmico</strong></td>
+<td>Dos corpos mamilares ao tálamo</td>
+<td>Elo do circuito de Papez</td>
+</tr>
+<tr>
+<td><strong>Núcleo anterior do tálamo</strong></td>
+<td>Ponta da frente de cada tálamo</td>
+<td>Liga os corpos mamilares ao giro do cíngulo</td>
+</tr>
+<tr>
+<td><strong>Giro do cíngulo</strong></td>
+<td>Em cima do corpo caloso, na face interna de cada hemisfério</td>
+<td>Junta emoção, dor e atenção</td>
+</tr>
+<tr>
+<td><strong>Circuito de Papez</strong></td>
+<td>Laço entre o hipocampo e o cíngulo, um de cada lado</td>
+<td>Circuito sobretudo da memória, descrito por James Papez em 1937</td>
+</tr>
+<tr>
+<td><strong>Habênula</strong></td>
+<td>Base da haste da pineal</td>
+<td>Centro de "antirrecompensa"; com a pineal, forma o epitálamo</td>
+</tr>
 </tbody>
 </table>
 <p>A camada simbólica (eixo vertical, ajna e coroa) reúne leituras de tradições espirituais, sem comprovação fisiológica. A ligação entre pineal e "terceiro olho" vem da Teosofia.</p>
 <h2 id="4-as-ferramentas-de-explorar">4. As ferramentas de Explorar</h2>
 <p>Cada botão de Explorar abre um cartão sobre o palco; clicar de novo no mesmo botão, ou em Sair, fecha. Só uma ferramenta fica aberta por vez.</p>
 <h3 id="41-tour-guiado">4.1 Tour guiado</h3>
-<p>São 14 passos que seguem o caminho da luz do dia até a melatonina da noite. A câmera voa até cada estrutura, que se acende, e a ficha correspondente abre no menu.</p>
+<p>São 15 passos que seguem o caminho da luz do dia até a melatonina da noite. A câmera voa até cada estrutura, que se acende, e a ficha correspondente abre no menu.</p>
 <ol>
 <li>O centro da cabeça</li>
 <li>A luz entra pelos olhos</li>
 <li>Quiasma e relógio mestre (NSQ)</li>
+<li>Mesma luz, dois destinos: a via da visão consciente (corpo geniculado lateral, radiação óptica e V1), com a camada Via da visão ligada só neste passo</li>
 <li>A noite chega e o freio se solta (NPV)</li>
 <li>O sinal desce pela medula até T1–T2</li>
 <li>Gânglio cervical superior</li>
@@ -507,7 +598,7 @@
 <figure class="larga"><img src="img/05_tetraedro.jpg" alt="Régua no modo Tetraedro: glabela, pineal, hipófise e olho dão 16,1 cm³"><figcaption>Régua no modo Tetraedro: glabela, pineal, hipófise e olho dão 16,1 cm³</figcaption></figure>
 
 <h3 id="45-tamanhos">4.5 Tamanhos</h3>
-<p>Um gráfico de barras em escala logarítmica, do NSQ (0,25 mm³) ao encéfalo (1.130 a 1.260 cm³): quase 7 ordens de grandeza. Cada linha mostra o valor real típico, a faixa entre adultos (trecho claro) e o volume do modelo (◆). Clicar numa linha voa até a estrutura.</p>
+<p>Um gráfico de barras em escala logarítmica, do NSQ (0,25 mm³) ao encéfalo (1.130 a 1.260 cm³): quase 7 ordens de grandeza. Cada linha mostra o valor real típico, a faixa entre adultos (trecho claro) e o volume do modelo (◆). Clicar numa linha voa até a estrutura e, se ela estiver numa camada desligada, liga essa camada. A lista inclui quatro estruturas do sistema límbico e do epitálamo: habênula, corpo mamilar, amígdala e hipocampo.</p>
 <figure class="media"><img src="img/06_tamanhos.jpg" alt="Cartão Tamanhos, do NSQ ao encéfalo em escala logarítmica"><figcaption>Cartão Tamanhos, do NSQ ao encéfalo em escala logarítmica</figcaption></figure>
 
 <h3 id="46-rede-do-nsq-modelo-de-kuramoto">4.6 Rede do NSQ (modelo de Kuramoto)</h3>
@@ -690,12 +781,47 @@
 <td>Sim</td>
 <td>Nomes com linhas-guia, sem sobreposição</td>
 </tr>
+<tr>
+<td>Córtex (lobos)</td>
+<td>Não</td>
+<td>Os quatro lobos em cores, o sulco central e a fissura lateral</td>
+</tr>
+<tr>
+<td>Via da visão</td>
+<td>Não</td>
+<td>Corpo geniculado lateral, radiação óptica, V1 e pulsos da retina ao V1</td>
+</tr>
+<tr>
+<td>Sistema límbico</td>
+<td>Não</td>
+<td>Hipocampo, amígdala, fórnix, corpos mamilares, tálamo anterior, cíngulo e habênula</td>
+</tr>
+<tr>
+<td>Circuito de Papez</td>
+<td>Não</td>
+<td>Pulsos rosa correndo pelo laço; liga junto o Sistema límbico</td>
+</tr>
 </tbody>
 </table>
 <p>No sistema porta, o verde é o dos hormônios de comando descendo pelas veias porta, o roxo o dos hormônios da adeno-hipófise saindo para o seio cavernoso, e o verde-claro o da ocitocina e da vasopressina descendo por dentro dos axônios.</p>
 <figure class="larga"><img src="img/11_corte_porta.jpg" alt="Corte de perfil com o sistema porta ligado, após duplo clique na hipófise"><figcaption>Corte de perfil com o sistema porta ligado, após duplo clique na hipófise</figcaption></figure>
 
-<h3 id="64-salvar-e-copiar-imagem">6.4 Salvar e copiar imagem</h3>
+<h3 id="64-camadas-extras-cortex-visao-e-sistema-limbico">6.4 Camadas extras: córtex, visão e sistema límbico</h3>
+<p>Quatro camadas ficam num bloco à parte, <strong>Camadas extras</strong>, todas desligadas no início para o modelo não ficar carregado. Ao ser ligada, cada uma abre a ficha da sua estrutura principal, e as estruturas novas entram no quiz, na régua, no duplo clique e, quando há valor real publicado, em Tamanhos.</p>
+<ul>
+<li><strong>Córtex (lobos):</strong> os quatro lobos pintados sobre o envoltório do cérebro (frontal azul, parietal amarelo, temporal verde, occipital rosa), com o sulco central e a fissura lateral como linhas claras. O lobo temporal ganhou um volume próprio de cada lado, porque o envoltório elíptico não desce o bastante. As fichas trazem a substância cinzenta de cada lobo (frontal ≈ 166, parietal ≈ 104, temporal ≈ 92 e occipital ≈ 43 cm³, somando os dois lados); como no modelo os lobos são cascas, eles não têm bloco de volume.</li>
+<li><strong>Via da visão:</strong> a continuação dos tratos ópticos até o corpo geniculado lateral, a radiação óptica e o córtex visual primário (V1). Pulsos azul-claros saem de cada retina; as fibras nasais cruzam no quiasma e as temporais seguem do mesmo lado. A quantidade de pulsos acompanha a luz do relógio: de noite quase nada passa.</li>
+<li><strong>Sistema límbico:</strong> hipocampo, amígdala, fórnix (que antes era um tubo sem nome na camada Cérebro), corpos mamilares, trato mamilotalâmico, núcleo anterior do tálamo, giro do cíngulo e habênula.</li>
+<li><strong>Circuito de Papez:</strong> pulsos rosa percorrem o laço hipocampo → fórnix → corpos mamilares → trato mamilotalâmico → núcleo anterior do tálamo → giro do cíngulo → cíngulo → córtex entorrinal → hipocampo, um laço de cada lado. Ligar o circuito liga também o Sistema límbico; desligar o límbico desliga o circuito.</li>
+</ul>
+<figure class="larga"><img src="img/13_cortex.jpg" alt="Camada Córtex isolada, vista de perfil: os quatro lobos, o sulco central e a fissura lateral"><figcaption>Camada Córtex isolada, vista de perfil: os quatro lobos, o sulco central e a fissura lateral</figcaption></figure>
+
+<h3 id="65-isolar-camada">6.5 Isolar camada</h3>
+<p>O seletor <strong>Isolar camada</strong>, logo abaixo das camadas extras, deixa uma camada com a aparência normal e apaga todo o resto para uns 12% da opacidade. Os rótulos de fora somem e o clique passa a ignorar o que está apagado: dá para clicar no hipocampo sem acertar o crânio. As opções são Córtex, Via da visão, Sistema límbico, Sistema porta, Ventrículos, Vasos e Circuito.</p>
+<p>Escolher uma camada desligada liga essa camada. Desligar a camada isolada, entrar no modo embrião ou usar Restaurar padrão volta o seletor para <strong>Nenhuma</strong>. Duas camadas andam juntas: ao isolar a Via da visão, o Circuito continua aceso, porque o ramo da retina até o NSQ é a outra metade da mesma história; ao isolar o Sistema límbico, o Circuito de Papez continua junto.</p>
+<figure class="larga"><img src="img/14_papez.jpg" alt="Sistema límbico isolado com o circuito de Papez: fórnix, corpos mamilares, tálamo anterior, cíngulo, hipocampo e amígdala"><figcaption>Sistema límbico isolado com o circuito de Papez: fórnix, corpos mamilares, tálamo anterior, cíngulo, hipocampo e amígdala</figcaption></figure>
+
+<h3 id="66-salvar-e-copiar-imagem">6.6 Salvar e copiar imagem</h3>
 <p><strong>Salvar imagem</strong> gera um PNG da vista atual, com os rótulos, as linhas de medida e uma legenda com a versão. No servidor local vai direto para Downloads; na página publicada, o Claude pede confirmação antes. <strong>Copiar imagem</strong> põe o PNG na área de transferência, mas só funciona em https ou localhost (no GitHub Pages, sim; num endereço http da rede local, não).</p>
 <h2 id="7-som-e-voz">7. Som e voz</h2>
 <p>O som começa <strong>desligado</strong>, porque os navegadores só tocam áudio depois de um clique. Clique em <strong>Ligar som</strong> (ou marque qualquer opção, ou mexa no volume, que ele liga sozinho). <strong>Testar</strong> toca notas e uma frase falada; sem som, confira se a aba não está silenciada e o volume do Windows.</p>
@@ -768,7 +894,7 @@
 </table>
 <p>Desmarcar uma opção corta o som dela na hora, inclusive o eco. Isso foi corrigido depois que a melodia da melatonina continuava tocando mesmo desligada.</p>
 <h2 id="8-volumes-o-modelo-e-o-corpo-real">8. Volumes: o modelo e o corpo real</h2>
-<p>Sete das dez estruturas comparadas têm, no modelo, um volume dentro da faixa real de um adulto. As três que fogem são o 3º ventrículo (cerca de 4 vezes maior), o encéfalo (cerca de 1,3 vez) e o NSQ, ampliado de propósito para aparecer: o real tem só uns 0,25 mm³, e o do modelo, 9,1 mm³.</p>
+<p>Onze das catorze estruturas comparadas têm, no modelo, um volume dentro da faixa real de um adulto. As três que fogem são o 3º ventrículo (cerca de 4 vezes maior), o encéfalo (cerca de 1,3 vez) e o NSQ, ampliado de propósito para aparecer: o real tem só uns 0,25 mm³, e o do modelo, 9,1 mm³.</p>
 <figure class="larga"><img src="img/grafico_volumes.png" alt="Volumes do modelo (calculados das formas 3D) e faixas reais de adultos das fontes da seção 8.4"><figcaption>Volumes do modelo (calculados das formas 3D) e faixas reais de adultos das fontes da seção 8.4</figcaption></figure>
 
 <p>O NSQ aparece umas 36 vezes maior que o real porque foi ampliado de propósito; o 3º ventrículo ficou largo demais no desenho.</p>
@@ -846,6 +972,26 @@
 <td>Encéfalo</td>
 <td><a href="https://graphsearch.epfl.ch/en/concept/3763482" target="_blank" rel="noopener">EPFL Graph, tamanho do cérebro</a></td>
 <td>Médias de 1.130 cm³ (mulheres) e 1.260 cm³ (homens)</td>
+</tr>
+<tr>
+<td>Hipocampo e amígdala</td>
+<td><a href="https://doi.org/10.1093/cercor/10.4.433" target="_blank" rel="noopener">Pruessner et al., Cereb Cortex 2000</a></td>
+<td>Hipocampo ≈ 3,2 a 3,3 cm³ e amígdala ≈ 1,15 cm³ de cada lado; outros métodos chegam a 4,5 e 1,5 cm³</td>
+</tr>
+<tr>
+<td>Corpos mamilares</td>
+<td><a href="https://www.ajnr.org/content/30/4/736" target="_blank" rel="noopener">AJNR 2009</a></td>
+<td>Controles com 55 a 69 mm³ cada (faixa de 38 a 86)</td>
+</tr>
+<tr>
+<td>Habênula</td>
+<td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10258539/" target="_blank" rel="noopener">Meta-análise de volumetria (PMC10258539)</a></td>
+<td>De 15 a 30 mm³ por lado</td>
+</tr>
+<tr>
+<td>Córtex por lobo</td>
+<td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5738927/" target="_blank" rel="noopener">NeuroImage 2017 (PMC5738927)</a></td>
+<td>Substância cinzenta, os dois lados: frontal 166, parietal 104, temporal 92, occipital 43, cíngulo 19 cm³; aparece só nas fichas</td>
 </tr>
 </tbody>
 </table>
@@ -1035,6 +1181,19 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <li>Dê duplo clique em Hipófise.</li>
 </ol>
 <p><strong>O que encontrar:</strong> as partículas verdes descem pela haste até a adeno-hipófise, as roxas saem para o seio cavernoso e as verde-claras descem por dentro dos axônios até a neuro-hipófise.</p>
+<h3 id="roteiro-9-uma-luz-dois-caminhos">Roteiro 9: uma luz, dois caminhos</h3>
+<ol>
+<li>Arraste o relógio para o meio-dia. Camadas extras → ligue Via da visão.</li>
+<li>Isolar camada → Via da visão. Vista Topo.</li>
+</ol>
+<p><strong>O que encontrar:</strong> os pulsos de cada retina se dividem no quiasma. Os da metade de dentro (nasal) cruzam para o outro lado e os de fora seguem em frente, e todos chegam ao V1 do lado oposto à metade do mundo que enxergam. Os pulsos azuis do Circuito mostram o ramo pequeno que vai ao NSQ. Leve o relógio para as 2 h: a via da visão quase para, mas a pineal acorda.</p>
+<h3 id="roteiro-10-dar-a-volta-no-circuito-de-papez">Roteiro 10: dar a volta no circuito de Papez</h3>
+<ol>
+<li>Camadas extras → ligue Circuito de Papez (o Sistema límbico liga junto).</li>
+<li>Isolar camada → Sistema límbico. Vista Perfil.</li>
+<li>Régua → Distância: clique em Hipocampo e depois em Corpos mamilares; em seguida, em Habênula e em Pineal.</li>
+</ol>
+<p><strong>O que encontrar:</strong> um pulso leva uns 18 segundos para dar a volta no laço. Hipocampo e corpos mamilares ficam a menos de 4 cm em linha reta, mas o fórnix dá a volta inteira por cima do tálamo para ligá-los. A habênula fica a menos de 1 cm da pineal: as duas formam o epitálamo.</p>
 <h2 id="11-os-scripts-python">11. Os scripts Python</h2>
 <p>A pasta python tem cinco scripts que geram os pôsteres, a simulação da melatonina e a animação de Bézier. Eles usam matplotlib, numpy e pillow, todos em requirements.txt, e salvam as imagens ao lado de si mesmos.</p>
 <pre><code class="language-bash">cd pineal_projeto/python
@@ -1133,11 +1292,11 @@ python bezier_anim.py
 </tr>
 <tr>
 <td>Anatomia</td>
-<td>Cria cada malha com registrar(): elipsóides, tubos de Catmull-Rom, extrusões, cones</td>
+<td>Cria cada malha com registrar(): elipsóides, tubos de Catmull-Rom, extrusões, cones; os lobos do córtex são fatias do envoltório, separadas por planos inclinados</td>
 </tr>
 <tr>
 <td>Partículas</td>
-<td>Pulsos do circuito, melatonina, líquor e sistema porta</td>
+<td>Pulsos do circuito, melatonina, líquor, sistema porta, via da visão e circuito de Papez</td>
 </tr>
 <tr>
 <td>Embrião</td>
@@ -1333,6 +1492,11 @@ python bezier_anim.py
 <tbody>
 <tr>
 <td>10 nov 2026</td>
+<td><strong>Córtex e límbico</strong></td>
+<td>Camadas extras Córtex (lobos), Via da visão, Sistema límbico e Circuito de Papez; Isolar camada; passo novo no tour; habênula, corpo mamilar, amígdala e hipocampo em Tamanhos</td>
+</tr>
+<tr>
+<td>10 nov 2026</td>
 <td><strong>v2.1</strong></td>
 <td>Rodapé com autoria e aviso, versão visível, ventrículos laterais com valor medido (7 a 10 mL cada), este manual</td>
 </tr>
@@ -1416,6 +1580,10 @@ python bezier_anim.py
 <td>Parte da frente da hipófise, glândula de verdade; veio do teto da boca do embrião</td>
 </tr>
 <tr>
+<td>Amígdala</td>
+<td>Núcleo em forma de amêndoa no lobo temporal, ligado ao medo e à cor emocional das memórias</td>
+</tr>
+<tr>
 <td>Aqueduto</td>
 <td>Canal estreito que leva o líquor do 3º ao 4º ventrículo, logo abaixo da pineal</td>
 </tr>
@@ -1424,8 +1592,20 @@ python bezier_anim.py
 <td>Bolsa que sobe do teto da boca do embrião e forma a adeno-hipófise</td>
 </tr>
 <tr>
+<td>Circuito de Papez</td>
+<td>Laço hipocampo → fórnix → corpos mamilares → tálamo anterior → cíngulo → hipocampo; circuito da memória</td>
+</tr>
+<tr>
+<td>Corpo geniculado lateral</td>
+<td>Núcleo do tálamo onde termina o trato óptico; estação da visão consciente</td>
+</tr>
+<tr>
 <td>Corte sagital, coronal, axial</td>
 <td>De perfil (divide esquerda e direita), de frente (divide frente e trás), de cima (divide cima e baixo)</td>
+</tr>
+<tr>
+<td>Córtex visual primário (V1)</td>
+<td>Área do lobo occipital, em volta do sulco calcarino, que recebe a radiação óptica</td>
 </tr>
 <tr>
 <td>Diencéfalo</td>
@@ -1436,8 +1616,24 @@ python bezier_anim.py
 <td>Início da melatonina sob luz baixa: a hora em que ela começa a subir, usada para medir o relógio</td>
 </tr>
 <tr>
+<td>Fissura lateral (de Sylvius)</td>
+<td>Sulco profundo que separa o lobo temporal do frontal e do parietal</td>
+</tr>
+<tr>
+<td>Fórnix</td>
+<td>Feixe arqueado que leva a saída do hipocampo até os corpos mamilares</td>
+</tr>
+<tr>
 <td>Glabela</td>
 <td>Ponto entre as sobrancelhas, onde sai o plano horizontal da pineal</td>
+</tr>
+<tr>
+<td>Habênula</td>
+<td>Pequeno núcleo par junto à haste da pineal; com ela, forma o epitálamo</td>
+</tr>
+<tr>
+<td>Hipocampo</td>
+<td>Faixa curva no lobo temporal que transforma experiências em memórias</td>
 </tr>
 <tr>
 <td>Infundíbulo</td>
@@ -1488,20 +1684,28 @@ python bezier_anim.py
 <td>Cruzamento em X dos nervos ópticos, acima da hipófise</td>
 </tr>
 <tr>
-<td>Sela túrcica</td>
-<td>Depressão do osso esfenoide onde fica a hipófise; aberta em cima</td>
-</tr>
-<tr>
 <td>Seio cavernoso</td>
 <td>Veia de cada lado da hipófise, com a carótida interna por dentro</td>
+</tr>
+<tr>
+<td>Sela túrcica</td>
+<td>Depressão do osso esfenoide onde fica a hipófise; aberta em cima</td>
 </tr>
 <tr>
 <td>Sincronia (r)</td>
 <td>No modelo de Kuramoto, de 0 (todos desencontrados) a 1 (todos juntos)</td>
 </tr>
 <tr>
+<td>Sistema límbico</td>
+<td>Conjunto de estruturas ligadas à memória e à emoção: hipocampo, amígdala, fórnix, corpos mamilares, cíngulo</td>
+</tr>
+<tr>
 <td>Sistema porta</td>
 <td>Duas redes de capilares em sequência, ligadas por veias, sem passar pelo coração</td>
+</tr>
+<tr>
+<td>Sulco central (de Rolando)</td>
+<td>Separa o lobo frontal (motor) do parietal (sensitivo)</td>
 </tr>
 <tr>
 <td>Teorema da divergência</td>
@@ -1535,6 +1739,10 @@ python bezier_anim.py
 <li><a href="https://eyewiki.org/Eye_in_Numbers" target="_blank" rel="noopener">Eye in Numbers (EyeWiki)</a></li>
 <li><a href="https://springerlink.bibliotecabuap.elogim.com/10.1007/978-1-4939-3450-8_4" target="_blank" rel="noopener">Human suprachiasmatic nucleus (Swaab, Springer)</a></li>
 <li><a href="https://graphsearch.epfl.ch/en/concept/3763482" target="_blank" rel="noopener">Brain size (EPFL Graph Search)</a></li>
+<li><a href="https://doi.org/10.1093/cercor/10.4.433" target="_blank" rel="noopener">Volumetry of hippocampus and amygdala with high-resolution MRI (Pruessner et al., Cereb Cortex, 2000)</a></li>
+<li><a href="https://www.ajnr.org/content/30/4/736" target="_blank" rel="noopener">Mammillary body volume in healthy controls (AJNR, 2009)</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10258539/" target="_blank" rel="noopener">Habenula volume: systematic review and meta-analysis (PMC10258539)</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5738927/" target="_blank" rel="noopener">Regional cortical gray matter volumes in adults (NeuroImage, 2017, PMC5738927)</a></li>
 </ul>
 <p><strong>Aviso:</strong> o modelo e este manual são para estudo. As formas são esquemáticas, as medidas aproximadas, e nada aqui é diagnóstico ou orientação médica. A camada simbólica reúne leituras de tradições espirituais, sem comprovação fisiológica.</p>
     <footer class="rodape">
