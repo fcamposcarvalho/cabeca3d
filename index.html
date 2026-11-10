@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cabeça 3D: pineal e hipófise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/addons/"
+} }
+</script>
+</head>
+<body>
+<div class="app">
+  <aside id="painel">
+    <header>
+      <div class="seg idioma" id="idioma" role="group" aria-label="Idioma / Language">
+        <button type="button" data-l="pt" aria-pressed="true" title="Português">PT</button>
+        <button type="button" data-l="en" aria-pressed="false" title="English">EN</button>
+      </div>
+      <h1>A pineal no centro da cabeça</h1>
+      <p class="lead">Modelo 3D esquemático, com as mesmas medidas dos pôsteres. Arraste para girar, role para aproximar e clique numa estrutura para ver o que ela faz.</p>
+    </header>
+
+    <section aria-labelledby="t-explorar">
+      <h2 id="t-explorar">Explorar</h2>
+      <div class="ferramentas">
+        <button type="button" id="b-tour" aria-pressed="false">Tour guiado</button>
+        <button type="button" id="b-quiz" aria-pressed="false">Quiz</button>
+        <button type="button" id="b-embriao" aria-pressed="false">Modo embrião</button>
+        <button type="button" id="b-regua" aria-pressed="false">Régua</button>
+        <button type="button" id="b-tam" aria-pressed="false">Tamanhos</button>
+        <button type="button" id="b-kura" aria-pressed="false">Rede do NSQ</button>
+        <button type="button" id="b-jet" aria-pressed="false">Jet lag e turnos</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="t-som">
+      <h2 id="t-som">Som</h2>
+      <div class="row som-linha">
+        <button type="button" id="b-som" aria-pressed="false">Ligar som</button>
+        <button type="button" id="b-testar">Testar</button>
+        <label class="vol" for="som-vol">Volume
+          <input type="range" id="som-vol" min="0" max="1" step="0.01" value="0.6">
+        </label>
+      </div>
+      <div class="grupos-som">
+        <fieldset>
+          <legend><label class="chk" for="g-efeitos"><input type="checkbox" id="g-efeitos" checked> Efeitos</label></legend>
+          <label class="chk sub" for="s-clique"><input type="checkbox" id="s-clique" checked> Cliques, quiz e régua</label>
+          <label class="chk sub" for="s-circ"><input type="checkbox" id="s-circ" checked> Circuito audível (pings, estalos, gotas)</label>
+          <label class="chk sub" for="s-emb"><input type="checkbox" id="s-emb" checked> Embrião com batimento</label>
+        </fieldset>
+        <fieldset>
+          <legend><label class="chk" for="g-voz"><input type="checkbox" id="g-voz" checked> Voz</label></legend>
+          <label class="chk sub" for="s-nomes"><input type="checkbox" id="s-nomes" checked> Nomes ao clicar</label>
+          <label class="chk sub" for="s-tour"><input type="checkbox" id="s-tour" checked> Narração do tour</label>
+          <label class="chk sub" for="s-auto"><input type="checkbox" id="s-auto"> Tour avança sozinho</label>
+        </fieldset>
+        <fieldset>
+          <legend><label class="chk" for="g-amb"><input type="checkbox" id="g-amb" checked> Ambiente</label></legend>
+          <label class="chk sub" for="s-dia"><input type="checkbox" id="s-dia" checked> Dia e noite</label>
+          <label class="chk sub" for="s-liq"><input type="checkbox" id="s-liq" checked> Líquor pulsando</label>
+          <label class="chk sub" for="s-mel"><input type="checkbox" id="s-mel"> Melodia da melatonina</label>
+        </fieldset>
+      </div>
+      <div class="cap" id="som-txt">O som começa desligado: os navegadores só tocam áudio depois de um clique.</div>
+    </section>
+
+    <section aria-labelledby="t-vista">
+      <h2 id="t-vista">Vista</h2>
+      <div class="row" id="vistas">
+        <button type="button" data-v="perfil" aria-pressed="false">Perfil</button>
+        <button type="button" data-v="frente" aria-pressed="false">Frente</button>
+        <button type="button" data-v="topo" aria-pressed="false">Topo</button>
+        <button type="button" data-v="tres" aria-pressed="true">3/4</button>
+      </div>
+      <div class="row img-linha">
+        <button type="button" id="b-salvar">Salvar imagem</button>
+        <button type="button" id="b-copiar">Copiar imagem</button>
+      </div>
+      <div class="cap" id="img-txt"></div>
+    </section>
+
+    <section aria-labelledby="t-corte">
+      <h2 id="t-corte">Corte</h2>
+      <div class="seg" id="cortes" role="group" aria-label="Plano de corte">
+        <button type="button" data-c="nenhum" aria-pressed="true">Nenhum</button>
+        <button type="button" data-c="sagital" aria-pressed="false">Perfil</button>
+        <button type="button" data-c="coronal" aria-pressed="false">Frente</button>
+        <button type="button" data-c="axial" aria-pressed="false">Topo</button>
+      </div>
+      <input type="range" id="corte-pos" min="-8" max="8" step="0.1" value="0" aria-label="Posição do corte">
+      <div class="cap" id="corte-txt">Escolha um plano para fatiar a pele, o cérebro e os vasos e ver o interior.</div>
+    </section>
+
+    <section aria-labelledby="t-relogio">
+      <h2 id="t-relogio">Relógio de 24 horas</h2>
+      <div class="clock">
+        <span class="hora" id="hora">23:00</span>
+        <span class="pill noite" id="fase">Noite</span>
+      </div>
+      <input type="range" id="slider" min="0" max="24" step="0.05" value="23" aria-label="Hora do dia">
+      <div class="row">
+        <button type="button" id="play" aria-pressed="true">Pausar</button>
+        <label class="sel" for="rotina">Rotina
+          <select id="rotina">
+            <option value="escura">Noite escura</option>
+            <option value="telas1">Luz e telas até 1h (1ª noite)</option>
+            <option value="telas14">Luz e telas até 1h (após 2 semanas)</option>
+          </select>
+        </label>
+      </div>
+      <p class="status" id="status"></p>
+      <canvas id="ritmos" aria-label="Curvas de melatonina, cortisol, temperatura e pressão do sono em 24 horas"></canvas>
+      <div class="leg-ritmos" id="ritmos-leg"></div>
+      <div class="cap">Modelo didático, do meio-dia ao meio-dia, todos comandados pelo NSQ; valores aproximados de um adulto. Faixa escura: horário de sono da rotina. Tracejado: melatonina na noite escura, para comparar.</div>
+    </section>
+
+    <section aria-labelledby="t-camadas">
+      <h2 id="t-camadas">Camadas</h2>
+      <div class="grid2">
+        <label class="chk" for="c-pele"><input type="checkbox" id="c-pele" checked> Pele</label>
+        <label class="chk" for="c-cerebro"><input type="checkbox" id="c-cerebro" checked> Cérebro</label>
+        <label class="chk" for="c-vent"><input type="checkbox" id="c-vent" checked> Ventrículos</label>
+        <label class="chk" for="c-vasos"><input type="checkbox" id="c-vasos" checked> Vasos</label>
+        <label class="chk" for="c-planos"><input type="checkbox" id="c-planos" checked> Planos</label>
+        <label class="chk" for="c-circ"><input type="checkbox" id="c-circ" checked> Circuito</label>
+        <label class="chk" for="c-liquor"><input type="checkbox" id="c-liquor"> Fluxo do líquor</label>
+        <label class="chk" for="c-porta"><input type="checkbox" id="c-porta"> Sistema porta</label>
+        <label class="chk" for="c-simbolo"><input type="checkbox" id="c-simbolo" checked> Camada simbólica</label>
+        <label class="chk" for="c-rot"><input type="checkbox" id="c-rot" checked> Rótulos</label>
+      </div>
+    </section>
+
+    <section aria-labelledby="t-info">
+      <h2 id="t-info">Estrutura selecionada</h2>
+      <div class="info" id="info"></div>
+    </section>
+
+    <section aria-labelledby="t-config">
+      <h2 id="t-config">Configurações</h2>
+      <button type="button" id="b-reset" class="b-reset">Restaurar padrão</button>
+      <div class="cap" id="reset-txt">Volta tudo ao início: vista, corte, relógio, camadas, som, menu e posição dos cartões.</div>
+    </section>
+
+    <div class="row manual-linha">
+      <button type="button" id="b-manual">Manual</button>
+      <button type="button" id="b-manual-pdf">Manual em PDF</button>
+    </div>
+    <footer class="rodape">
+      <p class="rod-tit" id="rod-tit">© 2026 Cabeça 3D: pineal e hipófise · v2.1. Todos os direitos reservados.</p>
+      <p id="rod-aviso">As informações deste modelo são apenas para fins educativos e de estudo, não constituindo diagnóstico, orientação ou recomendação médica. As medidas são aproximadas e as formas, esquemáticas; os valores reais vêm de estudos publicados e variam entre pessoas. A camada simbólica reúne leituras de tradições espirituais, sem comprovação fisiológica.</p>
+      <p><span id="rod-cri">Criado por Francisco Campos de Carvalho, email:</span> <a href="mailto:fcamposcarvalho@yahoo.com.br">fcamposcarvalho@yahoo.com.br</a>, <span id="rod-form">Bacharel em Matemática e Pós-Graduado em Sistemas de Informação e Banco de Dados.</span></p>
+    </footer>
+  </aside>
+
+  <main id="stage">
+    <button type="button" id="b-menu" class="b-menu" aria-controls="painel" aria-expanded="true" title="Recolher o menu (tecla M)"><span class="ico" aria-hidden="true"></span><span class="txt">Recolher</span></button>
+    <svg id="guias" aria-hidden="true"></svg>
+    <div id="rotulos" aria-hidden="true"></div>
+    <div class="hint">Arraste para girar, role para aproximar, clique numa estrutura, duplo clique para voar até ela</div>
+    <div class="legend" id="legenda">
+      <span><b style="background:var(--blue)"></b>luz: retina → NSQ</span>
+      <span><b style="background:var(--coral)"></b>sinal nervoso até a pineal</span>
+      <span><b style="background:var(--amber)"></b>melatonina</span>
+    </div>
+    <div class="liq-box" id="liq-box" hidden></div>
+    <div class="card" id="card" hidden></div>
+    <div class="erro" id="erro"><div><p>Seu navegador não conseguiu abrir o modelo 3D (WebGL indisponível).</p><p>No Edge ou no Chrome: ative “Usar aceleração gráfica quando disponível” nas configurações de Sistema, reinicie o navegador e confira em edge://gpu (ou chrome://gpu) se WebGL aparece como “Hardware accelerated”.</p></div></div>
+  </main>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
