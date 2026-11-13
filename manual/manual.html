@@ -1190,7 +1190,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <p>O córtex real, desdobrado, tem de 1.640 a 2.200 cm², e uns dois terços dele ficam escondidos nos sulcos: o índice de girificação (área total dividida pela área visível) fica perto de 2,5 a 3. O BodyParts3D não traz a superfície do córtex separada (cada giro é um sólido fechado, com paredes internas), então o modelo não mede essa área diretamente.</p>
 <h3 id="910-o-contorno-da-cabeca-e-as-medias-de-adultos">9.10 O contorno da cabeça e as médias de adultos</h3>
 <p>Até 12/11/2026, a pele esquemática seguia os pôsteres: topo 12,2 cm acima da raiz do nariz e parte de trás a 19,5 cm dela. O crânio do atlas, encaixado pelas estruturas internas (seção 9.9), ficava até 2,5 cm abaixo dessa pele no topo, e o envoltório do cérebro dos pôsteres nem cabia dentro dele.</p>
-<p>Desde 13/11/2026, da altura dos olhos para cima, a pele esquemática segue o crânio do atlas a 0,6 cm, a espessura do couro cabeludo. O envoltório do cérebro passou a ser o maior elipsoide que cabe dentro do crânio, descontando um osso de uns 0,65 cm: centro (9,2; 3,6; 0) e semieixos 7,8 × 5,4 × 6,4 cm. Abaixo dos olhos (rosto, mandíbula e pescoço), a pele continua com as medidas dos pôsteres, e nenhuma estrutura interna mudou de lugar.</p>
+<p>Desde 13/11/2026, da altura dos olhos para cima, a pele esquemática segue o crânio do atlas a 0,6 cm, a espessura do couro cabeludo. O envoltório do cérebro passou a ser o maior elipsoide que cabe dentro do crânio, descontando um osso de uns 0,65 cm: centro (9,2; 3,6; 0) e semieixos 7,8 × 5,4 × 6,4 cm. Abaixo dos olhos (rosto, mandíbula e pescoço), a pele continua com as medidas dos pôsteres, e nenhuma estrutura interna mudou de lugar. Na faixa dos olhos, a metade da frente de cada fatia deixou de ser uma elipse e virou uma superelipse, |x/a|^n + |z/b|^n = 1 com n = 2,6 em vez de 2: o rosto fica mais largo na frente, como um rosto real, e cobre os olhos, que antes saíam alguns milímetros da pele. Os olhos têm o tamanho certo (2,4 cm de diâmetro, 7,2 cm³; o real fica perto de 24 mm e 6,5 a 7 cm³).</p>
 <table>
 <thead>
 <tr>
@@ -1612,6 +1612,16 @@ python bezier_anim.py
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>13 nov 2026</td>
+<td>Olhos discretos</td>
+<td>Olhos em cinza-perolado e 75% opacos (íris e pupila continuam opacas): deixam ver o nervo óptico e a órbita</td>
+</tr>
+<tr>
+<td>13 nov 2026</td>
+<td>Rosto cobre os olhos</td>
+<td>Na faixa dos olhos, a frente da pele esquemática ficou mais larga (superelipse), e os olhos deixaram de sair da pele</td>
+</tr>
 <tr>
 <td>13 nov 2026</td>
 <td>Nariz discreto</td>
