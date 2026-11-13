@@ -225,17 +225,15 @@ function layoutRotulos() {
 }
 
 // =====================================================================  ANATOMIA
-const FRENTE = [[-18, 7.2], [-14.5, 6.8], [-12.8, 5.0], [-12.3, 2.0], [-11.9, 0.2], [-10.6, -1.0], [-9.4, -0.7],
-  [-8.6, -1.1], [-7.9, -0.6], [-7.1, -1.2], [-5.8, -0.9], [-4.0, -0.5], [-1.4, -0.2], [0, 0], [1.3, -0.45],
-  [3.5, -0.3], [6.5, 0.3], [9.3, 2.0], [11.3, 5.0], [12.05, 8.8]];
-const TRAS = [[-18, 15.6], [-8.5, 15.8], [-5.5, 16.8], [-2.0, 18.6], [1.5, 19.5], [4.0, 19.3], [8.0, 17.5],
-  [11.0, 14.0], [12.05, 10.2]];
-const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.7], [-2, 7.2], [1, 7.7], [4.5, 7.8],
-  [8.3, 7.0], [11.2, 4.4], [12.05, 1.2]];
+// perfis da pele esquemática (frente, trás e meia largura por altura y). Desde 13/11/2026, da altura dos olhos para cima
+// a pele segue o crânio do atlas BodyParts3D a 0,6 cm (couro cabeludo); abaixo continuam as medidas dos pôsteres.
+const FRENTE = [[-18, 7.2], [-14.5, 6.8], [-12.8, 5], [-12.3, 2], [-11.9, 0.2], [-10.6, -1], [-9.4, -0.7], [-8.6, -1.1], [-7.9, -0.6], [-7.1, -1.2], [-5.8, -0.9], [-4, -0.5], [-1.4, -0.2], [0, 0], [1.3, -0.45], [1.5, -0.44], [2, -0.38], [2.5, -0.39], [3, -0.46], [3.5, -0.4], [4, -0.22], [4.5, 0.06], [5, 0.3], [5.5, 0.6], [6, 0.85], [6.5, 1.23], [7, 1.77], [7.5, 2.31], [8, 3.09], [8.5, 4.09], [9, 5.4], [9.5, 6.38], [9.7, 6.51], [9.9, 6.96], [10.05, 7.6], [10.15, 8.3]];
+const TRAS = [[-18, 15.6], [-8.5, 15.8], [-5.5, 16.8], [-5, 17.06], [-4.5, 17], [-4, 17.05], [-3.5, 17.2], [-3, 17.47], [-2.5, 17.76], [-2, 18.01], [-1.5, 18.22], [-1, 18.37], [-0.5, 18.46], [0, 18.53], [0.5, 18.65], [1, 18.7], [1.5, 18.75], [2, 18.76], [2.5, 18.68], [3, 18.57], [3.5, 18.44], [4, 18.32], [4.5, 18.18], [5, 18.01], [5.5, 17.84], [6, 17.64], [6.5, 17.37], [7, 16.98], [7.5, 16.5], [8, 15.97], [8.5, 15.37], [9, 14.64], [9.5, 14.05], [9.7, 13.9], [9.9, 13.43], [10.05, 12.77], [10.15, 12.05]];
+const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.6], [-4, 6.75], [-3.5, 6.92], [-3, 7.06], [-2.5, 7.14], [-2, 7.17], [-1.5, 7.23], [-1, 7.37], [-0.5, 7.52], [0, 7.65], [0.5, 7.72], [1, 7.78], [1.5, 7.83], [2, 7.87], [2.5, 7.87], [3, 7.8], [3.5, 7.7], [4, 7.63], [4.5, 7.58], [5, 7.52], [5.5, 7.41], [6, 7.19], [6.5, 6.9], [7, 6.52], [7.5, 6.08], [8, 5.5], [8.5, 4.77], [9, 3.84], [9.5, 3.14], [9.7, 3.02], [9.9, 2.65], [10.05, 2.12], [10.15, 1.53]];
 (function pele() {
   const N = 110, M = 72, pos = [], idx = [];
   for (let i = 0; i <= N; i++) {
-    const y = -18 + (30.05 * i) / N;
+    const y = -18 + (28.15 * i) / N; // até 10,15; o topo (10,24) fecha a malha
     const xf = interp(FRENTE, y), xb = interp(TRAS, y), w = interp(LARG, y);
     const cx = (xf + xb) / 2, a = (xb - xf) / 2;
     for (let j = 0; j < M; j++) {
@@ -244,7 +242,7 @@ const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.7], [-2, 
       pos.push(v.x, v.y, v.z);
     }
   }
-  const topo = P(9.5, 12.15, 0);
+  const topo = P(10.17, 10.24, 0);
   pos.push(topo.x, topo.y, topo.z);
   const it = (N + 1) * M;
   for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) {
@@ -260,7 +258,7 @@ const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.7], [-2, 
   m.renderOrder = 10; m.userData.esq = "cabeca";
   registrar(m, null, "pele", { clip: true });
   const lm = new THREE.LineBasicMaterial({ color: 0x9fb2d6, transparent: true, opacity: 0.22 });
-  for (let y = -16.5; y < 12; y += 1.5) {
+  for (let y = -16.5; y < 10; y += 1.5) {
     const xf = interp(FRENTE, y), xb = interp(TRAS, y), w = interp(LARG, y);
     const cx = (xf + xb) / 2, a = (xb - xf) / 2, pts = [];
     for (let j = 0; j <= 96; j++) { const t = (2 * Math.PI * j) / 96; pts.push(P(cx - a * Math.cos(t), y, w * Math.sin(t))); }
@@ -292,7 +290,7 @@ for (const s of [1, -1]) {
 registrar(elipsoide([-0.45, 1.3, 0], [0.22, 0.22, 0.22], 0xffffff, { emissive: 0xffffff, ei: 0.4 }), "glabela", "fixo");
 registrar(elipsoide([0, 0, 0], [0.2, 0.2, 0.2], 0xffffff, { emissive: 0xffffff, ei: 0.4 }), "nasio", "fixo");
 // pontos de referência na superfície para medir: topo da cabeça (vértice) e ponto mais posterior (opistocrânio)
-for (const [id, pos] of [["vertice", [9.5, 12.15, 0]], ["occipital", [19.5, 1.5, 0]]]) {
+for (const [id, pos] of [["vertice", [10.17, 10.24, 0]], ["occipital", [18.76, 2.0, 0]]]) {
   registrar(elipsoide(pos, [0.32, 0.32, 0.32], 0xffffff, { emissive: 0xffffff, ei: 0.6 }), id, "fixo");
   const anel = new THREE.Mesh(new THREE.SphereGeometry(0.62, 24, 16), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false }));
   anel.position.copy(P(...pos)); anel.userData.marca = id; grupos.fixo.add(anel);
@@ -301,8 +299,11 @@ for (const s of [1, -1]) registrar(elipsoide([0.85, 2.3, s * 0.75], [0.45, 0.85,
 registrar(elipsoide([6.5, -2.85, 0], [1.5, 0.9, 1.6], 0x85b7eb, { opacity: 0.22 }), "esfenoidal", "fixo", { clip: true });
 
 // cérebro e tronco
+// envoltório do cérebro: o maior elipsoide que cabe dentro do crânio do atlas (osso de ~0,65 cm), desde 13/11/2026
+// (antes: centro 9,6; 4,4 e semieixos 8,3 × 6,0 × 6,7 cm, com as medidas dos pôsteres, que não cabiam no crânio real)
+const ENV_C = [9.2, 3.6], ENV_R = [7.8, 5.4, 6.4];
 {
-  const env = elipsoide([9.6, 4.4, 0], [8.3, 6.0, 6.7], 0xf0c6bd, { opacity: 0.08, side: THREE.DoubleSide });
+  const env = elipsoide([ENV_C[0], ENV_C[1], 0], ENV_R, 0xf0c6bd, { opacity: 0.08, side: THREE.DoubleSide });
   env.renderOrder = 9; env.userData.encefalo = true; env.userData.esq = "cortex";
   registrar(env, null, "cerebro", { clip: true });
 }
@@ -382,7 +383,7 @@ plano(-1.15, 7.0, -1.45, 0x3cc4a2);
 
 // camada simbólica: eixo vertical, ajna, coroa e o eixo pineal → glabela
 {
-  const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(10.15, 13.0), P(10.15, 1.95)]), new THREE.LineDashedMaterial({ color: 0xa39bf2, dashSize: 0.35, gapSize: 0.35 }));
+  const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(10.15, 11.1), P(10.15, 1.95)]), new THREE.LineDashedMaterial({ color: 0xa39bf2, dashSize: 0.35, gapSize: 0.35 }));
   l.computeLineDistances(); grupos.simbolo.add(l);
   const seta = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.6, 20), new THREE.MeshBasicMaterial({ color: 0xa39bf2 }));
   seta.rotation.x = Math.PI; seta.position.copy(P(10.15, 2.2)); grupos.simbolo.add(seta);
@@ -392,7 +393,7 @@ plano(-1.15, 7.0, -1.45, 0x3cc4a2);
   const ajnaG = new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 16), new THREE.MeshBasicMaterial({ color: 0x8f86ff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false }));
   ajnaG.position.copy(ajna.position); grupos.simbolo.add(ajnaG);
   const coroa = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.07, 12, 64), new THREE.MeshBasicMaterial({ color: 0xc7a6ff }));
-  coroa.rotation.x = Math.PI / 2; coroa.position.copy(P(9.7, 13.1)); coroa.userData.centro = coroa.position.clone();
+  coroa.rotation.x = Math.PI / 2; coroa.position.copy(P(10.17, 11.2)); coroa.userData.centro = coroa.position.clone();
   registrar(coroa, "coroa", "simbolo");
   const feixe = new THREE.Line(new THREE.BufferGeometry().setFromPoints([P(9.72, 1.45), P(-0.9, 1.3)]), new THREE.LineDashedMaterial({ color: 0x8f86ff, dashSize: 0.2, gapSize: 0.25 }));
   feixe.computeLineDistances(); grupos.simbolo.add(feixe);
@@ -527,16 +528,15 @@ for (const m of emb.opticas) { const r = rotulo("Vesícula óptica → retina", 
 rotulo("Boca primitiva", P(5.6, -6.6), "#F07F5A", "embriao", 3);
 
 // =====================================================================  CÓRTEX, VIA DA VISÃO E SISTEMA LÍMBICO (camadas opcionais)
-// córtex: os quatro lobos como "cascas" sobre o envoltório do cérebro (centro 9,6; 4,4; 0 e semieixos 8,3 × 6,0 × 6,7 cm)
-const ENV_C = [9.6, 4.4], ENV_R = [8.3, 6.0, 6.7];
+// córtex: os quatro lobos como "cascas" sobre o envoltório do cérebro (ENV_C e ENV_R, definidos junto do envoltório)
 const supZ = (x, y) => { const q = 1 - ((x - ENV_C[0]) / ENV_R[0]) ** 2 - ((y - ENV_C[1]) / ENV_R[1]) ** 2; return q > 0 ? ENV_R[2] * Math.sqrt(q) : NaN; };
 const sylvius = (x) => 1.0 + 0.42 * (x - 3.5);   // fissura lateral: sobe de frente para trás
 const centralX = (y) => 7.2 + 0.27 * (y - 2.5);  // sulco central: inclinado para a frente embaixo
 function loboDe(x, y, z) {
   const az = Math.abs(z);
   if (y < 0.4 && az < 3.4) return null; // base, escondida pelo diencéfalo e pelo tronco
-  if (x > 14.6 - 0.12 * (y - 4)) return "lobo_occipital";
-  if (az > 2.6 && y < sylvius(x) && x > 3.6 && x < 14.8) return "lobo_temporal";
+  if (x > 14.0 - 0.12 * (y - 4)) return "lobo_occipital";
+  if (az > 2.6 && y < sylvius(x) && x > 3.6 && x < 14.2) return "lobo_temporal";
   return x < centralX(y) ? "lobo_frontal" : "lobo_parietal";
 }
 const CORES_LOBO = { lobo_frontal: 0x7fa7e8, lobo_parietal: 0xe8c77f, lobo_temporal: 0x8fd19e, lobo_occipital: 0xe89a9a };
@@ -545,9 +545,9 @@ const CORES_LOBO = { lobo_frontal: 0x7fa7e8, lobo_parietal: 0xe8c77f, lobo_tempo
   const cena = [], anat = [];
   for (let i = 0; i < pos.count; i++) {
     const vx = pos.getX(i), vy = pos.getY(i), vz = pos.getZ(i);
-    const x = 9.6 - ENV_R[0] * vz, y = ENV_C[1] + ENV_R[1] * vy, z = ENV_R[2] * vx;
+    const x = ENV_C[0] - ENV_R[0] * vz, y = ENV_C[1] + ENV_R[1] * vy, z = ENV_R[2] * vx;
     anat.push([x, y, z]);
-    cena.push(P(x, y, z).sub(P(9.6, 4.4)).multiplyScalar(1.012).add(P(9.6, 4.4)));
+    cena.push(P(x, y, z).sub(P(ENV_C[0], ENV_C[1])).multiplyScalar(1.012).add(P(ENV_C[0], ENV_C[1])));
   }
   const tris = {};
   for (let t = 0; t < idx.count; t += 3) {
@@ -565,7 +565,7 @@ const CORES_LOBO = { lobo_frontal: 0x7fa7e8, lobo_parietal: 0xe8c77f, lobo_tempo
   }
   // o envoltório é um elipsoide simples e não desce o bastante dos lados: cada lobo temporal ganha um volume próprio
   // (só a parte que fica fora do envoltório é desenhada; a de dentro já é a casca verde acima)
-  const foraEnv = (x, y, z) => ((x - 9.6) / 8.3) ** 2 + ((y - 4.4) / 6.0) ** 2 + (z / 6.7) ** 2 > 0.985;
+  const foraEnv = (x, y, z) => ((x - ENV_C[0]) / ENV_R[0]) ** 2 + ((y - ENV_C[1]) / ENV_R[1]) ** 2 + (z / ENV_R[2]) ** 2 > 0.985;
   for (const s of [1, -1]) {
     const gt = new THREE.SphereGeometry(1, 72, 44), pt = gt.attributes.position, it = gt.index;
     const an = [], ce = [];
@@ -603,8 +603,8 @@ const CORES_LOBO = { lobo_frontal: 0x7fa7e8, lobo_parietal: 0xe8c77f, lobo_tempo
 // via da visão consciente: trato óptico (já desenhado) → corpo geniculado lateral → radiação óptica → córtex visual (V1)
 for (const s of [1, -1]) {
   registrar(elipsoide([9.75, 1.1, s * 2.42], [0.32, 0.22, 0.22], 0x9fb7ff, { emissive: 0x5e7fe0, ei: 0.25 }), "cgl", "visao");
-  registrar(tubo([[9.85, 1.1, s * 2.5], [11.2, 1.6, s * 3.3], [13.4, 2.5, s * 3.2], [15.6, 3.2, s * 2.0], [16.8, 3.6, s * 0.95]], 0.09, 0x9fb7ff, { opacity: 0.85 }), "radiacao", "visao");
-  registrar(elipsoide([17.1, 3.6, s * 0.75], [0.55, 0.95, 0.35], 0x7fa0ff, { emissive: 0x5e7fe0, ei: 0.3 }), "v1", "visao", { clip: true });
+  registrar(tubo([[9.85, 1.1, s * 2.5], [11.2, 1.6, s * 3.3], [13.2, 2.5, s * 3.1], [15.0, 3.2, s * 2.0], [16.0, 3.6, s * 0.95]], 0.09, 0x9fb7ff, { opacity: 0.85 }), "radiacao", "visao");
+  registrar(elipsoide([16.3, 3.6, s * 0.75], [0.55, 0.95, 0.35], 0x7fa0ff, { emissive: 0x5e7fe0, ei: 0.3 }), "v1", "visao", { clip: true });
 }
 const CURVAS_VISAO = [];
 for (const s of [1, -1]) for (const cruza of [true, false]) {
@@ -641,8 +641,8 @@ rotulo("3º ventrículo", [8.3, 1.4], "#5EA6F2", "vent", 2);
 rotulo("Tálamo", [8.9, 2.6, 1.9], "#A39BF2", "fixo", 2);
 rotulo("Glabela", [-0.45, 1.3], "#FFFFFF", "fixo", 1);
 rotulo("Raiz do nariz", [0, 0], "#FFFFFF", "fixo", 2);
-rotulo("Topo da cabeça", [9.5, 12.15], "#FFFFFF", "fixo", 1);
-rotulo("Parte de trás da cabeça", [19.5, 1.5], "#FFFFFF", "fixo", 1);
+rotulo("Topo da cabeça", [10.17, 10.24], "#FFFFFF", "fixo", 1);
+rotulo("Parte de trás da cabeça", [18.76, 2.0], "#FFFFFF", "fixo", 1);
 rotulo("Quiasma óptico", [6.7, 0.02, -0.5], "#C8CBD2", "fixo", 3);
 rotulo("Pirâmide nasal", [-1.6, -3.4], "#F07F5A", "fixo", 4);
 rotulo("Corpo caloso", [8.5, 5.9], "#F3EAD8", "cerebro", 4);
@@ -653,17 +653,17 @@ rotulo("Seio cavernoso", [7.1, -1.45, 1.9], "#A39BF2", "vasos", 4);
 rotulo("Ventrículo lateral", [12.8, 2.6, 3.1], "#5EA6F2", "vent", 6);
 rotulo("Olho", [1.9, -0.7, 3.2], "#E8EDF4", "fixo", 6);
 rotulo("Ajna (simbólico)", [-1.0, 1.3], "#8F86FF", "simbolo", 3, "simb");
-rotulo("Coroa (simbólico)", [9.7, 13.1, 1.2], "#C7A6FF", "simbolo", 3, "simb");
+rotulo("Coroa (simbólico)", [10.17, 11.2, 1.2], "#C7A6FF", "simbolo", 3, "simb");
 rotulo("Sistema porta", [7.2, -0.8, 0.3], "#E24B4A", "porta", 2);
 rotulo("Lobo frontal", [4.2, 7.5, supZ(4.2, 7.5)], "#7FA7E8", "cortex", 2);
-rotulo("Lobo parietal", [12.2, 9.0, supZ(12.2, 9.0)], "#E8C77F", "cortex", 2);
+rotulo("Lobo parietal", [12.0, 7.8, supZ(12.0, 7.8)], "#E8C77F", "cortex", 2);
 rotulo("Lobo temporal", [9.6, -0.3, 6.5], "#8FD19E", "cortex", 2);
-rotulo("Lobo occipital", [16.8, 4.0, supZ(16.8, 4.0)], "#E89A9A", "cortex", 2);
+rotulo("Lobo occipital", [16.2, 4.0, supZ(16.2, 4.0)], "#E89A9A", "cortex", 2);
 rotulo("Sulco central", [centralX(8.5), 8.5, supZ(centralX(8.5), 8.5)], "#E8EDF4", "cortex", 4);
 rotulo("Fissura lateral", [7.5, sylvius(7.5), supZ(7.5, sylvius(7.5))], "#E8EDF4", "cortex", 4);
 rotulo("Corpo geniculado lateral", [9.75, 1.1, 2.42], "#9FB7FF", "visao", 2);
-rotulo("Radiação óptica", [13.4, 2.5, 3.2], "#9FB7FF", "visao", 3);
-rotulo("Córtex visual (V1)", [17.1, 3.6, 0.75], "#7FA0FF", "visao", 1);
+rotulo("Radiação óptica", [13.2, 2.5, 3.1], "#9FB7FF", "visao", 3);
+rotulo("Córtex visual (V1)", [16.3, 3.6, 0.75], "#7FA0FF", "visao", 1);
 rotulo("Hipocampo", [10.8, -0.9, 3.4], "#F2A7C8", "limbico", 1);
 rotulo("Amígdala", [8.0, -1.15, 3.6], "#FF8A8A", "limbico", 2);
 rotulo("Fórnix", [9.6, 3.6, 0.45], "#E8D3A8", "limbico", 2);
@@ -708,9 +708,9 @@ const INFO = {
   nasio: ["Raiz do nariz (násio)", "#FFFFFF", "Encontro do osso frontal com os ossos nasais.",
     ["O plano da hipófise sai um pouco abaixo dela.", "Ali perto passa a veia angular, ligada ao seio cavernoso."]],
   vertice: ["Topo da cabeça (vértice)", "#FFFFFF", "O ponto mais alto da cabeça, no couro cabeludo.",
-    ["Fica quase em cima da pineal: cerca de 10,7 cm acima dela.", "Use a régua para medir até a pineal, a glabela ou a parte de trás da cabeça."]],
+    ["Fica quase em cima da pineal: cerca de 8,8 cm acima dela.", "Use a régua para medir até a pineal, a glabela ou a parte de trás da cabeça."]],
   occipital: ["Parte de trás da cabeça (opistocrânio)", "#FFFFFF", "O ponto mais para trás da cabeça, sobre o osso occipital.",
-    ["Da glabela até aqui é o comprimento da cabeça: cerca de 20 cm.", "A pineal fica uns 9,4 cm à frente dele."]],
+    ["Da glabela até aqui é o comprimento da cabeça: cerca de 19,2 cm.", "A pineal fica uns 8,7 cm à frente dele."]],
   seiofrontal: ["Seio frontal", "#85B7EB", "Cavidade de ar atrás da glabela; drena para o nariz.", []],
   esfenoidal: ["Seio esfenoidal", "#85B7EB", "Cavidade de ar logo abaixo da sela túrcica.", ["É por ele que se opera a hipófise pelo nariz."]],
   caloso: ["Corpo caloso", "#F3EAD8", "Grande ponte de fibras entre os dois hemisférios, acima do diencéfalo.", ["A pineal fica logo abaixo da sua ponta de trás (esplênio)."]],
@@ -812,9 +812,9 @@ const INFO_EN = {
   nasio: ["Root of the nose (nasion)", "Where the frontal bone meets the nasal bones.",
     ["The pituitary's plane exits a little below it.", "The angular vein, linked to the cavernous sinus, runs close by."]],
   vertice: ["Top of the head (vertex)", "The highest point of the head, on the scalp.",
-    ["It sits almost directly above the pineal: about 10.7 cm above it.", "Use the ruler to measure to the pineal, the glabella or the back of the head."]],
+    ["It sits almost directly above the pineal: about 8.8 cm above it.", "Use the ruler to measure to the pineal, the glabella or the back of the head."]],
   occipital: ["Back of the head (opisthocranion)", "The rearmost point of the head, over the occipital bone.",
-    ["From the glabella to here is the head length: about 20 cm.", "The pineal lies about 9.4 cm in front of it."]],
+    ["From the glabella to here is the head length: about 19.2 cm.", "The pineal lies about 8.7 cm in front of it."]],
   seiofrontal: ["Frontal sinus", "Air cavity behind the glabella; drains into the nose.", []],
   esfenoidal: ["Sphenoid sinus", "Air cavity just below the sella turcica.", ["Surgeons reach the pituitary through it, via the nose."]],
   caloso: ["Corpus callosum", "Large bridge of fibers between the two hemispheres, above the diencephalon.", ["The pineal lies just below its back end (splenium)."]],
@@ -1787,11 +1787,12 @@ function pontoRotulo(id) {
   const esq = ms.filter((m) => m.geometry.boundingSphere.center.x > 0.3);
   if (esq.length) ms = esq;
   const c = new THREE.Vector3(); let n = 0;
-  for (const m of ms) { const p = m.geometry.attributes.position; for (let i = 0; i < p.count; i += 7) { c.x += p.getX(i); c.y += p.getY(i); c.z += p.getZ(i); n++; } }
+  const posDe = (m) => m.geometry.attributes.position;
+  for (const m of ms) { const p = posDe(m); for (let i = 0; i < p.count; i += 7) { c.x += p.getX(i); c.y += p.getY(i); c.z += p.getZ(i); n++; } }
   c.divideScalar(n);
   const dir = c.clone().sub(CENTRO_ENC); if (dir.lengthSq() < 0.01) dir.set(0, 1, 0); dir.normalize();
   let melhor = null, mv = -Infinity; const v = new THREE.Vector3();
-  for (const m of ms) { const p = m.geometry.attributes.position; for (let i = 0; i < p.count; i += 3) { v.fromBufferAttribute(p, i); const s = v.clone().sub(c).dot(dir); if (s > mv) { mv = s; melhor = v.clone(); } } }
+  for (const m of ms) { const p = posDe(m); for (let i = 0; i < p.count; i += 3) { v.fromBufferAttribute(p, i); const s = v.clone().sub(c).dot(dir); if (s > mv) { mv = s; melhor = v.clone(); } } }
   return melhor;
 }
 function posicoesAnat() {
@@ -1848,7 +1849,7 @@ function textoForma() {
   formaTxt.textContent = forma.atual === "anat"
     ? L("Formas reais do BodyParts3D (um homem adulto), encaixadas nas coordenadas do modelo. Os pulsos, planos e vasos continuam esquemáticos.",
       "Real shapes from BodyParts3D (one adult man), fitted to the model's coordinates. Pulses, planes and vessels stay schematic.")
-    : L("Sólidos geométricos com as medidas dos pôsteres.", "Geometric solids with the posters' measurements.");
+    : L("Sólidos geométricos com as medidas dos pôsteres; o contorno da cabeça e o envoltório do cérebro seguem o crânio real.", "Geometric solids with the posters' measurements; the head outline and the brain envelope follow the real skull.");
 }
 document.querySelectorAll("#forma button").forEach((b) => b.addEventListener("click", () => setForma(b.dataset.f)));
 textoForma();
@@ -2857,7 +2858,7 @@ function restaurarTudo() {
 // Textos fixos do HTML: [seletor, inglês]. O português é lido do próprio HTML na abertura.
 const I18N = [
   ["#painel h1", "Human head"],
-  ["#painel .lead", "3D model with the same measurements as the posters, as geometric solids or as real anatomical shapes. Drag to rotate, scroll to zoom and click a structure to see what it does."],
+  ["#painel .lead", "3D model with the posters' measurements, as geometric solids or as real anatomical shapes. Drag to rotate, scroll to zoom and click a structure to see what it does."],
   ["#t-explorar", "Explore"], ["#b-tour", "Guided tour"], ["#b-quiz", "Quiz"], ["#b-embriao", "Embryo mode"], ["#b-regua", "Ruler"],
   ["#b-tam", "Sizes"], ["#b-kura", "SCN network"], ["#b-jet", "Jet lag and shifts"],
   ["#t-som", "Sound"], ["#b-testar", "Test"], ["label[for=som-vol]", "Volume"],
