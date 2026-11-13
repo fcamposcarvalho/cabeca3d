@@ -100,6 +100,7 @@ fieldset.desligado .sub { opacity: 0.45; }
 .lbl { position: absolute; left: 0; top: 0; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: rgba(12, 18, 29, 0.84); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text); white-space: nowrap; display: none; align-items: center; gap: 6px; will-change: transform; }
 .lbl.clicavel { pointer-events: auto; cursor: pointer; }
 .lbl.clicavel:hover { border-color: rgba(255, 210, 122, 0.8); background: rgba(30, 38, 56, 0.95); }
+.lbl.lbl-sel, .lbl.lbl-sel:hover { background: rgba(36, 74, 160, 0.95); border-color: #8DB8FF; color: #FFFFFF; }
 #guias circle.clicavel { pointer-events: all; cursor: pointer; }
 .lbl i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
 .lbl.simb { border-style: dashed; color: #CFCBFF; }

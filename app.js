@@ -1154,7 +1154,13 @@ function restaurarDestaque() {
   }
   destaque.ids.clear();
   limparHalos();
+  marcarRotulo(null);
 }
+// rótulo da estrutura selecionada em azul; só um por vez (um clique num espaço vazio ou Esc desmarca)
+function marcarRotulo(id) {
+  for (const r of ROT) r.el.classList.toggle("lbl-sel", !!id && r.id === id);
+}
+function desselecionar() { restaurarDestaque(); }
 function destacar(ids, pulsar = false) {
   restaurarDestaque();
   destaque.pulsar = pulsar;
@@ -2658,7 +2664,7 @@ renderer.domElement.addEventListener("pointerup", (e) => {
   if (!baixo || Math.hypot(e.clientX - baixo[0], e.clientY - baixo[1]) > 5) return;
   if (estado.quiz || estado.embriao) return;
   const hit = acharHit(e);
-  if (!hit) return;
+  if (!hit) { if (!estado.regua && estado.tour < 0) desselecionar(); return; }
   if (estado.regua) { medir(hit); return; }
   selecionarId(hit.object.userData.id, true);
 });
@@ -2691,6 +2697,7 @@ function selecionarId(id, viaCena = false) {
   }
   if (esfera.id && esfera.id !== id) removerEsfera();
   destacar([id], false);
+  marcarRotulo(id);
   mostrar(id);
   somEstrutura(id);
   const d = infoDe(id);
@@ -2805,6 +2812,7 @@ function setMenu(aberto) {
 }
 botaoMenu.addEventListener("click", () => setMenu(appEl.classList.contains("recolhido")));
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !e.target.closest("input, select, textarea") && estado.tour < 0 && !estado.quiz) { desselecionar(); return; }
   if (e.key.toLowerCase() !== "m" || e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.target.closest("input, select, textarea")) return;
   setMenu(appEl.classList.contains("recolhido"));
