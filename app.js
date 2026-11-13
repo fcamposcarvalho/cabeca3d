@@ -116,7 +116,7 @@ const ROT = [];
 const ID_DO_ROTULO = { "Pineal": "pineal", "Hipófise": "adeno", "Hipotálamo": "hipotalamo", "3º ventrículo": "vent3", "Tálamo": "talamo",
   "Glabela": "glabela", "Raiz do nariz": "nasio", "Quiasma óptico": "quiasma", "Pirâmide nasal": "piramide", "Corpo caloso": "caloso",
   "Cerebelo": "cerebelo", "Tronco encefálico": "tronco", "Gânglio cervical superior": "gcs", "Seio cavernoso": "cavernoso",
-  "Ventrículo lateral": "ventlat", "Olho": "olho", "Ajna (simbólico)": "ajna", "Coroa (simbólico)": "coroa", "Sistema porta": "porta",
+  "Ventrículo lateral": "ventlat", "Olho": "olho", "Retina": "retina", "Córnea": "cornea", "Íris": "iris", "Cristalino": "cristalino", "Corpo ciliar": "ciliar", "Ajna (simbólico)": "ajna", "Coroa (simbólico)": "coroa", "Sistema porta": "porta",
   "Topo da cabeça": "vertice", "Parte de trás da cabeça": "occipital",
   "Lobo frontal": "lobo_frontal", "Lobo parietal": "lobo_parietal", "Lobo temporal": "lobo_temporal", "Lobo occipital": "lobo_occipital",
   "Sulco central": "sulco_central", "Fissura lateral": "fissura_lateral", "Corpo geniculado lateral": "cgl", "Radiação óptica": "radiacao",
@@ -129,7 +129,7 @@ const ROT_EN = { "Pineal": "Pineal", "Hipófise": "Pituitary", "Hipotálamo": "H
   "Glabela": "Glabella", "Raiz do nariz": "Root of the nose", "Topo da cabeça": "Top of the head", "Parte de trás da cabeça": "Back of the head",
   "Quiasma óptico": "Optic chiasm", "Pirâmide nasal": "Nasal pyramid", "Corpo caloso": "Corpus callosum", "Cerebelo": "Cerebellum",
   "Tronco encefálico": "Brainstem", "Gânglio cervical superior": "Superior cervical ganglion", "Seio cavernoso": "Cavernous sinus",
-  "Ventrículo lateral": "Lateral ventricle", "Olho": "Eye", "Ajna (simbólico)": "Ajna (symbolic)", "Coroa (simbólico)": "Crown (symbolic)",
+  "Ventrículo lateral": "Lateral ventricle", "Olho": "Eye", "Retina": "Retina", "Córnea": "Cornea", "Íris": "Iris", "Cristalino": "Lens", "Corpo ciliar": "Ciliary body", "Ajna (simbólico)": "Ajna (symbolic)", "Coroa (simbólico)": "Crown (symbolic)",
   "Sistema porta": "Portal system", "Vesícula do diencéfalo": "Diencephalic vesicle", "Vesícula óptica → retina": "Optic vesicle → retina",
   "Broto da pineal": "Pineal bud", "Infundíbulo → neuro-hipófise": "Infundibulum → posterior pituitary",
   "Bolsa de Rathke → adeno-hipófise": "Rathke's pouch → anterior pituitary", "Boca primitiva": "Primitive mouth",
@@ -190,7 +190,9 @@ function layoutRotulos() {
     if (ok && forma.atual === "anat" && r.id && !(porId.get(r.id) || []).some((m) => m.visible)) ok = false;
     if (!ok) { esconder(r); continue; }
     if (r.posFn) r.posFn(r.pos);
-    tmpV.copy(forma.atual === "anat" && r.posAnat ? r.posAnat : r.pos).project(camera);
+    const pRot = forma.atual === "anat" && r.posAnat ? r.posAnat : r.pos;
+    if (r.perto && camera.position.distanceTo(pRot) > r.perto) { esconder(r); continue; } // só aparece de perto
+    tmpV.copy(pRot).project(camera);
     if (tmpV.z > 1 || Math.abs(tmpV.x) > 1.2 || Math.abs(tmpV.y) > 1.2) { esconder(r); continue; }
     r.ax = (tmpV.x * 0.5 + 0.5) * W;
     r.ay = (-tmpV.y * 0.5 + 0.5) * H;
@@ -281,14 +283,52 @@ function pontoPele(y, t, xf, xb, w) {
 
 // rosto
 for (const s of [1, -1]) {
-  // olho: cinza-perolado e um pouco translúcido (75%), para não saltar na tela e deixar ver o nervo óptico e a órbita;
+  // olho: cinza-perolado e translúcido (35%), para a retina aparecer por dentro, para não saltar na tela e deixar ver o nervo óptico e a órbita;
   // íris e pupila continuam opacas
-  const olho = registrar(elipsoide([1.9, -0.7, s * 3.2], [1.2, 1.2, 1.2], 0xc9d0d9, { opacity: 0.75 }), "olho", "fixo", { clip: true });
-  olho.renderOrder = 6;
-  const iris = new THREE.Mesh(new THREE.CircleGeometry(0.5, 32), new THREE.MeshStandardMaterial({ color: 0x6b7f99 }));
-  iris.position.copy(P(0.69, -0.7, s * 3.2)); grupos.fixo.add(iris);
-  const pup = new THREE.Mesh(new THREE.CircleGeometry(0.22, 24), new THREE.MeshBasicMaterial({ color: 0x0c121d }));
-  pup.position.copy(P(0.67, -0.7, s * 3.2)); grupos.fixo.add(pup);
+  const olho = registrar(elipsoide([1.9, -0.7, s * 3.2], [1.2, 1.2, 1.2], 0xc9d0d9, { opacity: 0.35 }), "olho", "fixo", { clip: true });
+  olho.renderOrder = 6; olho.material.depthWrite = false; // deixa ver a retina por dentro
+  // parte da frente do olho, nas proporções reais (o eixo do olho aponta para −x dos pôsteres = +z da cena);
+  // a geometria é feita em torno do eixo y e girada para esse eixo
+  const eixo = (g) => { g.rotateX(Math.PI / 2); return g; };          // +y da geometria → +z da cena (frente)
+  const naFrente = (m, x) => { m.position.copy(P(x, -0.7, s * 3.2)); return m; };
+  const soPeloNome = (m) => { pickables.splice(pickables.indexOf(m), 1); return m; }; // clicar no olho continua selecionando o olho
+  // córnea: calota mais curva que o globo (raio 7,8 mm, 11,5 mm de diâmetro), ápice 0,25 cm à frente da borda
+  const cornea = naFrente(new THREE.Mesh(eixo(new THREE.SphereGeometry(0.78, 40, 16, 0, Math.PI * 2, 0, 0.83)),
+    mat(0xdcecf7, { opacity: 0.28, side: THREE.DoubleSide })), 1.373);
+  cornea.renderOrder = 7; cornea.userData.centro = P(0.66, -0.7, s * 3.2);
+  soPeloNome(registrar(cornea, "cornea", "fixo", { clip: true }));
+  // íris: anel de 12 mm com a pupila de 4 mm no meio, a 3,5 mm atrás do ápice da córnea
+  const iris = naFrente(new THREE.Mesh(new THREE.RingGeometry(0.2, 0.6, 48), mat(0x6b7f99, { side: THREE.DoubleSide })), 0.95); // o anel já nasce de frente
+  iris.userData.centro = P(0.95, -0.7, s * 3.2);
+  soPeloNome(registrar(iris, "iris", "fixo", { clip: true }));
+  const pup = naFrente(new THREE.Mesh(new THREE.CircleGeometry(0.2, 32), new THREE.MeshBasicMaterial({ color: 0x0c121d, side: THREE.DoubleSide })), 0.965);
+  grupos.fixo.add(pup);
+  // cristalino: lente biconvexa de 9,5 mm de diâmetro e 4 mm de espessura, logo atrás da íris
+  const cristalino = registrar(elipsoide([1.2, -0.7, s * 3.2], [0.2, 0.475, 0.475], 0xf2e2b8, { opacity: 0.55 }), "cristalino", "fixo", { clip: true });
+  cristalino.renderOrder = 6; soPeloNome(cristalino);
+  // corpo ciliar: faixa na parede de dentro, da raiz da íris até a borda da retina (ora serrata)
+  const perfil = [];
+  for (let k = 0; k <= 12; k++) { const x = 0.98 + (0.5 * k) / 12; perfil.push(new THREE.Vector2(Math.sqrt(1.1 ** 2 - (1.9 - x) ** 2), -(x - 0.98))); }
+  const ciliar = naFrente(new THREE.Mesh(eixo(new THREE.LatheGeometry(perfil, 48)), mat(0x9a6658, { opacity: 0.8, side: THREE.DoubleSide })), 0.98);
+  ciliar.userData.centro = P(1.25, -0.7, s * 3.2 + 0.8 * s);
+  soPeloNome(registrar(ciliar, "ciliar", "fixo", { clip: true }));
+  // retina: casca no fundo do olho (do polo de trás até um pouco à frente do equador, onde fica a ora serrata),
+  // rosa-avermelhada como no exame de fundo de olho; aparece através do olho translúcido
+  const gr = new THREE.SphereGeometry(1.12, 48, 24, 0, Math.PI * 2, 0, 1.95);
+  gr.rotateX(-Math.PI / 2); // o polo da casca aponta para trás (−z da cena = +x dos pôsteres)
+  const retina = new THREE.Mesh(gr, mat(0xc9505f, { opacity: 0.7, side: THREE.DoubleSide, emissive: 0x6a1a26, ei: 0.6 }));
+  retina.position.copy(P(1.9, -0.7, s * 3.2)); retina.renderOrder = 5;
+  retina.userData.centro = P(2.75, -0.7, s * 3.2);
+  registrar(retina, "retina", "fixo", { clip: true });
+  pickables.splice(pickables.indexOf(retina), 1); // clicar no olho continua selecionando o olho; a retina se seleciona pelo nome
+  // disco óptico (ponto cego, onde sai o nervo óptico, para o lado do nariz) e mácula (centro da visão, para fora)
+  const dirDisco = new THREE.Vector3(1.2, 0.02, -0.35 * s).normalize(), dirMac = new THREE.Vector3(1, 0, 0.18 * s).normalize();
+  const disco = new THREE.Mesh(new THREE.SphereGeometry(0.17, 20, 12), new THREE.MeshStandardMaterial({ color: 0xf3dfb0, roughness: 0.6 }));
+  disco.scale.set(1, 1, 0.35); disco.position.copy(P(1.9 + 1.1 * dirDisco.x, -0.7 + 1.1 * dirDisco.y, s * 3.2 + 1.1 * dirDisco.z));
+  disco.lookAt(P(1.9, -0.7, s * 3.2)); grupos.fixo.add(disco);
+  const macula = new THREE.Mesh(new THREE.SphereGeometry(0.2, 20, 12), new THREE.MeshStandardMaterial({ color: 0x8c3a4a, roughness: 0.7 }));
+  macula.scale.set(1, 1, 0.3); macula.position.copy(P(1.9 + 1.1 * dirMac.x, -0.7, s * 3.2 + 1.1 * dirMac.z));
+  macula.lookAt(P(1.9, -0.7, s * 3.2)); grupos.fixo.add(macula);
 }
 // nariz (pirâmide nasal): tom de pele discreto, para não chamar mais atenção que as estruturas do circuito
 const COR_NARIZ = 0xc9b4a8;
@@ -668,6 +708,10 @@ rotulo("Gânglio cervical superior", [10.3, -9.0, 2.4], "#F0997B", "circ", 5);
 rotulo("Seio cavernoso", [7.1, -1.45, 1.9], "#A39BF2", "vasos", 4);
 rotulo("Ventrículo lateral", [12.8, 2.6, 3.1], "#5EA6F2", "vent", 6);
 rotulo("Olho", [1.9, -0.7, 3.2], "#C9D0D9", "fixo", 6);
+rotulo("Retina", [3.0, -0.2, 3.25], "#E07080", "fixo", 6);
+// as partes da frente do olho só ganham nome com a câmera perto (duplo clique no olho), para não lotar a vista geral
+for (const [t, pos, cor] of [["Córnea", [0.62, -0.7, 3.2], "#BFD9EC"], ["Íris", [0.95, -0.35, 3.2], "#8EA2BE"],
+  ["Cristalino", [1.2, -0.7, 3.5], "#E8D6A6"], ["Corpo ciliar", [1.25, -0.1, 3.85], "#B8806F"]]) rotulo(t, pos, cor, "fixo", 7).perto = 18;
 rotulo("Ajna (simbólico)", [-1.0, 1.3], "#8F86FF", "simbolo", 3, "simb");
 rotulo("Coroa (simbólico)", [10.17, 11.2, 1.2], "#C7A6FF", "simbolo", 3, "simb");
 rotulo("Sistema porta", [7.2, -0.8, 0.3], "#E24B4A", "porta", 2);
@@ -718,6 +762,19 @@ const INFO = {
     ["Um tumor de hipófise costuma afetar primeiro a visão lateral.", "Do quiasma sai a via direta da luz até o NSQ."]],
   olho: ["Olhos", "#C9D0D9", "Irmãos da pineal: as retinas e a pineal nascem do mesmo tecido do diencéfalo no embrião.",
     ["Nos mamíferos, é por eles que a pineal sabe se é dia ou noite."]],
+  retina: ["Retina", "#E07080", "Camada de neurônios que forra o fundo do olho e transforma luz em sinais elétricos.",
+    ["Cones (cores, de dia) e bastonetes (penumbra) formam a imagem; uma terceira célula, a ganglionar com melanopsina (ipRGC), só mede se está claro.",
+      "As ipRGCs mandam o sinal pelo trato retino-hipotalâmico até o NSQ: é assim que a luz azul da manhã acerta o relógio e a da noite freia a melatonina.",
+      "No embrião, ela nasce da vesícula óptica, um broto do diencéfalo, como a pineal.",
+      "O disco claro é o ponto cego, onde sai o nervo óptico; a mancha escura é a mácula, o centro da visão."]],
+  cornea: ["Córnea", "#BFD9EC", "A janela transparente na frente do olho, mais curva que o resto do globo.",
+    ["Faz cerca de dois terços do foco do olho (≈ 43 dioptrias); o cristalino faz o resto.", "Não tem vasos: recebe oxigênio do ar e da lágrima.", "Tem uns 11,5 mm de diâmetro e 0,5 mm de espessura no centro."]],
+  iris: ["Íris", "#8EA2BE", "O anel colorido que abre e fecha a pupila, como o diafragma de uma câmera.",
+    ["No escuro a pupila se abre (até uns 8 mm); na luz forte, fecha (uns 2 mm).", "O reflexo da pupila usa as mesmas células com melanopsina da retina que avisam o NSQ se é dia.", "A cor depende da quantidade de melanina na íris."]],
+  cristalino: ["Cristalino", "#E8D6A6", "Lente transparente logo atrás da íris, que ajusta o foco para perto e para longe.",
+    ["O músculo ciliar muda a curvatura dele: é a acomodação.", "Com a idade, endurece (presbiopia) e pode ficar opaco (catarata).", "Amarela com os anos e filtra mais luz azul: chega menos luz às células que acertam o relógio."]],
+  ciliar: ["Corpo ciliar", "#B8806F", "Anel de músculo e tecido na parede do olho, entre a raiz da íris e a borda da retina.",
+    ["O músculo ciliar segura o cristalino por fibras finas (zônulas) e muda o foco.", "Produz o humor aquoso, o líquido que enche a frente do olho e mantém a pressão dele."]],
   piramide: ["Pirâmide nasal", "#C9B4A8", "O nariz externo tem a forma de uma pirâmide de três faces.", ["Vértice na raiz do nariz; base nas narinas."]],
   glabela: ["Glabela", "#FFFFFF", "Ponto entre as sobrancelhas, 1 a 1,5 cm acima da raiz do nariz.",
     ["O plano horizontal da pineal sai aqui.", "Na vista de frente, fica bem na frente da pineal.", "Região de maior risco para preenchedores (anastomose com a artéria oftálmica)."]],
@@ -822,6 +879,19 @@ const INFO_EN = {
     ["A pituitary tumor usually affects side vision first.", "The direct light pathway to the SCN leaves from the chiasm."]],
   olho: ["Eyes", "Siblings of the pineal: in the embryo, the retinas and the pineal grow from the same diencephalic tissue.",
     ["In mammals, they are how the pineal knows whether it is day or night."]],
+  retina: ["Retina", "A layer of neurons lining the back of the eye that turns light into electrical signals.",
+    ["Cones (colour, daylight) and rods (dim light) build the image; a third cell, the melanopsin ganglion cell (ipRGC), only measures how bright it is.",
+      "ipRGCs send their signal down the retinohypothalamic tract to the SCN: that is how blue morning light sets the clock and evening light holds back melatonin.",
+      "In the embryo it grows from the optic vesicle, a bud of the diencephalon, like the pineal.",
+      "The pale disc is the blind spot, where the optic nerve leaves; the dark spot is the macula, the centre of vision."]],
+  cornea: ["Cornea", "The clear window at the front of the eye, more curved than the rest of the globe.",
+    ["It does about two thirds of the eye's focusing (≈ 43 dioptres); the lens does the rest.", "It has no blood vessels: it takes oxygen from the air and the tears.", "About 11.5 mm across and 0.5 mm thick at the centre."]],
+  iris: ["Iris", "The coloured ring that opens and closes the pupil, like a camera's aperture.",
+    ["In the dark the pupil opens (up to about 8 mm); in bright light it closes (about 2 mm).", "The pupil reflex uses the same melanopsin cells of the retina that tell the SCN it is day.", "Its colour depends on how much melanin it has."]],
+  cristalino: ["Lens", "A clear lens just behind the iris that adjusts focus for near and far.",
+    ["The ciliary muscle changes its curvature: that is accommodation.", "With age it stiffens (presbyopia) and can turn cloudy (cataract).", "It yellows over the years and filters more blue light: less light reaches the cells that set the clock."]],
+  ciliar: ["Ciliary body", "A ring of muscle and tissue in the eye wall, between the root of the iris and the edge of the retina.",
+    ["The ciliary muscle holds the lens by fine fibres (zonules) and changes focus.", "It makes the aqueous humour, the fluid that fills the front of the eye and keeps its pressure."]],
   piramide: ["Nasal pyramid", "The external nose has the shape of a three-sided pyramid.", ["Apex at the root of the nose; base at the nostrils."]],
   glabela: ["Glabella", "The point between the eyebrows, 1 to 1.5 cm above the root of the nose.",
     ["The pineal's horizontal plane exits here.", "In the front view, it lies right in front of the pineal.", "The highest-risk area for fillers (anastomosis with the ophthalmic artery)."]],
@@ -944,9 +1014,9 @@ function volumeMalha(m) {
   }
   return Math.abs(v);
 }
-const PARES = new Set(["olho", "talamo", "hipotalamo", "nsq", "npv", "ventlat", "seiofrontal", "cavernoso", "gcs",
+const PARES = new Set(["olho", "retina", "cornea", "iris", "cristalino", "ciliar", "talamo", "hipotalamo", "nsq", "npv", "ventlat", "seiofrontal", "cavernoso", "gcs",
   "cgl", "v1", "hipocampo", "amigdala", "mamilares", "tal_anterior", "habenula", "insula", "parahipocampal", "nucleos_base", "osso_parietal", "osso_temporal", "cingulo"]);
-const SEM_VOLUME = new Set(["glabela", "nasio", "vertice", "occipital", "ajna", "coroa", "porta", "carotida", "veia",
+const SEM_VOLUME = new Set(["retina", "cornea", "iris", "cristalino", "ciliar", "glabela", "nasio", "vertice", "occipital", "ajna", "coroa", "porta", "carotida", "veia",
   "lobo_frontal", "lobo_parietal", "lobo_temporal", "lobo_occipital", "sulco_central", "fissura_lateral", "radiacao", "papez", "fornix", "mamilotalamico"]);
 const cacheVol = new Map();
 // volume do modelo: total (todas as partes) e de um lado só (para estruturas em par)
@@ -1461,7 +1531,7 @@ function estalo(freq = 1200, vol = 0.1, dur = 0.01, quando = 0, cat = "clique") 
 const FAMILIA = { pineal: "glandula", adeno: "glandula", neuro: "glandula", hipotalamo: "glandula", nsq: "glandula", npv: "glandula",
   vent3: "vent", ventlat: "vent", aqueduto: "vent", quiasma: "nervo", tronco: "nervo", medula: "nervo", gcs: "nervo", caloso: "nervo",
   talamo: "nervo", cerebelo: "nervo", carotida: "vaso", veia: "vaso", cavernoso: "vaso", porta: "vaso", glabela: "face", nasio: "face",
-  piramide: "face", olho: "face", seiofrontal: "face", esfenoidal: "face", vertice: "face", occipital: "face", ajna: "simb", coroa: "simb",
+  piramide: "face", olho: "face", retina: "face", cornea: "face", iris: "face", cristalino: "face", ciliar: "face", seiofrontal: "face", esfenoidal: "face", vertice: "face", occipital: "face", ajna: "simb", coroa: "simb",
   lobo_frontal: "nervo", lobo_parietal: "nervo", lobo_temporal: "nervo", lobo_occipital: "nervo", sulco_central: "nervo", fissura_lateral: "nervo",
   cgl: "nervo", radiacao: "nervo", v1: "nervo", hipocampo: "nervo", amigdala: "nervo", fornix: "nervo", mamilares: "nervo",
   mamilotalamico: "nervo", tal_anterior: "nervo", cingulo: "nervo", papez: "nervo", habenula: "glandula", insula: "nervo", parahipocampal: "nervo",
