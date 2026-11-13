@@ -239,7 +239,7 @@
 <h3 id="24-restaurar-padrao">2.4 Restaurar padrão</h3>
 <p>O botão pede confirmação: o primeiro clique vira "Clique de novo para confirmar" por 4 segundos. Ele volta vista, corte, relógio, camadas, som, menu e posição dos cartões ao início. O idioma não muda.</p>
 <h2 id="3-as-estruturas-do-modelo">3. As estruturas do modelo</h2>
-<p>O modelo tem 49 estruturas clicáveis; 18 delas ficam nas camadas extras (Córtex, Via da visão e Sistema límbico), que começam desligadas. A forma anatômica (seção 6.6) acrescenta mais 11: ínsula, giro para-hipocampal, núcleos da base e oito fichas de ossos do crânio. O sistema de coordenadas é o dos pôsteres, em centímetros: origem na raiz do nariz (násio), x da frente para trás, y para cima, z para o lado (positivo = esquerda da pessoa).</p>
+<p>O modelo tem 54 estruturas clicáveis; 18 delas ficam nas camadas extras (Córtex, Via da visão e Sistema límbico), que começam desligadas. A forma anatômica (seção 6.6) acrescenta mais 11: ínsula, giro para-hipocampal, núcleos da base e oito fichas de ossos do crânio. O sistema de coordenadas é o dos pôsteres, em centímetros: origem na raiz do nariz (násio), x da frente para trás, y para cima, z para o lado (positivo = esquerda da pessoa).</p>
 <table>
 <thead>
 <tr>
@@ -308,6 +308,16 @@
 <td><strong>Olhos</strong></td>
 <td>Órbitas</td>
 <td>"Irmãos" da pineal no embrião; dizem a ela se é dia ou noite</td>
+</tr>
+<tr>
+<td><strong>Retina</strong></td>
+<td>Fundo de cada olho, vista através do olho translúcido</td>
+<td>Transforma luz em sinal; as células com melanopsina avisam o NSQ se é dia. O disco claro é o ponto cego (saída do nervo óptico) e a mancha escura, a mácula. Seleciona-se pelo nome; clicar no olho seleciona o olho</td>
+</tr>
+<tr>
+<td><strong>Córnea, íris, cristalino e corpo ciliar</strong></td>
+<td>Frente de cada olho, nas proporções reais</td>
+<td>Córnea: janela curva que faz dois terços do foco. Íris: anel que abre e fecha a pupila (o reflexo usa as células com melanopsina). Cristalino: lente que acomoda o foco e amarela com a idade, filtrando luz azul. Corpo ciliar: músculo que muda o foco e produz o humor aquoso. Os nomes só aparecem de perto (duplo clique no olho); cada uma se seleciona pelo nome</td>
 </tr>
 <tr>
 <td><strong>Pirâmide nasal</strong></td>
@@ -858,7 +868,7 @@
 <li><strong>Estruturas profundas:</strong> tálamos e corpos geniculados laterais, hipotálamo, ventrículos, cerebelo, tronco, corpo caloso, fórnix, hipocampos, amígdalas, giros do cíngulo e para-hipocampal, corpos mamilares, habênula, pineal, hipófise, quiasma e nervos ópticos, e os núcleos da base (caudado, putâmen e globo pálido), que só existem nesta forma.</li>
 <li><strong>Cabeça:</strong> a pele real, as orelhas e as cartilagens do nariz. A camada nova <strong>Crânio (ossos reais)</strong> mostra 22 ossos agrupados em oito fichas: frontal, parietais, occipital, temporais, esfenoide, etmoide, ossos da face e mandíbula. Ela funciona nas duas formas e também pode ser isolada. O crânio é o mesmo nas duas: na Esquemática, a pele fica a uns 0,6 cm dele, da altura dos olhos para cima (seção 9.10).</li>
 </ul>
-<p>Ficam esquemáticos nas duas formas: os olhos (a malha do atlas tem mais que o dobro do volume de um olho real), o NSQ e o NPV, a radiação óptica, o V1, o trato mamilotalâmico, o núcleo anterior do tálamo, todos os vasos, a medula e o gânglio cervical, os planos, a camada simbólica e todos os pulsos. Como as malhas foram encaixadas nas posições dos pôsteres (seção 9.9), esses elementos continuam no lugar, com folgas de alguns milímetros.</p>
+<p>Ficam esquemáticos nas duas formas: os olhos, com retina, córnea, íris, cristalino e corpo ciliar (a malha do atlas tem mais que o dobro do volume de um olho real), o NSQ e o NPV, a radiação óptica, o V1, o trato mamilotalâmico, o núcleo anterior do tálamo, todos os vasos, a medula e o gânglio cervical, os planos, a camada simbólica e todos os pulsos. Como as malhas foram encaixadas nas posições dos pôsteres (seção 9.9), esses elementos continuam no lugar, com folgas de alguns milímetros.</p>
 <p>Nos rótulos, a linha-guia passa a apontar para a superfície da malha real, e as marcas do topo e de trás da cabeça vão para a pele real. A ficha troca "Modelo" por "Malha real" e mostra o volume da malha original, de uma só pessoa, que pode fugir da faixa típica: no atlas, cada hipocampo tem 1,9 cm³, cada ventrículo lateral 11 cm³, cada tálamo 7,4 cm³ e o cerebelo 99 cm³. Tamanhos mostra os volumes da forma ativa. Restaurar padrão volta para a forma esquemática.</p>
 <figure class="larga"><img src="img/15_anat_cortex.jpg" alt="Forma anatômica com a camada Córtex: os giros reais coloridos pelo lobo"><figcaption>Forma anatômica com a camada Córtex: os giros reais coloridos pelo lobo</figcaption></figure>
 
@@ -1624,8 +1634,13 @@ python bezier_anim.py
 </tr>
 <tr>
 <td>13 nov 2026</td>
-<td>Olhos discretos</td>
-<td>Olhos em cinza-perolado e 75% opacos (íris e pupila continuam opacas): deixam ver o nervo óptico e a órbita</td>
+<td>Frente do olho</td>
+<td>Córnea, íris (com a pupila), cristalino e corpo ciliar, com fichas próprias; nomes visíveis só de perto</td>
+</tr>
+<tr>
+<td>13 nov 2026</td>
+<td>Olhos discretos e retina</td>
+<td>Olhos em cinza-perolado e translúcidos (35%; íris e pupila opacas); dentro deles, a retina rosa-avermelhada, com o disco óptico (ponto cego) e a mácula, e ficha própria</td>
 </tr>
 <tr>
 <td>13 nov 2026</td>
