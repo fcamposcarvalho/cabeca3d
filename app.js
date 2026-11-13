@@ -1177,6 +1177,14 @@ function marcarRotulo(id) {
   for (const r of ROT) r.el.classList.toggle("lbl-sel", !!id && r.id === id);
 }
 function desselecionar() { restaurarDestaque(); }
+// ao clicar numa estrutura, o menu rola até "Estrutura selecionada" (só no computador, com o menu ao lado da cena;
+// no celular o menu fica embaixo e rolar a página tiraria a cena da tela)
+function rolarParaFicha() {
+  const painel = document.getElementById("painel"), sec = document.getElementById("t-info")?.closest("section");
+  if (!painel || !sec || appEl?.classList.contains("recolhido") || window.matchMedia("(max-width: 760px)").matches) return;
+  const alvo = sec.getBoundingClientRect().top - painel.getBoundingClientRect().top + painel.scrollTop - 12;
+  painel.scrollTo({ top: alvo, behavior: reduz ? "auto" : "smooth" });
+}
 function destacar(ids, pulsar = false) {
   restaurarDestaque();
   destaque.pulsar = pulsar;
@@ -2715,6 +2723,7 @@ function selecionarId(id, viaCena = false) {
   destacar([id], false);
   marcarRotulo(id);
   mostrar(id);
+  rolarParaFicha();
   somEstrutura(id);
   const d = infoDe(id);
   if (opc.nomes && d) falar(`${d[0]}. ${d[2]}`);
