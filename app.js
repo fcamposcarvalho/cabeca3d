@@ -230,15 +230,26 @@ function layoutRotulos() {
 const FRENTE = [[-18, 7.2], [-14.5, 6.8], [-12.8, 5], [-12.3, 2], [-11.9, 0.2], [-10.6, -1], [-9.4, -0.7], [-8.6, -1.1], [-7.9, -0.6], [-7.1, -1.2], [-5.8, -0.9], [-4, -0.5], [-1.4, -0.2], [0, 0], [1.3, -0.45], [1.5, -0.44], [2, -0.38], [2.5, -0.39], [3, -0.46], [3.5, -0.4], [4, -0.22], [4.5, 0.06], [5, 0.3], [5.5, 0.6], [6, 0.85], [6.5, 1.23], [7, 1.77], [7.5, 2.31], [8, 3.09], [8.5, 4.09], [9, 5.4], [9.5, 6.38], [9.7, 6.51], [9.9, 6.96], [10.05, 7.6], [10.15, 8.3]];
 const TRAS = [[-18, 15.6], [-8.5, 15.8], [-5.5, 16.8], [-5, 17.06], [-4.5, 17], [-4, 17.05], [-3.5, 17.2], [-3, 17.47], [-2.5, 17.76], [-2, 18.01], [-1.5, 18.22], [-1, 18.37], [-0.5, 18.46], [0, 18.53], [0.5, 18.65], [1, 18.7], [1.5, 18.75], [2, 18.76], [2.5, 18.68], [3, 18.57], [3.5, 18.44], [4, 18.32], [4.5, 18.18], [5, 18.01], [5.5, 17.84], [6, 17.64], [6.5, 17.37], [7, 16.98], [7.5, 16.5], [8, 15.97], [8.5, 15.37], [9, 14.64], [9.5, 14.05], [9.7, 13.9], [9.9, 13.43], [10.05, 12.77], [10.15, 12.05]];
 const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.6], [-4, 6.75], [-3.5, 6.92], [-3, 7.06], [-2.5, 7.14], [-2, 7.17], [-1.5, 7.23], [-1, 7.37], [-0.5, 7.52], [0, 7.65], [0.5, 7.72], [1, 7.78], [1.5, 7.83], [2, 7.87], [2.5, 7.87], [3, 7.8], [3.5, 7.7], [4, 7.63], [4.5, 7.58], [5, 7.52], [5.5, 7.41], [6, 7.19], [6.5, 6.9], [7, 6.52], [7.5, 6.08], [8, 5.5], [8.5, 4.77], [9, 3.84], [9.5, 3.14], [9.7, 3.02], [9.9, 2.65], [10.05, 2.12], [10.15, 1.53]];
+// fatia da pele na altura y: elipse, com a metade da frente achatada (superelipse) na faixa dos olhos, para que o
+// rosto fique largo na frente como um rosto real e cubra os olhos (antes eles saíam alguns milímetros da pele)
+function expoRosto(y) {
+  const sobe = Math.min(Math.max((y + 3.6) / 1.4, 0), 1), desce = Math.min(Math.max((2.2 - y) / 1.4, 0), 1);
+  return 2 + 0.6 * Math.min(sobe, desce); // 2 = elipse; 2,6 na altura dos olhos
+}
+function pontoPele(y, t, xf, xb, w) {
+  const cx = (xf + xb) / 2, a = (xb - xf) / 2, c = Math.cos(t), s = Math.sin(t);
+  if (c <= 0) return P(cx - a * c, y, w * s); // metade de trás: elipse
+  const e = 2 / expoRosto(y);
+  return P(cx - a * Math.pow(c, e), y, w * Math.sign(s) * Math.pow(Math.abs(s), e));
+}
 (function pele() {
   const N = 110, M = 72, pos = [], idx = [];
   for (let i = 0; i <= N; i++) {
     const y = -18 + (28.15 * i) / N; // até 10,15; o topo (10,24) fecha a malha
     const xf = interp(FRENTE, y), xb = interp(TRAS, y), w = interp(LARG, y);
-    const cx = (xf + xb) / 2, a = (xb - xf) / 2;
     for (let j = 0; j < M; j++) {
       const t = (2 * Math.PI * j) / M;
-      const v = P(cx - a * Math.cos(t), y, w * Math.sin(t));
+      const v = pontoPele(y, t, xf, xb, w);
       pos.push(v.x, v.y, v.z);
     }
   }
@@ -260,8 +271,8 @@ const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.6], [-4, 
   const lm = new THREE.LineBasicMaterial({ color: 0x9fb2d6, transparent: true, opacity: 0.22 });
   for (let y = -16.5; y < 10; y += 1.5) {
     const xf = interp(FRENTE, y), xb = interp(TRAS, y), w = interp(LARG, y);
-    const cx = (xf + xb) / 2, a = (xb - xf) / 2, pts = [];
-    for (let j = 0; j <= 96; j++) { const t = (2 * Math.PI * j) / 96; pts.push(P(cx - a * Math.cos(t), y, w * Math.sin(t))); }
+    const pts = [];
+    for (let j = 0; j <= 96; j++) { const t = (2 * Math.PI * j) / 96; pts.push(pontoPele(y, t, xf, xb, w)); }
     const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm); l.userData.esq = "cabeca";
     grupos.pele.add(l); clipaveis.push(l);
   }
@@ -270,7 +281,10 @@ const LARG = [[-18, 5.6], [-12, 5.5], [-9.6, 5.8], [-7, 6.1], [-4.5, 6.6], [-4, 
 
 // rosto
 for (const s of [1, -1]) {
-  registrar(elipsoide([1.9, -0.7, s * 3.2], [1.2, 1.2, 1.2], 0xe8edf4), "olho", "fixo", { clip: true });
+  // olho: cinza-perolado e um pouco translúcido (75%), para não saltar na tela e deixar ver o nervo óptico e a órbita;
+  // íris e pupila continuam opacas
+  const olho = registrar(elipsoide([1.9, -0.7, s * 3.2], [1.2, 1.2, 1.2], 0xc9d0d9, { opacity: 0.75 }), "olho", "fixo", { clip: true });
+  olho.renderOrder = 6;
   const iris = new THREE.Mesh(new THREE.CircleGeometry(0.5, 32), new THREE.MeshStandardMaterial({ color: 0x6b7f99 }));
   iris.position.copy(P(0.69, -0.7, s * 3.2)); grupos.fixo.add(iris);
   const pup = new THREE.Mesh(new THREE.CircleGeometry(0.22, 24), new THREE.MeshBasicMaterial({ color: 0x0c121d }));
@@ -653,7 +667,7 @@ rotulo("Tronco encefálico", [10.3, -3.5], "#E2C9BB", "cerebro", 5);
 rotulo("Gânglio cervical superior", [10.3, -9.0, 2.4], "#F0997B", "circ", 5);
 rotulo("Seio cavernoso", [7.1, -1.45, 1.9], "#A39BF2", "vasos", 4);
 rotulo("Ventrículo lateral", [12.8, 2.6, 3.1], "#5EA6F2", "vent", 6);
-rotulo("Olho", [1.9, -0.7, 3.2], "#E8EDF4", "fixo", 6);
+rotulo("Olho", [1.9, -0.7, 3.2], "#C9D0D9", "fixo", 6);
 rotulo("Ajna (simbólico)", [-1.0, 1.3], "#8F86FF", "simbolo", 3, "simb");
 rotulo("Coroa (simbólico)", [10.17, 11.2, 1.2], "#C7A6FF", "simbolo", 3, "simb");
 rotulo("Sistema porta", [7.2, -0.8, 0.3], "#E24B4A", "porta", 2);
@@ -702,7 +716,7 @@ const INFO = {
     ["Um tumor de pineal pode apertar o aqueduto e causar hidrocefalia."]],
   quiasma: ["Quiasma, nervos e tratos ópticos", "#C8CBD2", "Os nervos ópticos se cruzam em X acima da hipófise.",
     ["Um tumor de hipófise costuma afetar primeiro a visão lateral.", "Do quiasma sai a via direta da luz até o NSQ."]],
-  olho: ["Olhos", "#E8EDF4", "Irmãos da pineal: as retinas e a pineal nascem do mesmo tecido do diencéfalo no embrião.",
+  olho: ["Olhos", "#C9D0D9", "Irmãos da pineal: as retinas e a pineal nascem do mesmo tecido do diencéfalo no embrião.",
     ["Nos mamíferos, é por eles que a pineal sabe se é dia ou noite."]],
   piramide: ["Pirâmide nasal", "#C9B4A8", "O nariz externo tem a forma de uma pirâmide de três faces.", ["Vértice na raiz do nariz; base nas narinas."]],
   glabela: ["Glabela", "#FFFFFF", "Ponto entre as sobrancelhas, 1 a 1,5 cm acima da raiz do nariz.",
