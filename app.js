@@ -276,15 +276,17 @@ for (const s of [1, -1]) {
   const pup = new THREE.Mesh(new THREE.CircleGeometry(0.22, 24), new THREE.MeshBasicMaterial({ color: 0x0c121d }));
   pup.position.copy(P(0.67, -0.7, s * 3.2)); grupos.fixo.add(pup);
 }
+// nariz (pirâmide nasal): tom de pele discreto, para não chamar mais atenção que as estruturas do circuito
+const COR_NARIZ = 0xc9b4a8;
 {
   const N = P(0, 0), T = P(-3.05, -4.6), AR = P(-0.6, -5.4, -1.7), AL = P(-0.6, -5.4, 1.7);
   const g = new THREE.BufferGeometry().setFromPoints([N, T, AL, N, AR, T, N, AL, AR, T, AR, AL]);
   g.computeVertexNormals();
-  const m = new THREE.Mesh(g, mat(0xf0997b, { opacity: 0.55, side: THREE.DoubleSide }));
+  const m = new THREE.Mesh(g, mat(COR_NARIZ, { opacity: 0.32, side: THREE.DoubleSide }));
   m.renderOrder = 5;
   m.userData.centro = P(-1.2, -3.3, 0);
   registrar(m, "piramide", "fixo");
-  const arestas = new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: 0xf07f5a, transparent: true, opacity: 0.8 }));
+  const arestas = new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: 0xa8968c, transparent: true, opacity: 0.55 }));
   arestas.userData.esq = "cabeca"; grupos.fixo.add(arestas);
 }
 registrar(elipsoide([-0.45, 1.3, 0], [0.22, 0.22, 0.22], 0xffffff, { emissive: 0xffffff, ei: 0.4 }), "glabela", "fixo");
@@ -644,7 +646,7 @@ rotulo("Raiz do nariz", [0, 0], "#FFFFFF", "fixo", 2);
 rotulo("Topo da cabeça", [10.17, 10.24], "#FFFFFF", "fixo", 1);
 rotulo("Parte de trás da cabeça", [18.76, 2.0], "#FFFFFF", "fixo", 1);
 rotulo("Quiasma óptico", [6.7, 0.02, -0.5], "#C8CBD2", "fixo", 3);
-rotulo("Pirâmide nasal", [-1.6, -3.4], "#F07F5A", "fixo", 4);
+rotulo("Pirâmide nasal", [-1.6, -3.4], "#C9B4A8", "fixo", 4);
 rotulo("Corpo caloso", [8.5, 5.9], "#F3EAD8", "cerebro", 4);
 rotulo("Cerebelo", [15.0, -2.6], "#D9B8A8", "cerebro", 5);
 rotulo("Tronco encefálico", [10.3, -3.5], "#E2C9BB", "cerebro", 5);
@@ -702,7 +704,7 @@ const INFO = {
     ["Um tumor de hipófise costuma afetar primeiro a visão lateral.", "Do quiasma sai a via direta da luz até o NSQ."]],
   olho: ["Olhos", "#E8EDF4", "Irmãos da pineal: as retinas e a pineal nascem do mesmo tecido do diencéfalo no embrião.",
     ["Nos mamíferos, é por eles que a pineal sabe se é dia ou noite."]],
-  piramide: ["Pirâmide nasal", "#F07F5A", "O nariz externo tem a forma de uma pirâmide de três faces.", ["Vértice na raiz do nariz; base nas narinas."]],
+  piramide: ["Pirâmide nasal", "#C9B4A8", "O nariz externo tem a forma de uma pirâmide de três faces.", ["Vértice na raiz do nariz; base nas narinas."]],
   glabela: ["Glabela", "#FFFFFF", "Ponto entre as sobrancelhas, 1 a 1,5 cm acima da raiz do nariz.",
     ["O plano horizontal da pineal sai aqui.", "Na vista de frente, fica bem na frente da pineal.", "Região de maior risco para preenchedores (anastomose com a artéria oftálmica)."]],
   nasio: ["Raiz do nariz (násio)", "#FFFFFF", "Encontro do osso frontal com os ossos nasais.",
@@ -1743,7 +1745,7 @@ function carregarPacote(nome) {
       g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
       g.setIndex(new THREE.BufferAttribute(idx.slice(), 1));
       g.computeVertexNormals(); g.computeBoundingSphere();
-      const material = e.id === "pineal" ? pinealMat : mat(e.cor, { opacity: e.op, side: THREE.DoubleSide });
+      const material = e.id === "pineal" ? pinealMat : mat(e.id === "piramide" ? COR_NARIZ : e.cor, { opacity: e.id === "piramide" ? Math.min(e.op, 0.35) : e.op, side: THREE.DoubleSide });
       if (e.grupo === "cranio") material.roughness = 0.75;
       const m = new THREE.Mesh(g, material);
       if (e.op < 0.6) m.renderOrder = e.grupo === "pele" ? 10 : e.grupo === "cortex" ? 8 : 5;
